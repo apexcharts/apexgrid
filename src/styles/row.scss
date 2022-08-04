@@ -1,0 +1,19 @@
+:host {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    contain: content;
+}
+
+igc-grid-cell {
+    border-right: 1px solid #ccc;
+
+    &:last-child {
+        border-right: none;
+    }
+
+    &[active] {
+        outline-offset: -1px;
+        outline: 2px solid deeppink;
+    }
+}

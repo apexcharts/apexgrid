@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Demo igc-grid</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <meta charset="utf-8" />
+    <style>
+      body {
+        background: #fafafa;
+        font-family: sans-serif;
+      }
+      #demo {
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="demo"></div>
+
+    <script type="module">
+      import { html, render } from 'lit';
+      import '../src/index.ts';
+
+      function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+      }
+
+      const standard = props => {
+        const change = e => console.log(`Changed to ${e.target.value}`);
+
+        return html`<input
+          .value=${props.value}
+          @change=${change}
+        />`;
+      };
+
+      const booleanTemplate = props => {
+        return html`
+          <label
+            >Status:
+            <input
+              type="checkbox"
+              ?checked=${props.value}
+              .value=${props.value}
+            />
+          </label>
+        `;
+      };
+
+      const data = [];
+      const columns = [
+        { key: 'id', headerText: 'User ID', hidden: false, sort: true },
+        { key: 'name', cellTemplate: standard, filter: {} },
+        { key: 'age' },
+        { key: 'email' },
+        { key: 'subscribed', cellTemplate: booleanTemplate, sort: true },
+      ];
+
+      for (let i = 0; i < 1e2; i++) {
+        data.push({
+          id: i,
+          name: `User - ${getRandomInt(1e3)}`,
+          age: getRandomInt(75),
+          subscribed: Boolean(Math.round(Math.random() * i) % 2),
+          email: `user${i}@organization.com`,
+          avatar: `https://static.infragistics.com/xplatform/images/people/GIRL${getRandomInt(
+            20,
+          )}.png`,
+        });
+      }
+
+      render(
+        html`<igc-grid
+          .columns=${columns}
+          .data=${data}
+        ></igc-grid>`,
+        document.querySelector('#demo'),
+      );
+    </script>
+  </body>
+</html>

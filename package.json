@@ -1,0 +1,87 @@
+{
+  "name": "igc-grid",
+  "version": "1.0.0-rc.1",
+  "description": "Webcomponent igc-grid following open-wc recommendations",
+  "keywords": [
+    "lit",
+    "web-component",
+    "lit-element"
+  ],
+  "license": "SEE LICENSE IN LICENSE.mds",
+  "author": "igc-grid",
+  "exports": {
+    ".": "./dist/index.js",
+    "./igc-grid.js": "./dist/define/igc-grid.js"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "/dist/",
+    "/dist/index.*",
+    "!/dist/test/"
+  ],
+  "scripts": {
+    "analyze": "cem analyze --litelement --globs \"src/**/*.{js,ts}\"",
+    "build": "npm run build:tsc && npm run dev:vite",
+    "build:tsc": "tsc",
+    "dev:vite": "vite build",
+    "format": "npm run format:eslint && npm run format:prettier && npm run format:stylelint",
+    "format:eslint": "eslint \"**/*.{js,ts,html}\" --fix --ignore-path .eslintignore",
+    "format:prettier": "prettier \"**/*.{js,ts,json,html,md}\" --write --ignore-path .eslintignore",
+    "format:stylelint": "stylelint \"**/*.{scss,css}\" --fix --allow-empty-input --ignore-path .eslintignore",
+    "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:stylelint",
+    "lint:eslint": "eslint \"**/*.{js,ts,html}\" --ignore-path .eslintignore",
+    "lint:prettier": "prettier \"**/*.{js,ts,json,html,md}\" --check --ignore-path .eslintignore",
+    "lint:stylelint": "stylelint \"**/*.{scss,css}\" --allow-empty-input --ignore-path .eslintignore",
+    "preview:vite": "vite preview",
+    "sass:watch": "sass-style-template -j ts",
+    "start": "concurrently -k -r \"npm:sass:watch\" \"npm:vite\"",
+    "start:wds": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"npm:sass:watch\" \"npm:wds\"",
+    "test": "tsc && OUTDIR=dist wtr --coverage",
+    "test:watch": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"OUTDIR=dist wtr --watch\"",
+    "vite": "vite",
+    "wds": "web-dev-server",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "**/*.{js,ts,html}": [
+      "npm run format:eslint"
+    ],
+    "**/*.{js,ts,json,html,md}": [
+      "npm run format:prettier"
+    ],
+    "**/*.{scss,css}": [
+      "npm run format:stylelint"
+    ]
+  },
+  "dependencies": {
+    "lit": "^2.2.8",
+    "@lit-labs/virtualizer": "^0.7.1"
+  },
+  "devDependencies": {
+    "@blockquote/rollup-plugin-total-bundlesize": "^1.0.0",
+    "@blockquote/sass-style-template": "^2.1.2",
+    "@blockquote/test-runner-mocha-style-reporter": "^1.4.0",
+    "@custom-elements-manifest/analyzer": "^0.6.3",
+    "@open-wc/eslint-config": "^7.0.0",
+    "@open-wc/testing": "^3.1.6",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
+    "@web/dev-server": "^0.1.32",
+    "@web/test-runner": "^0.13.31",
+    "@web/test-runner-playwright": "^0.8.9",
+    "concurrently": "^7.3.0",
+    "eslint": "^8.21.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-log-filenames": "^1.0.6",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "stylelint": "^14.9.1",
+    "stylelint-config-standard-scss": "^5.0.0",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4",
+    "vite": "^3.0.4",
+    "husky": "^8.0.0"
+  },
+  "customElements": "custom-elements.json"
+}

@@ -1,0 +1,11 @@
+:host {
+    display: inline-flex;
+    flex: 1 0 0;
+    padding: .5rem 0;
+    contain: content;
+    font-weight: 500;
+}
+
+[part~='sortable'] {
+    cursor: pointer;
+}

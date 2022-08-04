@@ -1,0 +1,32 @@
+## editors
+/.idea
+/.vscode
+/*.code-workspace
+
+## system files
+.DS_Store
+
+## npm/yarn
+node_modules
+npm-debug.log
+*-debug.log
+yarn-error.log
+
+## testing
+coverage
+**/coverage/
+reports
+__snapshots__
+screenshots/.current
+screenshots/.diff
+
+
+## build
+_site
+dist
+dev
+build
+.tmp
+*.tgz
+*.tsbuildinfo
+storybook-static

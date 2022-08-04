@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "IgcGrid",
+          "declaration": {
+            "name": "IgcGrid",
+            "module": "./components/IgcGrid.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/components/IgcGrid.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "IgcGrid",
+          "members": [
+            {
+              "kind": "field",
+              "name": "is",
+              "type": {
+                "text": "string"
+              },
+              "static": true
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Hey there'",
+              "description": "The heading to say \"Hello\" to.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "counter",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "description": "The number of times the button has been clicked.",
+              "attribute": "counter"
+            },
+            {
+              "kind": "method",
+              "name": "#onClick"
+            },
+            {
+              "kind": "method",
+              "name": "sayHello",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "heading",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "The heading to say \"Hello\" to"
+                }
+              ],
+              "description": "Formats a greeting"
+            }
+          ],
+          "events": [
+            {
+              "name": "counter-changed",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Hey there'",
+              "description": "The heading to say \"Hello\" to.",
+              "fieldName": "heading"
+            },
+            {
+              "name": "counter",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "description": "The number of times the button has been clicked.",
+              "fieldName": "counter"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "igc-grid",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "IgcGrid",
+          "declaration": {
+            "name": "IgcGrid",
+            "module": "src/components/IgcGrid.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "igc-grid",
+          "declaration": {
+            "name": "IgcGrid",
+            "module": "src/components/IgcGrid.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/styles/grid-styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/styles/grid-styles.ts"
+          }
+        }
+      ]
+    }
+  ]
+}

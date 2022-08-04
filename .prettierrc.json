@@ -1,0 +1,16 @@
+{
+  "arrowParens": "avoid",
+  "printWidth": 100,
+  "singleQuote": true,
+  "singleAttributePerLine": true,
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": "*.{scss,css}",
+      "options": {
+        "printWidth": 280,
+        "singleQuote": false
+      }
+    }
+  ]
+}
