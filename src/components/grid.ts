@@ -1,44 +1,61 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
-import { ColumnType } from '../internal/types.js';
-import styles from '../styles/grid-styles.js';
-
-import './header-row.js';
-import './grid-body.js';
-import './row.js';
-import GridCell from './cell.js';
-import type GridBody from './grid-body';
+import { styleMap } from 'lit/directives/style-map.js';
+import { GRID_TAG } from '../internal/tags.js';
 import { StateController } from '../controllers/state.js';
 import { DataOperationsController } from '../controllers/data-operation.js';
-import type GridRow from './row.js';
 import { watch } from '../internal/watch.js';
 import { PIPELINE } from '../internal/constants.js';
-import type GridHeaderRow from './header-row.js';
+import { applyColumnWidths } from '../internal/utils.js';
+import styles from '../styles/grid-styles.js';
 
-@customElement('igc-grid')
-export class Grid<T extends object> extends LitElement {
+import type { ColumnConfig, Keys } from '../internal/types.js';
+import type { SortExpression } from '../operations/sort/types.js';
+import GridBody from './grid-body.js';
+import GridHeaderRow from './header-row.js';
+import GridRow from './row.js';
+import GridCell from './cell.js';
+
+@customElement(GRID_TAG)
+export default class Grid<T extends object> extends LitElement {
+  public static get is() {
+    return GRID_TAG;
+  }
   public static override styles = styles;
 
   protected stateController = new StateController<T>(this);
   protected dataController = new DataOperationsController<T>(this);
+  protected rowRenderer = <T>(data: T, index: number): TemplateResult => {
+    return html`<igc-grid-row
+      style=${styleMap(applyColumnWidths(this.columns))}
+      .index=${index}
+      .activeNode=${this.stateController.active}
+      .data=${data}
+      .columns=${this.columns}
+    ></igc-grid-row>`;
+  };
 
-  @query('igc-grid-body')
+  @query(GridBody.is)
   protected bodyElement!: GridBody;
 
-  @query('igc-grid-header-row')
+  @query(GridHeaderRow.is)
   protected headerRow!: GridHeaderRow<T>;
 
   @state()
   protected dataState: Array<T> = [];
 
+  @queryAll(GridRow.is)
+  protected _rows!: NodeListOf<GridRow<T>>;
+
   @property({ attribute: false })
-  public columns: Array<ColumnType<T>> = [];
+  public columns: Array<ColumnConfig<T>> = [];
 
   @property({ attribute: false })
   public data: Array<T> = [];
 
-  @queryAll('igc-grid-row')
-  public rows!: Array<GridRow<T>>;
+  public get rows() {
+    return Array.from(this._rows);
+  }
 
   public get totalItems() {
     return this.dataState.length;
@@ -50,6 +67,24 @@ export class Grid<T extends object> extends LitElement {
       e.stopPropagation();
       this.stateController.sorting.sort(e.detail.key);
     });
+  }
+
+  public sort(key: Keys<T>, config?: Partial<SortExpression<T>>) {
+    this.stateController.sorting.sort(key, config as SortExpression<T>);
+  }
+
+  public updateColumn(key: Keys<T>, config: Partial<ColumnConfig<T>>) {
+    // Check and reset data operation states
+    if (!config.sort) {
+      this.stateController.sorting.reset(key);
+    }
+    this.columns = this.columns.map(each => {
+      if (key === each.key) {
+        each = { ...each, ...config };
+      }
+      return each;
+    });
+    this.requestUpdate(PIPELINE);
   }
 
   @watch(PIPELINE, { waitUntilFirstUpdate: true })
@@ -79,6 +114,7 @@ export class Grid<T extends object> extends LitElement {
 
   protected renderHeaderRow() {
     return html`<igc-grid-header-row
+      style=${styleMap(applyColumnWidths(this.columns))}
       .columns=${this.columns}
       .state=${this.stateController}
     ></igc-grid-header-row>`;
@@ -90,12 +126,7 @@ export class Grid<T extends object> extends LitElement {
       @keydown=${this.bodyKeydownHandler}
       @click=${this.bodyClickHandler}
       .items=${this.dataState}
-      .renderItem=${(data: T, index: number): TemplateResult => html`<igc-grid-row
-        .index=${index}
-        .activeNode=${this.stateController.active}
-        .data=${data}
-        .columns=${this.columns}
-      ></igc-grid-row>`}
+      .renderItem=${this.rowRenderer}
     ></igc-grid-body>`;
   }
 

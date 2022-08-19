@@ -18,13 +18,13 @@ export default class SortOperation<T extends object> extends DataOperation<T> {
   }
 
   protected compareObjects(first: T, second: T, expression: SortExpression<T>) {
-    const { direction, key, caseSensitive } = expression;
+    const { direction, key, caseSensitive, comparer } = expression;
     const [a, b] = [
       this.resolveCase(this.resolveValue(first, key), caseSensitive),
       this.resolveCase(this.resolveValue(second, key), caseSensitive),
     ];
 
-    return this.orderBy.get(direction)! * this.compareValues(a, b);
+    return this.orderBy.get(direction)! * (comparer ? comparer(a, b) : this.compareValues(a, b));
   }
 
   public apply(data: T[], state: SortState<T>) {

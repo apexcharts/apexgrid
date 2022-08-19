@@ -14,7 +14,7 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: /^lit|^@lit-labs/,
+      external: /^lit|^@lit-labs|^igniteui/,
       plugins: [totalBundlesize()],
     },
   },

@@ -1,8 +1,7 @@
-/* eslint-disable import/no-extraneous-dependencies */
 /* process.env.npm_lifecycle_event, process.env.npm_lifecycle_script, process.env.OUTDIR; */
 
 import { playwrightLauncher } from '@web/test-runner-playwright';
-import { chromeLauncher, defaultReporter } from '@web/test-runner';
+import { defaultReporter } from '@web/test-runner';
 import { mochaStyleReporter } from '@blockquote/test-runner-mocha-style-reporter';
 
 const filteredLogs = ['in dev mode'];
@@ -10,26 +9,15 @@ const outDir = process.env.OUTDIR || '.';
 
 export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
   /** Test files to run */
-  files: [`${outDir}/test/**/*.test.js`],
+  files: [`${outDir}/test/**/*.test.js`, `!${outDir}/test/utils/**/*`],
 
   /** Resolve bare module imports */
   nodeResolve: {
     exportConditions: ['browser', 'development'],
   },
 
-  browsers: [playwrightLauncher({ product: 'chromium' })],
-
   /** Browsers to run tests on */
-  // browsers: [
-  //   chromeLauncher({
-  //     launchOptions: {
-  //       executablePath: '/opt/google/chrome/chrome',
-  //       headless: true,
-  //     },
-  //   }),
-  //   // playwrightLauncher({ product: 'chromium' }),
-  //   // playwrightLauncher({ product: 'webkit' }),
-  // ],
+  browsers: [playwrightLauncher({ product: 'chromium' })],
 
   /** Amount of browsers to run concurrently */
   // concurrentBrowsers: 2,

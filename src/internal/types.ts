@@ -1,9 +1,14 @@
 import { ReactiveControllerHost } from 'lit';
-import type { Grid } from '../components/grid';
+import type Grid from '../components/grid';
 
 export type Keys<T extends object> = keyof T;
 export type Values<T extends object> = T[keyof T];
 export type PropertyType<T extends object, K extends keyof T> = T[K];
+// export type PickTypeKeys<Obj, Type, T extends keyof Obj = keyof Obj> = {
+//   [P in keyof Obj]: Obj[P] extends Type ? P : never;
+// }[T];
+
+// export type PickType<T, Type> = Pick<T, PickTypeKeys<T, Type>>;
 
 export type DataType = 'number' | 'string' | 'boolean';
 
@@ -20,13 +25,18 @@ export interface ColumnSortConfig {
   remote?: unknown;
 }
 
-export interface ColumnType<T extends object> {
+export interface ColumnFilterConfig {
+  remote?: unknown;
+}
+
+export interface ColumnConfig<T extends object> {
   key: Keys<T>;
   type?: DataType;
   headerText?: string;
+  width?: string;
   hidden?: boolean;
-  sort?: ColumnSortConfig;
-  filter?: boolean;
+  sort?: ColumnSortConfig | boolean;
+  filter?: ColumnFilterConfig | boolean;
   headerTemplate?: (props: unknown) => Template;
   cellTemplate?: (props: unknown) => Template;
 }

@@ -1,16 +1,27 @@
 import { LitElement, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { partNameMap } from '../internal/part-map.js';
-import type { ColumnType } from '../internal/types';
+import { GRID_HEADER_TAG } from '../internal/tags.js';
+import { SORT_ICON_ASCENDING, SORT_ICON_DESCENDING } from '../internal/constants.js';
+import type { ColumnConfig } from '../internal/types';
 import type { SortExpression } from '../operations/sort/types.js';
 import styles from '../styles/header-styles.js';
 
-@customElement('igc-grid-header')
+// TODO: Revise
+// import Icon from 'igniteui-webcomponents/components/icon/icon';
+import { defineComponents, IgcIconComponent } from 'igniteui-webcomponents';
+defineComponents(IgcIconComponent);
+
+@customElement(GRID_HEADER_TAG)
 export default class GridHeader<T extends object> extends LitElement {
+  public static get is() {
+    return GRID_HEADER_TAG;
+  }
+
   public static override styles = styles;
 
   @property({ attribute: false })
-  public column!: ColumnType<T>;
+  public column!: ColumnConfig<T>;
 
   @property({ attribute: false })
   public sortState?: SortExpression<T>;
@@ -34,7 +45,11 @@ export default class GridHeader<T extends object> extends LitElement {
 
   protected renderSortState() {
     if (!this.sortState) return nothing;
-    return html`${this.sortState.direction === 'ascending' ? '↑' : '↓'}`;
+    return html`<igc-icon
+      size="small"
+      name=${this.sortState.direction === 'ascending' ? SORT_ICON_ASCENDING : SORT_ICON_DESCENDING}
+      collection="internal"
+    ></igc-icon>`;
   }
 
   protected renderContent() {

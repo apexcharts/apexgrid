@@ -1,1 +1,1 @@
-export { Grid as IgcGrid } from './components/grid.js';
+export { default as Grid } from './components/grid.js';

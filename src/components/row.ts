@@ -1,24 +1,26 @@
 import { html, LitElement, nothing } from 'lit';
 import { customElement, property, queryAll } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import type { ActiveNode, ColumnType } from '../internal/types';
-import type GridCell from './cell';
+import { GRID_ROW_TAG } from '../internal/tags.js';
+import type { ActiveNode, ColumnConfig } from '../internal/types';
+import GridCell from './cell.js';
 import styles from '../styles/row-styles.js';
 
-import './cell.js';
-
-@customElement('igc-grid-row')
+@customElement(GRID_ROW_TAG)
 export default class GridRow<T extends object> extends LitElement {
+  public static get is() {
+    return GRID_ROW_TAG;
+  }
   public static override styles = styles;
 
-  @queryAll('igc-grid-cell')
+  @queryAll(GridCell.is)
   public cells!: NodeListOf<GridCell<T>>;
 
   @property({ attribute: false })
   public data!: T;
 
   @property({ attribute: false })
-  public columns: Array<ColumnType<T>> = [];
+  public columns: Array<ColumnConfig<T>> = [];
 
   @property({ attribute: false })
   public activeNode!: ActiveNode;

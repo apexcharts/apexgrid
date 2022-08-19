@@ -1,27 +1,38 @@
 import { html, LitElement, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, queryAll } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
+import { GRID_HEADER_ROW_TAG } from '../internal/tags.js';
 import type { StateController } from '../controllers/state';
-import type { ColumnType } from '../internal/types';
+import type { ColumnConfig } from '../internal/types';
 import styles from '../styles/header-row-styles.js';
-import './header.js';
+import GridHeader from './header.js';
 
-@customElement('igc-grid-header-row')
+@customElement(GRID_HEADER_ROW_TAG)
 export default class GridHeaderRow<T extends object> extends LitElement {
+  public static get is() {
+    return GRID_HEADER_ROW_TAG;
+  }
   public static override styles = styles;
 
+  @queryAll(GridHeader.is)
+  protected _headers!: NodeListOf<GridHeader<T>>;
+
   @property({ attribute: false })
-  public columns: Array<ColumnType<T>> = [];
+  public columns: Array<ColumnConfig<T>> = [];
 
   @property({ attribute: false })
   public state!: StateController<T>;
+
+  public get headers() {
+    return Array.from(this._headers);
+  }
 
   public override connectedCallback() {
     super.connectedCallback();
     this.setAttribute('tabindex', '0');
   }
 
-  #getColumnSortState(column: ColumnType<T>) {
+  #getColumnSortState(column: ColumnConfig<T>) {
     return this.state.sorting.state.get(column.key);
   }
 

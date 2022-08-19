@@ -7,7 +7,15 @@
       content="width=device-width, initial-scale=1"
     />
     <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="../node_modules/igniteui-webcomponents/themes/light/bootstrap.css"
+    />
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
       body {
         background: #fafafa;
         font-family: sans-serif;
@@ -23,6 +31,20 @@
     <script type="module">
       import { html, render } from 'lit';
       import '../src/index.ts';
+      import {
+        defineComponents,
+        IgcAvatarComponent,
+        IgcInputComponent,
+        IgcCheckboxComponent,
+        IgcRatingComponent,
+      } from 'igniteui-webcomponents';
+
+      defineComponents(
+        IgcInputComponent,
+        IgcCheckboxComponent,
+        IgcAvatarComponent,
+        IgcRatingComponent,
+      );
 
       function getRandomInt(max) {
         return Math.floor(Math.random() * max);
@@ -30,45 +52,66 @@
 
       const standard = props => {
         const change = e => console.log(`Changed to ${e.target.value}`);
-
-        return html`<input
+        return html` <igc-input
+          size="medium"
           .value=${props.value}
-          @change=${change}
-        />`;
+          @igcChange=${change}
+        >
+        </igc-input>`;
       };
 
       const booleanTemplate = props => {
-        return html`
-          <label
-            >Status:
-            <input
-              type="checkbox"
-              ?checked=${props.value}
-              .value=${props.value}
-            />
-          </label>
-        `;
+        return html`<igc-checkbox
+          label-position="before"
+          ?checked=${props.value}
+          .value=${props.value}
+          >Status:</igc-checkbox
+        >`;
+      };
+
+      const avatarTemplate = props => {
+        return html`<igc-avatar
+          size="small"
+          shape="circle"
+          .src=${props.value}
+        ></igc-avatar>`;
+      };
+
+      const satisfactionTemplate = props => {
+        return html`<igc-rating
+          readonly
+          size="medium"
+          .value=${props.value}
+        ></igc-rating>`;
       };
 
       const data = [];
       const columns = [
-        { key: 'id', headerText: 'User ID', hidden: false, sort: true },
+        {
+          key: 'id',
+          headerText: 'User ID',
+          hidden: false,
+          sort: true,
+        },
         { key: 'name', cellTemplate: standard, filter: {} },
+        { key: 'avatar', cellTemplate: avatarTemplate },
+        { key: 'satisfaction', cellTemplate: satisfactionTemplate, sort: true },
         { key: 'age' },
         { key: 'email' },
         { key: 'subscribed', cellTemplate: booleanTemplate, sort: true },
       ];
 
-      for (let i = 0; i < 1e2; i++) {
+      for (let i = 0; i < 1e3; i++) {
         data.push({
           id: i,
-          name: `User - ${getRandomInt(1e3)}`,
+          name: `User - ${getRandomInt(1e2)}`,
           age: getRandomInt(75),
           subscribed: Boolean(Math.round(Math.random() * i) % 2),
+          satisfaction: getRandomInt(5),
           email: `user${i}@organization.com`,
-          avatar: `https://static.infragistics.com/xplatform/images/people/GIRL${getRandomInt(
-            20,
-          )}.png`,
+          avatar: `https://static.infragistics.com/xplatform/images/people/${
+            getRandomInt(2) % 2 ? 'women' : 'men'
+          }/${getRandomInt(100)}.jpg`,
         });
       }
 

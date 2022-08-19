@@ -1,6 +1,6 @@
 import { ReactiveController } from 'lit';
 import { PIPELINE } from '../internal/constants.js';
-import type { ColumnType, GridHost, Keys } from '../internal/types';
+import type { GridHost, Keys } from '../internal/types';
 import type { SortExpression, SortingDirection, SortState } from '../operations/sort/types';
 
 export class SortController<T extends object> implements ReactiveController {
@@ -12,13 +12,13 @@ export class SortController<T extends object> implements ReactiveController {
 
   public hostConnected() {}
 
-  public prepareExpression(column: ColumnType<T>): SortExpression<T> {
-    return {
-      key: column.key,
-      caseSensitive: column.sort?.caseSensitive ?? false,
-      direction: this.#orderBy(this.state.get(column.key)?.direction),
-    };
-  }
+  // public prepareExpression(column: ColumnType<T>): SortExpression<T> {
+  //   return {
+  //     key: column.key,
+  //     caseSensitive: column.sort?.caseSensitive ?? false,
+  //     direction: this.#orderBy(this.state.get(column.key)?.direction),
+  //   };
+  // }
 
   #orderBy(dir?: SortingDirection): SortingDirection {
     return dir === 'ascending' ? 'descending' : 'ascending';
@@ -29,12 +29,17 @@ export class SortController<T extends object> implements ReactiveController {
     this.host.requestUpdate(PIPELINE);
   }
 
-  public sort(key: Keys<T>) {
-    let expr = this.state.get(key);
-    expr = expr
-      ? { ...expr, ...{ direction: this.#orderBy(expr.direction) } }
-      : { key, direction: 'ascending' };
-    this.state.set(key, expr);
+  public sort(key: Keys<T>, expression?: SortExpression<T>) {
+    if (expression) {
+      Object.assign(expression, { key, direction: expression.direction ?? 'ascending' });
+    } else {
+      expression = this.state.get(key);
+      expression = expression
+        ? { ...expression, ...{ direction: this.#orderBy(expression.direction) } }
+        : { key, direction: 'ascending' };
+    }
+
+    this.state.set(key, expression);
     this.host.requestUpdate(PIPELINE);
   }
 }

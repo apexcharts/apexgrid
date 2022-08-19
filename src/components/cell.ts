@@ -1,18 +1,23 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import type { ColumnType } from '../internal/types';
+import { GRID_CELL_TAG } from '../internal/tags.js';
+import type { ColumnConfig } from '../internal/types';
 import styles from '../styles/cell-styles.js';
 import type GridRow from './row';
 
-@customElement('igc-grid-cell')
+@customElement(GRID_CELL_TAG)
 export default class GridCell<T extends object> extends LitElement {
+  public static get is() {
+    return GRID_CELL_TAG;
+  }
+
   public static override styles = styles;
 
   @property({ attribute: false })
-  public value!: T;
+  public value!: T[keyof T];
 
   @property({ attribute: false })
-  public column!: ColumnType<T>;
+  public column!: ColumnConfig<T>;
 
   @property({ type: Boolean, reflect: true })
   public active = false;
@@ -22,6 +27,7 @@ export default class GridCell<T extends object> extends LitElement {
   protected get context() {
     return {
       parent: this as GridCell<T>,
+      row: this.row,
       column: this.column,
       value: this.value,
     };

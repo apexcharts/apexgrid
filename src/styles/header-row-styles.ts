@@ -2,7 +2,7 @@ import { css } from 'lit';
 
 export default css`:host {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-  background-color: deeppink;
+  background-color: hsla(var(--igc-primary-500));
+  color: hsla(var(--igc-primary-500-contrast));
   contain: content;
 }`;

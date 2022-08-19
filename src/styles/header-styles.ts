@@ -9,7 +9,7 @@ export default css`:host {
           flex: 1 0 0;
   padding: 0.5rem 0;
   contain: content;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 [part~=sortable] {

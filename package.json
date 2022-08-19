@@ -55,8 +55,10 @@
     ]
   },
   "dependencies": {
-    "lit": "^2.2.8",
-    "@lit-labs/virtualizer": "^0.7.1"
+    "lit": "^2.3.0",
+    "@lit-labs/virtualizer": "^0.7.1",
+    "igniteui-webcomponents": "^3.3.1",
+    "igniteui-theming": "next"
   },
   "devDependencies": {
     "@blockquote/rollup-plugin-total-bundlesize": "^1.0.0",

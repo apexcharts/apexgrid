@@ -13,15 +13,14 @@ export default css`:host {
 }
 
 igc-grid-row {
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+  border: 1px solid hsla(var(--igc-gray-400));
+  border-top: none;
 }
 
 igc-grid-row:nth-of-type(even) {
-  background-color: #eee;
+  background-color: hsla(var(--igc-gray-200));
 }
 
 igc-grid-row:hover {
-  background-color: lightblue;
+  background-color: hsla(var(--igc-primary-50));
 }`;
