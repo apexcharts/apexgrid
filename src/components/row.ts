@@ -14,13 +14,17 @@ export default class GridRow<T extends object> extends LitElement {
   public static override styles = styles;
 
   @queryAll(GridCell.is)
-  public cells!: NodeListOf<GridCell<T>>;
+  protected _cells!: NodeListOf<GridCell<T>>;
 
   @property({ attribute: false })
   public data!: T;
 
   @property({ attribute: false })
   public columns: Array<ColumnConfig<T>> = [];
+
+  public get cells() {
+    return Array.from(this._cells);
+  }
 
   @property({ attribute: false })
   public activeNode!: ActiveNode;

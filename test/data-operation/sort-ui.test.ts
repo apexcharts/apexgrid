@@ -18,33 +18,33 @@ suite('Grid UI sort', () => {
   suite('Default UI', () => {
     test('Sort icons state', async () => {
       await TDD.clickHeader('id');
-      assert.strictEqual(TDD.getHeader('id').sortIcon.name, SORT_ICON_ASCENDING);
+      assert.strictEqual(TDD.headers.first.sortIcon.name, SORT_ICON_ASCENDING);
 
       await TDD.clickHeader('id');
-      assert.strictEqual(TDD.getHeader('id').sortIcon.name, SORT_ICON_DESCENDING);
+      assert.strictEqual(TDD.headers.first.sortIcon.name, SORT_ICON_DESCENDING);
     });
 
     test('Single sort by clicking', async () => {
       // Ascending
       await TDD.clickHeader('id');
-      assert.strictEqual(TDD.firstRow.data.id, 1);
+      assert.strictEqual(TDD.rows.first.data.id, 1);
 
       // Descending
       await TDD.clickHeader('id');
-      assert.strictEqual(TDD.firstRow.data.id, 8);
+      assert.strictEqual(TDD.rows.first.data.id, 8);
     });
 
     test('Multiple sort by clicking', async () => {
       // Ascending `active` & ascending `id`
       await TDD.clickHeader('active');
       await TDD.clickHeader('id');
-      assert.strictEqual(TDD.firstRow.data.active, false);
-      assert.strictEqual(TDD.firstRow.data.id, 1);
+      assert.strictEqual(TDD.rows.first.data.active, false);
+      assert.strictEqual(TDD.rows.first.data.id, 1);
 
       // Ascending `active` & descending `id`
       await TDD.clickHeader('id');
-      assert.strictEqual(TDD.firstRow.data.active, false);
-      assert.strictEqual(TDD.firstRow.data.id, 6);
+      assert.strictEqual(TDD.rows.first.data.active, false);
+      assert.strictEqual(TDD.rows.first.data.id, 6);
     });
 
     test('Click on non-sortable columns', async () => {
@@ -52,29 +52,29 @@ suite('Grid UI sort', () => {
       await TDD.clickHeader('id');
       await TDD.clickHeader('id');
 
-      assert.notStrictEqual(TDD.firstRow.data.id, 8);
+      assert.notStrictEqual(TDD.rows.first.data.id, 8);
     });
   });
 
   suite('API', () => {
     test('Single sort', async () => {
       await TDD.sort('id', { direction: 'descending' });
-      assert.strictEqual(TDD.firstRow.data.id, 8);
+      assert.strictEqual(TDD.rows.first.data.id, 8);
     });
 
     test('Sort works on non-sortable columns', async () => {
       await TDD.updateColumn('id', { sort: false });
       await TDD.sort('id', { direction: 'descending' });
 
-      assert.strictEqual(TDD.firstRow.data.id, 8);
+      assert.strictEqual(TDD.rows.first.data.id, 8);
     });
 
     test('Config object', async () => {
       await TDD.sort('importance', { direction: 'descending', comparer: importanceComparer });
-      assert.strictEqual(TDD.firstRow.data.importance, 'high');
+      assert.strictEqual(TDD.rows.first.data.importance, 'high');
 
       await TDD.sort('importance', { comparer: importanceComparer });
-      assert.strictEqual(TDD.firstRow.data.importance, 'low');
+      assert.strictEqual(TDD.rows.first.data.importance, 'low');
     });
   });
 });

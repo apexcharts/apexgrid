@@ -1,5 +1,9 @@
 import { ReactiveControllerHost } from 'lit';
 import type Grid from '../components/grid';
+import type GridCell from '../components/cell';
+import type GridRow from '../components/row';
+import type GridHeader from '../components/header';
+import type { SortState } from '../operations/sort/types';
 
 export type Keys<T extends object> = keyof T;
 export type Values<T extends object> = T[keyof T];
@@ -22,7 +26,6 @@ export interface Template {
 export interface ColumnSortConfig {
   caseSensitive?: boolean;
   comparator?: unknown;
-  remote?: unknown;
 }
 
 export interface ColumnFilterConfig {
@@ -37,8 +40,8 @@ export interface ColumnConfig<T extends object> {
   hidden?: boolean;
   sort?: ColumnSortConfig | boolean;
   filter?: ColumnFilterConfig | boolean;
-  headerTemplate?: (props: unknown) => Template;
-  cellTemplate?: (props: unknown) => Template;
+  headerTemplate?: (props: HeaderContext<T>) => Template;
+  cellTemplate?: (props: CellContext<T>) => Template;
 }
 
 export interface ActiveNode {
@@ -46,4 +49,20 @@ export interface ActiveNode {
   row: number;
 }
 
+export interface HeaderContext<T extends object> {
+  parent: GridHeader<T>;
+  column: ColumnConfig<T>;
+}
+export interface CellContext<T extends object> {
+  parent: GridCell<T>;
+  row: GridRow<T>;
+  column: ColumnConfig<T>;
+  value: T[keyof T];
+}
+
 export type NavigationState = 'previous' | 'current';
+
+type RemoteSortHook<T extends object> = (state: SortState<T>) => T[];
+export interface GridRemoteConfig<T extends object> {
+  sort: RemoteSortHook<T>;
+}

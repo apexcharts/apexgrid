@@ -91,7 +91,9 @@
           key: 'id',
           headerText: 'User ID',
           hidden: false,
-          sort: true,
+          sort: {
+            caseSensitive: true,
+          },
         },
         { key: 'name', cellTemplate: standard, filter: {} },
         { key: 'avatar', cellTemplate: avatarTemplate },

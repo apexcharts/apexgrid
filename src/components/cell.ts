@@ -1,7 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { GRID_CELL_TAG } from '../internal/tags.js';
-import type { ColumnConfig } from '../internal/types';
+import type { CellContext, ColumnConfig } from '../internal/types';
 import styles from '../styles/cell-styles.js';
 import type GridRow from './row';
 
@@ -24,9 +24,9 @@ export default class GridCell<T extends object> extends LitElement {
 
   public row!: GridRow<T>;
 
-  protected get context() {
+  protected get context(): CellContext<T> {
     return {
-      parent: this as GridCell<T>,
+      parent: this,
       row: this.row,
       column: this.column,
       value: this.value,

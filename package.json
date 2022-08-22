@@ -57,8 +57,8 @@
   "dependencies": {
     "lit": "^2.3.0",
     "@lit-labs/virtualizer": "^0.7.1",
-    "igniteui-webcomponents": "^3.3.1",
-    "igniteui-theming": "next"
+    "igniteui-webcomponents": "4.0.0-alpha",
+    "igniteui-theming": "1.0.0-alpha"
   },
   "devDependencies": {
     "@blockquote/rollup-plugin-total-bundlesize": "^1.0.0",

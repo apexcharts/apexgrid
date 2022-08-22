@@ -1,14 +1,18 @@
 import type GridHeader from '../../src/components/header';
 
 export default class HeaderTestFixture<T extends object> {
-  constructor(protected dom: GridHeader<T>) {}
+  constructor(public element: GridHeader<T>) {}
 
   protected get contentPart() {
-    return this.dom.shadowRoot!.querySelector('[part~="content"]')!;
+    return this.element.shadowRoot!.querySelector('[part~="content"]')!;
   }
 
   public get sortIcon() {
-    return this.dom.shadowRoot!.querySelector('igc-icon')!;
+    return this.element.shadowRoot!.querySelector('igc-icon')!;
+  }
+
+  public get text() {
+    return this.contentPart.textContent?.trim();
   }
 
   public click() {

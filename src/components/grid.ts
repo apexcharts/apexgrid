@@ -9,7 +9,7 @@ import { PIPELINE } from '../internal/constants.js';
 import { applyColumnWidths } from '../internal/utils.js';
 import styles from '../styles/grid-styles.js';
 
-import type { ColumnConfig, Keys } from '../internal/types.js';
+import type { ColumnConfig, GridRemoteConfig, Keys } from '../internal/types.js';
 import type { SortExpression } from '../operations/sort/types.js';
 import GridBody from './grid-body.js';
 import GridHeaderRow from './header-row.js';
@@ -53,6 +53,9 @@ export default class Grid<T extends object> extends LitElement {
   @property({ attribute: false })
   public data: Array<T> = [];
 
+  @property({ attribute: false })
+  public remoteConfig?: GridRemoteConfig<T>;
+
   public get rows() {
     return Array.from(this._rows);
   }
@@ -71,6 +74,13 @@ export default class Grid<T extends object> extends LitElement {
 
   public sort(key: Keys<T>, config?: Partial<SortExpression<T>>) {
     this.stateController.sorting.sort(key, config as SortExpression<T>);
+  }
+
+  public getColumn(id: Keys<T> | number) {
+    if (typeof id === 'number') {
+      return this.columns.at(id);
+    }
+    return this.columns.find(({ key }) => key === id);
   }
 
   public updateColumn(key: Keys<T>, config: Partial<ColumnConfig<T>>) {

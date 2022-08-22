@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { partNameMap } from '../internal/part-map.js';
 import { GRID_HEADER_TAG } from '../internal/tags.js';
 import { SORT_ICON_ASCENDING, SORT_ICON_DESCENDING } from '../internal/constants.js';
-import type { ColumnConfig } from '../internal/types';
+import type { ColumnConfig, HeaderContext } from '../internal/types';
 import type { SortExpression } from '../operations/sort/types.js';
 import styles from '../styles/header-styles.js';
 
@@ -26,9 +26,9 @@ export default class GridHeader<T extends object> extends LitElement {
   @property({ attribute: false })
   public sortState?: SortExpression<T>;
 
-  protected get context() {
+  protected get context(): HeaderContext<T> {
     return {
-      parent: this as GridHeader<T>,
+      parent: this,
       column: this.column,
     };
   }

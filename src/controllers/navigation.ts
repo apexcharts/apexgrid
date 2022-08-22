@@ -120,6 +120,12 @@ export class NavigationController<T extends object> implements ReactiveControlle
 
   public hostConnected() {}
 
+  public hostDisconnected() {
+    // TODO: Revise
+    this.active = SENTINEL_NODE;
+    this.state = new Map();
+  }
+
   public navigate(event: KeyboardEvent, container: GridBody) {
     if (this.handlers.has(event.key)) {
       event.preventDefault();
