@@ -2,7 +2,7 @@ import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { GRID_CELL_TAG } from '../internal/tags.js';
 import type { CellContext, ColumnConfig } from '../internal/types';
-import styles from '../styles/cell-styles.js';
+import styles from '../styles/components/body-cell/cell-styles';
 import type GridRow from './row';
 
 @customElement(GRID_CELL_TAG)

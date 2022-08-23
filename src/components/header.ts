@@ -5,7 +5,7 @@ import { GRID_HEADER_TAG } from '../internal/tags.js';
 import { SORT_ICON_ASCENDING, SORT_ICON_DESCENDING } from '../internal/constants.js';
 import type { ColumnConfig, HeaderContext } from '../internal/types';
 import type { SortExpression } from '../operations/sort/types.js';
-import styles from '../styles/header-styles.js';
+import styles from '../styles/components/header-cell/header-styles';
 
 // TODO: Revise
 // import Icon from 'igniteui-webcomponents/components/icon/icon';
@@ -71,7 +71,10 @@ export default class GridHeader<T extends object> extends LitElement {
         })}
         @click=${this.column.sort ? this.#handleClick : nothing}
       >
-        ${this.renderContent()} ${this.renderSortState()}
+        <span part="title">
+          <span>${this.renderContent()}</span>
+        </span>
+        <span part="action">${this.renderSortState()}</span>
       </div>
       ${this.renderFilterArea()}
     `;

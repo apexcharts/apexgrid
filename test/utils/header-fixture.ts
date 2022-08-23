@@ -7,8 +7,16 @@ export default class HeaderTestFixture<T extends object> {
     return this.element.shadowRoot!.querySelector('[part~="content"]')!;
   }
 
+  protected get actionPart() {
+    return this.element.shadowRoot!.querySelector('[part~="action"]')!;
+  }
+
+  public get titlePart() {
+    return this.element.shadowRoot!.querySelector('[part~="title"]')!;
+  }
+
   public get sortIcon() {
-    return this.element.shadowRoot!.querySelector('igc-icon')!;
+    return this.actionPart.querySelector('igc-icon')!;
   }
 
   public get text() {

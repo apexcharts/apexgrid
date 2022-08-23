@@ -55,9 +55,13 @@ suite('Column configuration', () => {
         headerTemplate: props => html`<h3>Custom template for ${props.column.key}</h3>`,
       });
       assert.strictEqual(TDD.headers.first.text, 'Custom template for id');
-      assert.shadowDom.equal(
-        TDD.headers.first.element,
-        `<div part="content"><h3>Custom template for id</h3></div>`,
+      assert.dom.equal(
+        TDD.headers.first.titlePart,
+        `<span part="title">
+            <span>
+              <h3>Custom template for id</h3>
+            </span>
+          </span>`,
       );
     });
 

@@ -4,7 +4,7 @@ import { map } from 'lit/directives/map.js';
 import { GRID_ROW_TAG } from '../internal/tags.js';
 import type { ActiveNode, ColumnConfig } from '../internal/types';
 import GridCell from './cell.js';
-import styles from '../styles/row-styles.js';
+import styles from '../styles/components/body-row/row-styles';
 
 @customElement(GRID_ROW_TAG)
 export default class GridRow<T extends object> extends LitElement {

@@ -12,16 +12,22 @@
       href="../node_modules/igniteui-webcomponents/themes/light/bootstrap.css"
     />
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-      }
+      html,
       body {
-        background: #fafafa;
-        font-family: sans-serif;
+        height: 100%;
       }
+
+      body {
+        --sample-body-padding: 20px;
+        background: #fff;
+        margin: 0;
+        font-family: sans-serif;
+        padding: var(--sample-body-padding);
+        overflow: hidden;
+      }
+
       #demo {
-        height: 100vh;
+        height: calc(100% - (var(--sample-body-padding) * 2));
       }
     </style>
   </head>

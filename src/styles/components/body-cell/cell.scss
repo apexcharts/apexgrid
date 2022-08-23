@@ -1,0 +1,41 @@
+@use '../../vars' as *;
+@use 'node_modules/igniteui-theming/sass/typography/functions' as *;
+
+$inset-shadow-width: #{rem(1px)};
+
+:host {
+    display: inline-flex;
+    flex: 1 0 0;
+    contain: content;
+    align-items: center;
+    padding: 0 $ig-cells-padding--xl;
+    color: inherit;
+}
+
+:host([active]) {
+    outline: none;
+    box-shadow: inset 0 0 0 $inset-shadow-width var(--cell-active-border-color);
+}
+
+:host(:last-child) {
+    border-inline-end: none;
+}
+
+igc-input {
+    position: absolute;
+    top: $inset-shadow-width;
+    left: $inset-shadow-width;
+    width: calc(100% - ($inset-shadow-width * 2));
+    height: calc(100% - ($inset-shadow-width * 2));
+
+    &::part(container),
+    &::part(input) {
+        height: 100%;
+    }
+
+    &::part(input) {
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+    }
+}

@@ -1,0 +1,47 @@
+@use '../../vars' as *;
+@use 'node_modules/igniteui-theming/sass/typography/functions' as *;
+
+:host {
+    display: flex;
+    align-items: center;
+    contain: content;
+    border-inline-end: var(--header-border-width) var(--header-border-style) var(--header-border-color);
+}
+
+:host(:last-of-type) {
+    border-inline-end: none;
+}
+
+[part~='content'] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding: 0 $ig-cells-padding--xl;
+    font-weight: 500;
+    overflow: hidden;
+    user-select: none;
+}
+
+[part~='sortable'] {
+    cursor: pointer;
+}
+
+[part~='title'] {
+    display: block;
+    position: relative;
+    cursor: initial;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    min-width: 3ch;
+}
+
+[part~='action'] {
+    igc-icon {
+        --size: #{rem(15px)};
+
+        color: var(--sorted-header-icon-color);
+    }
+}

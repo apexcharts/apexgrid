@@ -6,8 +6,9 @@ import { StateController } from '../controllers/state.js';
 import { DataOperationsController } from '../controllers/data-operation.js';
 import { watch } from '../internal/watch.js';
 import { PIPELINE } from '../internal/constants.js';
+import { registerGridIcons } from '../internal/icon-registry.js';
 import { applyColumnWidths } from '../internal/utils.js';
-import styles from '../styles/grid-styles.js';
+import styles from '../styles/components/grid/grid-styles';
 
 import type { ColumnConfig, GridRemoteConfig, Keys } from '../internal/types.js';
 import type { SortExpression } from '../operations/sort/types.js';
@@ -66,6 +67,7 @@ export default class Grid<T extends object> extends LitElement {
 
   constructor() {
     super();
+    registerGridIcons();
     this.addEventListener('headerSortClicked', (e: any) => {
       e.stopPropagation();
       this.stateController.sorting.sort(e.detail.key);
@@ -132,7 +134,6 @@ export default class Grid<T extends object> extends LitElement {
 
   protected renderBody() {
     return html`<igc-grid-body
-      style="height: 100%"
       @keydown=${this.bodyKeydownHandler}
       @click=${this.bodyClickHandler}
       .items=${this.dataState}
