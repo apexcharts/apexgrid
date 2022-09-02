@@ -1,0 +1,20 @@
+@use '../common' as *;
+
+$header-background: var(--igx-header-background, var(--header-background));
+$header-text-color: var(--igx-header-text-color, var(--header-text-color));
+$header-border-width: var(--igx-header-border-width, var(--header-border-width));
+$header-border-style: var(--igx-header-border-style, var(--header-border-style));
+$header-border-color: var(--igx-header-border-color, var(--header-border-color));
+
+:host {
+    display: grid;
+    min-height: $ig-cells-min-height;
+    background: $header-background;
+    color: $header-text-color;
+    contain: content;
+    border-block-end: $header-border-width $header-border-style $header-border-color;
+}
+
+:host(:focus) {
+    outline: none;
+}

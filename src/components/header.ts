@@ -5,7 +5,7 @@ import { GRID_HEADER_TAG } from '../internal/tags.js';
 import { SORT_ICON_ASCENDING, SORT_ICON_DESCENDING } from '../internal/constants.js';
 import type { ColumnConfig, HeaderContext } from '../internal/types';
 import type { SortExpression } from '../operations/sort/types.js';
-import styles from '../styles/components/header-cell/header-styles';
+import styles from '../styles/header-cell/header-cell-styles';
 
 // TODO: Revise
 // import Icon from 'igniteui-webcomponents/components/icon/icon';

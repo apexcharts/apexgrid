@@ -7,10 +7,6 @@
       content="width=device-width, initial-scale=1"
     />
     <meta charset="utf-8" />
-    <link
-      rel="stylesheet"
-      href="../node_modules/igniteui-webcomponents/themes/light/bootstrap.css"
-    />
     <style>
       html,
       body {
@@ -19,19 +15,32 @@
 
       body {
         --sample-body-padding: 20px;
-        background: #fff;
+        background: hsla(var(--ig-surface-100));
         margin: 0;
-        font-family: sans-serif;
         padding: var(--sample-body-padding);
         overflow: hidden;
       }
 
+      igc-grid {
+        flex: 1;
+      }
+
+      .sample-drop-down {
+        display: flex;
+        justify-content: center;
+        padding: 0.5rem 0;
+        gap: 1rem;
+      }
+
       #demo {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
         height: calc(100% - (var(--sample-body-padding) * 2));
       }
     </style>
   </head>
-  <body>
+  <body class="ig-typography">
     <div id="demo"></div>
 
     <script type="module">
@@ -43,6 +52,10 @@
         IgcInputComponent,
         IgcCheckboxComponent,
         IgcRatingComponent,
+        IgcButtonComponent,
+        IgcDropdownComponent,
+        IgcSwitchComponent,
+        configureTheme,
       } from 'igniteui-webcomponents';
 
       defineComponents(
@@ -50,6 +63,9 @@
         IgcCheckboxComponent,
         IgcAvatarComponent,
         IgcRatingComponent,
+        IgcButtonComponent,
+        IgcDropdownComponent,
+        IgcSwitchComponent,
       );
 
       function getRandomInt(max) {
@@ -71,8 +87,7 @@
           label-position="before"
           ?checked=${props.value}
           .value=${props.value}
-          >Status:</igc-checkbox
-        >`;
+        ></igc-checkbox>`;
       };
 
       const avatarTemplate = props => {
@@ -123,13 +138,53 @@
         });
       }
 
+      async function setTheme(theme) {
+        theme = theme ?? document.getElementById('theme').textContent;
+        const variant = document.querySelector('igc-switch')?.checked ? 'dark' : 'light';
+        document.head.querySelectorAll('style[type="text/css"]').forEach(style => style.remove());
+        await import(
+          /* @vite-ignore */
+          `/node_modules/igniteui-webcomponents/themes/${variant}/${theme}.css?${Date.now()}`
+        );
+        configureTheme(theme);
+        document.getElementById('theme').textContent = theme;
+      }
+
+      const themeChooser = () => {
+        const themes = ['bootstrap', 'material', 'fluent', 'indigo'];
+
+        return html`
+          <div class="sample-drop-down">
+            <igc-dropdown
+              same-width
+              flip
+              @igcChange=${e => setTheme(e.detail.value)}
+            >
+              <igc-button
+                title="Choose theme"
+                id="theme"
+                slot="target"
+                >Choose theme
+              </igc-button>
+              ${themes.map(each => html`<igc-dropdown-item>${each}</igc-dropdown-item>`)}
+            </igc-dropdown>
+            <igc-switch
+              @igcChange=${() => setTheme()}
+              label-position="before"
+              >Dark variant</igc-switch
+            >
+          </div>
+        `;
+      };
       render(
-        html`<igc-grid
-          .columns=${columns}
-          .data=${data}
-        ></igc-grid>`,
+        html`${themeChooser()}
+          <igc-grid
+            .columns=${columns}
+            .data=${data}
+          ></igc-grid>`,
         document.querySelector('#demo'),
       );
+      await setTheme('bootstrap');
     </script>
   </body>
 </html>

@@ -4,7 +4,7 @@ import { map } from 'lit/directives/map.js';
 import { GRID_HEADER_ROW_TAG } from '../internal/tags.js';
 import type { StateController } from '../controllers/state';
 import type { ColumnConfig } from '../internal/types';
-import styles from '../styles/components/header-row/header-row-styles';
+import styles from '../styles/header-row/header-row.base-styles.js';
 import GridHeader from './header.js';
 
 @customElement(GRID_HEADER_ROW_TAG)

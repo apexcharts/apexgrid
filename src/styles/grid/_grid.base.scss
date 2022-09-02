@@ -1,0 +1,25 @@
+@use '../common' as *;
+
+$content-background: var(--igx-content-background, var(--content-background));
+$content-text-color: var(--igx-content-text-color, var(--content-text-color));
+
+:host {
+    display: flex;
+    height: 100%;
+    flex-flow: column;
+    contain: content;
+    font-family: var(--ig-font-family);
+    box-shadow: elevation(2);
+}
+
+igc-grid-body {
+    display: flex;
+    flex-flow: column;
+    flex: 1;
+    background: $content-background;
+    color: $content-text-color;
+
+    &:focus {
+        outline: none;
+    }
+}

@@ -1,6 +1,7 @@
 import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
+import { themes } from 'igniteui-webcomponents/theming/theming-decorator.js';
 import { GRID_TAG } from '../internal/tags.js';
 import { StateController } from '../controllers/state.js';
 import { DataOperationsController } from '../controllers/data-operation.js';
@@ -8,8 +9,10 @@ import { watch } from '../internal/watch.js';
 import { PIPELINE } from '../internal/constants.js';
 import { registerGridIcons } from '../internal/icon-registry.js';
 import { applyColumnWidths } from '../internal/utils.js';
-import styles from '../styles/components/grid/grid-styles';
-
+import { default as bootstrap } from '../styles/grid/themes/light/grid.bootstrap-styles.js';
+import { default as fluent } from '../styles/grid/themes/light/grid.fluent-styles.js';
+import { default as indigo } from '../styles/grid/themes/light/grid.indigo-styles.js';
+import { default as material } from '../styles/grid/themes/light/grid.material-styles.js';
 import type { ColumnConfig, GridRemoteConfig, Keys } from '../internal/types.js';
 import type { SortExpression } from '../operations/sort/types.js';
 import GridBody from './grid-body.js';
@@ -17,12 +20,19 @@ import GridHeaderRow from './header-row.js';
 import GridRow from './row.js';
 import GridCell from './cell.js';
 
+// TODO: Styling
+@themes({
+  bootstrap,
+  fluent,
+  indigo,
+  material,
+})
 @customElement(GRID_TAG)
 export default class Grid<T extends object> extends LitElement {
   public static get is() {
     return GRID_TAG;
   }
-  public static override styles = styles;
+  public static override styles = bootstrap;
 
   protected stateController = new StateController<T>(this);
   protected dataController = new DataOperationsController<T>(this);
