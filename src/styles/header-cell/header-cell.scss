@@ -8,8 +8,8 @@ $sorted-header-icon-color: var(--igx-sorted-header-icon-color, var(--sorted-head
 :host {
     display: flex;
     align-items: center;
-    contain: content;
-    border-inline-end: var($header-border-width) var($header-border-style) var($header-border-color);
+    position: relative;
+    border-inline-end: $header-border-width $header-border-style $header-border-color;
     font-weight: 600;
     font-size: #{rem(12px)};
 }
@@ -50,4 +50,13 @@ $sorted-header-icon-color: var(--igx-sorted-header-icon-color, var(--sorted-head
 
         color: $sorted-header-icon-color;
     }
+}
+
+[part~='resizable'] {
+    width: rem(4px);
+    height: 100%;
+    position: absolute;
+    inset-inline-end: rem(-2px);
+    z-index: 1;
+    cursor: col-resize;
 }

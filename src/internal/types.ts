@@ -38,6 +38,7 @@ export interface ColumnConfig<T extends object> {
   headerText?: string;
   width?: string;
   hidden?: boolean;
+  resizable?: boolean;
   sort?: ColumnSortConfig | boolean;
   filter?: ColumnFilterConfig | boolean;
   headerTemplate?: (props: HeaderContext<T>) => Template;

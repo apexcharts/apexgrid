@@ -65,6 +65,10 @@ export default class GridTestFixture<T extends object> {
     return this.grid.dataState;
   }
 
+  public get resizePart() {
+    return this.grid.shadowRoot!.querySelector('[part~="resize-indicator"]') as HTMLElement;
+  }
+
   public get headerRow() {
     return this.grid.shadowRoot!.querySelector(GridHeaderRow.is)! as unknown as GridHeaderRow<T>;
   }
@@ -99,6 +103,26 @@ export default class GridTestFixture<T extends object> {
 
   public async clickHeader(key: Keys<T>) {
     this.getHeader(key).click();
+    await elementUpdated(this.grid);
+  }
+
+  public async startResizeHeader(key: Keys<T>) {
+    this.getHeader(key).startResize();
+    await elementUpdated(this.grid);
+  }
+
+  public async stopResizeHeader(key: Keys<T>) {
+    this.getHeader(key).stopResize();
+    await elementUpdated(this.grid);
+  }
+
+  public async resizeHeader(key: Keys<T>, x: number) {
+    this.getHeader(key).resize(x);
+    await elementUpdated(this.grid);
+  }
+
+  public async autoSizeHeader(key: Keys<T>) {
+    this.getHeader(key).autosize();
     await elementUpdated(this.grid);
   }
 

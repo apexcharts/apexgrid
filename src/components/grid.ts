@@ -1,10 +1,11 @@
-import { html, LitElement, TemplateResult } from 'lit';
+import { html, LitElement, nothing, TemplateResult } from 'lit';
 import { customElement, eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { themes } from 'igniteui-webcomponents/theming/theming-decorator.js';
 import { GRID_TAG } from '../internal/tags.js';
 import { StateController } from '../controllers/state.js';
 import { DataOperationsController } from '../controllers/data-operation.js';
+import { ResizeController } from '../controllers/resize.js';
 import { watch } from '../internal/watch.js';
 import { PIPELINE } from '../internal/constants.js';
 import { registerGridIcons } from '../internal/icon-registry.js';
@@ -20,7 +21,6 @@ import GridHeaderRow from './header-row.js';
 import GridRow from './row.js';
 import GridCell from './cell.js';
 
-// TODO: Styling
 @themes({
   bootstrap,
   fluent,
@@ -34,6 +34,7 @@ export default class Grid<T extends object> extends LitElement {
   }
   public static override styles = bootstrap;
 
+  protected resizeController = new ResizeController<T>(this);
   protected stateController = new StateController<T>(this);
   protected dataController = new DataOperationsController<T>(this);
   protected rowRenderer = <T>(data: T, index: number): TemplateResult => {
@@ -151,8 +152,19 @@ export default class Grid<T extends object> extends LitElement {
     ></igc-grid-body>`;
   }
 
+  protected renderResizeIndicator() {
+    return this.resizeController.active
+      ? html`<div
+          part="resize-indicator"
+          style=${styleMap({
+            transform: `translateX(${this.resizeController.x}px)`,
+          })}
+        ></div>`
+      : nothing;
+  }
+
   protected override render() {
-    return html`${this.renderHeaderRow()}${this.renderBody()}`;
+    return html`${this.renderResizeIndicator()}${this.renderHeaderRow()}${this.renderBody()}`;
   }
 }
 

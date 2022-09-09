@@ -45,6 +45,16 @@ igc-grid-body:focus {
   outline: none;
 }
 
+[part~=resize-indicator] {
+  position: absolute;
+  height: 100%;
+  background-color: var(--igx-grid-resize-line-color, var(--grid-resize-line-color));
+  width: 0.125rem;
+  inset-inline-start: 0;
+  top: 0;
+  z-index: 1;
+}
+
 :host {
   --content-background: hsla(var(--ig-gray-50), var(--ig-gray-a));
   --content-text-color: var(--ig-gray-50-contrast);
@@ -64,4 +74,5 @@ igc-grid-body:focus {
   --row-border-style: solid;
   --row-border-width: 0.0625rem;
   --cell-active-border-color: hsla(var(--ig-primary-500), var(--ig-primary-a));
+  --grid-resize-line-color: hsla(var(--ig-primary-500), var(--ig-primary-a));
 }`;

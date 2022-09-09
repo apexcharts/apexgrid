@@ -98,5 +98,14 @@ suite('Column configuration', () => {
       headerWidthEquals(200);
       cellWidthEquals(200);
     });
+
+    test('Resize', async () => {
+      assert.notExists(TDD.grid.getColumn('name')?.resizable);
+
+      await TDD.updateColumn('name', { resizable: true });
+
+      assert.strictEqual(TDD.grid.getColumn('name')?.resizable, true);
+      assert.exists(TDD.headers.get('name').resizePart);
+    });
   });
 });

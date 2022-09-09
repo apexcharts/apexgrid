@@ -1,5 +1,7 @@
 import type GridHeader from '../../src/components/header';
 
+const DEFAULT_ARGS: PointerEventInit = { pointerId: 1, bubbles: true, composed: true };
+
 export default class HeaderTestFixture<T extends object> {
   constructor(public element: GridHeader<T>) {}
 
@@ -9,6 +11,10 @@ export default class HeaderTestFixture<T extends object> {
 
   protected get actionPart() {
     return this.element.shadowRoot!.querySelector('[part~="action"]')!;
+  }
+
+  public get resizePart() {
+    return this.element.shadowRoot!.querySelector('[part~="resizable"]')!;
   }
 
   public get titlePart() {
@@ -23,7 +29,29 @@ export default class HeaderTestFixture<T extends object> {
     return this.contentPart.textContent?.trim();
   }
 
+  public startResize() {
+    this.resizePart.dispatchEvent(new PointerEvent('pointerdown', DEFAULT_ARGS));
+  }
+
+  public stopResize() {
+    this.resizePart.dispatchEvent(new PointerEvent('pointerup', DEFAULT_ARGS));
+    this.resizePart.dispatchEvent(new PointerEvent('lostpointercapture', DEFAULT_ARGS));
+  }
+
+  public resize(x: number) {
+    this.resizePart.dispatchEvent(
+      new PointerEvent('pointermove', {
+        ...DEFAULT_ARGS,
+        clientX: this.element.offsetLeft + this.element.offsetWidth + x,
+      }),
+    );
+  }
+
+  public autosize() {
+    this.resizePart.dispatchEvent(new Event('dblclick', DEFAULT_ARGS));
+  }
+
   public click() {
-    this.contentPart.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
+    this.contentPart.dispatchEvent(new Event('click', DEFAULT_ARGS));
   }
 }

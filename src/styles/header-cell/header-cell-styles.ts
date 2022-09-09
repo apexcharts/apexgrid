@@ -19,9 +19,9 @@ export default css`/* stylelint-disable max-line-length */
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  contain: content;
-  -webkit-border-end: var(var(--igx-header-border-width, var(--header-border-width))) var(var(--igx-header-border-style, var(--header-border-style))) var(var(--igx-header-border-color, var(--header-border-color)));
-          border-inline-end: var(var(--igx-header-border-width, var(--header-border-width))) var(var(--igx-header-border-style, var(--header-border-style))) var(var(--igx-header-border-color, var(--header-border-color)));
+  position: relative;
+  -webkit-border-end: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
+          border-inline-end: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
   font-weight: 600;
   font-size: 0.75rem;
 }
@@ -70,4 +70,13 @@ export default css`/* stylelint-disable max-line-length */
 [part~=action] igc-icon {
   --size: 0.9375rem;
   color: var(--igx-sorted-header-icon-color, var(--sorted-header-icon-color));
+}
+
+[part~=resizable] {
+  width: 0.25rem;
+  height: 100%;
+  position: absolute;
+  inset-inline-end: -0.125rem;
+  z-index: 1;
+  cursor: col-resize;
 }`;
