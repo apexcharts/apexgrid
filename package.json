@@ -57,33 +57,33 @@
   "dependencies": {
     "lit": "^2.3.1",
     "@lit-labs/virtualizer": "^0.7.2",
-    "igniteui-theming": "^1.0.0-beta.14",
+    "igniteui-theming": "^1.0.0-beta.16",
     "igniteui-webcomponents": "^4.0.0-alpha.2"
   },
   "devDependencies": {
     "@blockquote/rollup-plugin-total-bundlesize": "^1.0.0",
     "@blockquote/sass-style-template": "^2.1.2",
-    "@blockquote/test-runner-mocha-style-reporter": "^1.4.0",
+    "@blockquote/test-runner-mocha-style-reporter": "^1.4.1",
     "@custom-elements-manifest/analyzer": "^0.6.4",
     "@open-wc/eslint-config": "^8.0.2",
     "@open-wc/testing": "^3.1.6",
-    "@typescript-eslint/eslint-plugin": "^5.36.0",
-    "@typescript-eslint/parser": "^5.36.0",
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
+    "@typescript-eslint/parser": "^5.38.0",
     "@web/dev-server": "^0.1.34",
     "@web/test-runner": "^0.14.0",
     "@web/test-runner-playwright": "^0.8.10",
-    "concurrently": "^7.3.0",
-    "eslint": "^8.23.0",
+    "concurrently": "^7.4.0",
+    "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-log-filenames": "^1.0.6",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
-    "stylelint": "^14.11.0",
+    "stylelint": "^14.12.1",
     "stylelint-config-standard-scss": "^5.0.0",
     "tslib": "^2.4.0",
-    "typescript": "^4.8.2",
-    "vite": "^3.0.9"
+    "typescript": "^4.8.3",
+    "vite": "^3.1.3"
   },
   "customElements": "custom-elements.json"
 }
