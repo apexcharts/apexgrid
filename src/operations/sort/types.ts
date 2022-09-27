@@ -1,6 +1,6 @@
 import type { Keys, Values } from '../../internal/types';
 
-export type SortingDirection = 'ascending' | 'descending';
+export type SortingDirection = 'ascending' | 'descending' | 'none';
 
 export interface SortExpression<T extends object> {
   key: Keys<T>;

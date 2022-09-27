@@ -92,7 +92,7 @@
         ></igc-checkbox>`;
       };
 
-      const emailTemplate = props => {
+      const _emailTemplate = props => {
         const subscribed = props.row.data.subscribed;
         const text = lipsum.substring(0, 140);
         return html`<div>
@@ -137,7 +137,7 @@
         { key: 'avatar', cellTemplate: avatarTemplate, resizable: true },
         { key: 'satisfaction', cellTemplate: satisfactionTemplate, sort: true, resizable: true },
         { key: 'age', resizable: true },
-        { key: 'email', resizable: true, cellTemplate: emailTemplate },
+        { key: 'email', resizable: true },
         { key: 'subscribed', cellTemplate: booleanTemplate, sort: true },
       ];
 

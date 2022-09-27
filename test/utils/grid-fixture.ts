@@ -55,6 +55,11 @@ export default class GridTestFixture<T extends object> {
     return fixtureCleanup();
   }
 
+  public async updateProperty<K extends keyof Grid<T>>(prop: K, value: Grid<T>[K]) {
+    Object.assign(this.grid, { [prop]: value });
+    await elementUpdated(this.grid);
+  }
+
   public get gridBody() {
     // @ts-expect-error - Protected member access
     return this.grid.bodyElement;

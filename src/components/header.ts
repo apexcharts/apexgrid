@@ -65,6 +65,9 @@ export default class GridHeader<T extends object> extends EventEmitterBase<GridH
   @property({ attribute: false })
   public sortState?: SortExpression<T>;
 
+  @property({ attribute: false })
+  public sortIndex = -1;
+
   protected get context(): HeaderContext<T> {
     return {
       parent: this,
@@ -115,10 +118,12 @@ export default class GridHeader<T extends object> extends EventEmitterBase<GridH
   #autosize = () =>
     this.emitEvent('columnAutosize', { detail: { column: this.column, header: this } });
 
+  // TODO: Remove sort index for single sort
   protected renderSortState() {
     return this.sortState
       ? html`
           <igc-icon
+            data-sortIndex=${this.sortIndex > -1 ? this.sortIndex + 1 : nothing}
             size="small"
             name=${this.sortState.direction === 'ascending'
               ? SORT_ICON_ASCENDING

@@ -36,6 +36,10 @@ export default class GridHeaderRow<T extends object> extends LitElement {
     return this.state.sorting.state.get(column.key);
   }
 
+  #getSortIndex(column: ColumnConfig<T>) {
+    return Array.from(this.state.sorting.state.values()).indexOf(this.#getColumnSortState(column)!);
+  }
+
   protected override render() {
     return html`${map(this.columns, column =>
       column.hidden
@@ -43,6 +47,7 @@ export default class GridHeaderRow<T extends object> extends LitElement {
         : html`<igc-grid-header
             .column=${column}
             .sortState=${this.#getColumnSortState(column)}
+            .sortIndex=${this.#getSortIndex(column)}
           ></igc-grid-header>`,
     )}`;
   }

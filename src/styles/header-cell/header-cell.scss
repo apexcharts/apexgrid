@@ -50,6 +50,17 @@ $sorted-header-icon-color: var(--igx-sorted-header-icon-color, var(--sorted-head
 
         color: $sorted-header-icon-color;
     }
+
+    igc-icon::after {
+        content: attr(data-sortIndex);
+        position: absolute;
+        top: -5px;
+        inset-inline-end: -1px;
+        font-size: rem(10px);
+        text-align: end;
+        font-family: sans-serif;
+        line-height: rem(10px);
+    }
 }
 
 [part~='resizable'] {

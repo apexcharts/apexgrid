@@ -23,9 +23,14 @@ export interface Template {
   values: unknown[];
 }
 
-export interface ColumnSortConfig {
+export interface GridSortingConfig {
+  multiple: boolean;
+  triState: boolean;
+}
+
+export interface ColumnSortConfig<T extends object> {
   caseSensitive?: boolean;
-  comparator?: unknown;
+  comparer?: (a: Values<T>, b: Values<T>) => number;
 }
 
 export interface ColumnFilterConfig {
@@ -39,7 +44,7 @@ export interface ColumnConfig<T extends object> {
   width?: string;
   hidden?: boolean;
   resizable?: boolean;
-  sort?: ColumnSortConfig | boolean;
+  sort?: ColumnSortConfig<T> | boolean;
   filter?: ColumnFilterConfig | boolean;
   headerTemplate?: (props: HeaderContext<T>) => Template;
   cellTemplate?: (props: CellContext<T>) => Template;

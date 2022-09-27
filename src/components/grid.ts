@@ -1,4 +1,4 @@
-import { html, LitElement, nothing, TemplateResult } from 'lit';
+import { html, nothing, TemplateResult } from 'lit';
 import { customElement, eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { themes } from 'igniteui-webcomponents/theming/theming-decorator.js';
@@ -6,6 +6,7 @@ import { GRID_TAG } from '../internal/tags.js';
 import { StateController } from '../controllers/state.js';
 import { DataOperationsController } from '../controllers/data-operation.js';
 import { ResizeController } from '../controllers/resize.js';
+import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { watch } from '../internal/watch.js';
 import { PIPELINE } from '../internal/constants.js';
 import { registerGridIcons } from '../internal/icon-registry.js';
@@ -14,13 +15,18 @@ import { default as bootstrap } from '../styles/grid/themes/light/grid.bootstrap
 import { default as fluent } from '../styles/grid/themes/light/grid.fluent-styles.js';
 import { default as indigo } from '../styles/grid/themes/light/grid.indigo-styles.js';
 import { default as material } from '../styles/grid/themes/light/grid.material-styles.js';
-import type { ColumnConfig, GridRemoteConfig, Keys } from '../internal/types.js';
+import type { ColumnConfig, GridRemoteConfig, GridSortingConfig, Keys } from '../internal/types.js';
 import type { SortExpression } from '../operations/sort/types.js';
 import GridBody from './grid-body.js';
 import GridHeaderRow from './header-row.js';
 import GridRow from './row.js';
 import GridCell from './cell.js';
 
+// TODO: Subject to change as these are way too generic names
+export interface GridEventMap<T extends object> {
+  sorting: CustomEvent<SortExpression<T>>;
+  sorted: CustomEvent<SortExpression<T>>;
+}
 @themes({
   bootstrap,
   fluent,
@@ -28,7 +34,7 @@ import GridCell from './cell.js';
   material,
 })
 @customElement(GRID_TAG)
-export default class Grid<T extends object> extends LitElement {
+export default class Grid<T extends object> extends EventEmitterBase<GridEventMap<T>> {
   public static get is() {
     return GRID_TAG;
   }
@@ -66,6 +72,12 @@ export default class Grid<T extends object> extends LitElement {
   public data: Array<T> = [];
 
   @property({ attribute: false })
+  public sortingConfig: GridSortingConfig = {
+    multiple: true,
+    triState: true,
+  };
+
+  @property({ attribute: false })
   public remoteConfig?: GridRemoteConfig<T>;
 
   public get rows() {
@@ -79,10 +91,6 @@ export default class Grid<T extends object> extends LitElement {
   constructor() {
     super();
     registerGridIcons();
-    this.addEventListener('headerSortClicked', (e: any) => {
-      e.stopPropagation();
-      this.stateController.sorting.sort(e.detail.key);
-    });
   }
 
   public sort(key: Keys<T>, config?: Partial<SortExpression<T>>) {
@@ -90,10 +98,9 @@ export default class Grid<T extends object> extends LitElement {
   }
 
   public getColumn(id: Keys<T> | number) {
-    if (typeof id === 'number') {
-      return this.columns.at(id);
-    }
-    return this.columns.find(({ key }) => key === id);
+    return typeof id === 'number'
+      ? this.columns.at(id)
+      : this.columns.find(({ key }) => key === id);
   }
 
   public updateColumn(key: Keys<T>, config: Partial<ColumnConfig<T>>) {

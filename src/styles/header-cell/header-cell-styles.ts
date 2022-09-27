@@ -71,6 +71,16 @@ export default css`/* stylelint-disable max-line-length */
   --size: 0.9375rem;
   color: var(--igx-sorted-header-icon-color, var(--sorted-header-icon-color));
 }
+[part~=action] igc-icon::after {
+  content: attr(data-sortIndex);
+  position: absolute;
+  top: -5px;
+  inset-inline-end: -1px;
+  font-size: 0.625rem;
+  text-align: end;
+  font-family: sans-serif;
+  line-height: 0.625rem;
+}
 
 [part~=resizable] {
   width: 0.25rem;
