@@ -5,12 +5,13 @@ $content-text-color: var(--igx-content-text-color, var(--content-text-color));
 $grid-resize-line-color: var(--igx-grid-resize-line-color, var(--grid-resize-line-color));
 
 :host {
-    display: flex;
+    display: grid;
     height: 100%;
-    flex-flow: column;
     contain: content;
     font-family: var(--ig-font-family);
     box-shadow: elevation(2);
+    overflow: auto hidden;
+    grid-template-rows: max-content auto;
 }
 
 apx-grid-body {

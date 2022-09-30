@@ -13,18 +13,15 @@ export default css`/* stylelint-disable max-line-length */
 }
 
 :host {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: grid;
   height: 100%;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-flow: column;
-          flex-flow: column;
   contain: content;
   font-family: var(--ig-font-family);
   -webkit-box-shadow: var(--ig-elevation-2);
           box-shadow: var(--ig-elevation-2);
+  overflow: auto hidden;
+  grid-template-rows: -webkit-max-content auto;
+  grid-template-rows: max-content auto;
 }
 
 apx-grid-body {
