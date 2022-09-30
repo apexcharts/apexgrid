@@ -1,1 +1,1 @@
-export { default as Grid } from './components/grid.js';
+export { default as ApexGrid } from './components/grid.js';

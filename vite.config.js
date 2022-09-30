@@ -11,6 +11,7 @@ export default defineConfig({
     target: 'esnext',
     lib: {
       entry: 'src/index.ts',
+      fileName: 'bundle',
       formats: ['es'],
     },
     rollupOptions: {

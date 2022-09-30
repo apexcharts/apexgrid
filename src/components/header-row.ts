@@ -5,17 +5,17 @@ import { GRID_HEADER_ROW_TAG } from '../internal/tags.js';
 import type { StateController } from '../controllers/state';
 import type { ColumnConfig } from '../internal/types';
 import styles from '../styles/header-row/header-row.base-styles.js';
-import GridHeader from './header.js';
+import ApexGridHeader from './header.js';
 
 @customElement(GRID_HEADER_ROW_TAG)
-export default class GridHeaderRow<T extends object> extends LitElement {
+export default class ApexGridHeaderRow<T extends object> extends LitElement {
   public static get is() {
     return GRID_HEADER_ROW_TAG;
   }
   public static override styles = styles;
 
-  @queryAll(GridHeader.is)
-  protected _headers!: NodeListOf<GridHeader<T>>;
+  @queryAll(ApexGridHeader.is)
+  protected _headers!: NodeListOf<ApexGridHeader<T>>;
 
   @property({ attribute: false })
   public columns: Array<ColumnConfig<T>> = [];
@@ -44,17 +44,17 @@ export default class GridHeaderRow<T extends object> extends LitElement {
     return html`${map(this.columns, column =>
       column.hidden
         ? nothing
-        : html`<igc-grid-header
+        : html`<apx-grid-header
             .column=${column}
             .sortState=${this.#getColumnSortState(column)}
             .sortIndex=${this.#getSortIndex(column)}
-          ></igc-grid-header>`,
+          ></apx-grid-header>`,
     )}`;
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'igc-grid-header-row': GridHeaderRow<object>;
+    [ApexGridHeaderRow.is]: ApexGridHeaderRow<object>;
   }
 }

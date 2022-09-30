@@ -1,5 +1,5 @@
 import type { Keys } from '../../src/internal/types';
-import type GridRow from '../../src/components/row';
+import type ApexGridRow from '../../src/components/row';
 import CellTestFixture from './cell-fixture.js';
 
 interface CellCollection<T extends object> {
@@ -9,7 +9,7 @@ interface CellCollection<T extends object> {
 }
 
 export default class RowTestFixture<T extends object> {
-  constructor(public element: GridRow<T>) {}
+  constructor(public element: ApexGridRow<T>) {}
 
   protected get(id: Keys<T> | number) {
     return new CellTestFixture(

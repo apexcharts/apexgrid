@@ -1,9 +1,9 @@
 import { elementUpdated, fixture, fixtureCleanup, html, waitUntil } from '@open-wc/testing';
-import GridHeaderRow from '../../src/components/header-row.js';
-import GridRow from '../../src/components/row.js';
+import ApexGridHeaderRow from '../../src/components/header-row.js';
+import ApexGridRow from '../../src/components/row.js';
 import type { ColumnConfig, Keys } from '../../src/internal/types';
 import type { SortExpression } from '../../src/operations/sort/types';
-import type Grid from '../../src/components/grid';
+import type ApexGrid from '../../src/components/grid';
 import '../../src/index.js';
 import HeaderTestFixture from './header-fixture.js';
 import RowTestFixture from './row-fixture.js';
@@ -22,7 +22,7 @@ interface HeaderCollection<T extends object> {
 }
 
 export default class GridTestFixture<T extends object> {
-  public grid!: Grid<T>;
+  public grid!: ApexGrid<T>;
   public columnConfig: ColumnConfig<T>[];
 
   constructor(protected data: T[], protected parentStyle?: Partial<CSSStyleDeclaration>) {
@@ -40,22 +40,22 @@ export default class GridTestFixture<T extends object> {
     this.updateConfig();
 
     this.grid = await fixture(
-      html`<igc-grid
+      html`<apx-grid
         .data=${this.data}
         .columns=${this.columnConfig}
-      ></igc-grid>`,
+      ></apx-grid>`,
       { parentNode },
     );
 
     // TODO: Still not good but better than arbitrary condition
-    await waitUntil(() => this.gridBody.querySelector(GridRow.is));
+    await waitUntil(() => this.gridBody.querySelector(ApexGridRow.is));
   }
 
   public tearDown() {
     return fixtureCleanup();
   }
 
-  public async updateProperty<K extends keyof Grid<T>>(prop: K, value: Grid<T>[K]) {
+  public async updateProperty<K extends keyof ApexGrid<T>>(prop: K, value: ApexGrid<T>[K]) {
     Object.assign(this.grid, { [prop]: value });
     await elementUpdated(this.grid);
   }
@@ -75,7 +75,9 @@ export default class GridTestFixture<T extends object> {
   }
 
   public get headerRow() {
-    return this.grid.shadowRoot!.querySelector(GridHeaderRow.is)! as unknown as GridHeaderRow<T>;
+    return this.grid.shadowRoot!.querySelector(
+      ApexGridHeaderRow.is,
+    )! as unknown as ApexGridHeaderRow<T>;
   }
 
   public get rows(): RowCollection<T> {

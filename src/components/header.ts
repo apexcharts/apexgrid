@@ -8,7 +8,7 @@ import {
   SORT_ICON_ASCENDING,
   SORT_ICON_DESCENDING,
 } from '../internal/constants.js';
-import type { ColumnConfig, HeaderContext } from '../internal/types';
+import type { ColumnConfig, ApexHeaderContext } from '../internal/types';
 import type { SortExpression } from '../operations/sort/types';
 import styles from '../styles/header-cell/header-cell-styles.js';
 
@@ -31,10 +31,10 @@ export interface ColumnResizedEvent<T extends object> extends ColumnResizeBase<T
 }
 
 export interface ColumnAutosizeEvent<T extends object> extends ColumnResizeBase<T> {
-  header: GridHeader<T>;
+  header: ApexGridHeader<T>;
 }
 
-export interface GridHeaderEventMap<T extends object> {
+export interface ApexGridHeaderEventMap<T extends object> {
   columnResizeStart: CustomEvent<ColumnResizeStartEvent>;
   columnResizeEnd: CustomEvent<void>;
   columnResized: CustomEvent<ColumnResizedEvent<T>>;
@@ -45,11 +45,13 @@ export interface GridHeaderEventMap<T extends object> {
 // TODO: Fix
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface HTMLElementEventMap extends GridHeaderEventMap<any> {}
+  interface HTMLElementEventMap extends ApexGridHeaderEventMap<any> {}
 }
 
 @customElement(GRID_HEADER_TAG)
-export default class GridHeader<T extends object> extends EventEmitterBase<GridHeaderEventMap<T>> {
+export default class ApexGridHeader<T extends object> extends EventEmitterBase<
+  ApexGridHeaderEventMap<T>
+> {
   public static get is() {
     return GRID_HEADER_TAG;
   }
@@ -68,7 +70,7 @@ export default class GridHeader<T extends object> extends EventEmitterBase<GridH
   @property({ attribute: false })
   public sortIndex = -1;
 
-  protected get context(): HeaderContext<T> {
+  protected get context(): ApexHeaderContext<T> {
     return {
       parent: this,
       column: this.column,
@@ -176,6 +178,6 @@ export default class GridHeader<T extends object> extends EventEmitterBase<GridH
 
 declare global {
   interface HTMLElementTagNameMap {
-    'igc-grid-header': GridHeader<object>;
+    [ApexGridHeader.is]: ApexGridHeader<object>;
   }
 }

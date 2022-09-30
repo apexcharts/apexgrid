@@ -21,6 +21,7 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": false,
     "noImplicitOverride": true,
     "plugins": [
       {

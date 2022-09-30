@@ -1,8 +1,8 @@
 import { ReactiveControllerHost } from 'lit';
-import type Grid from '../components/grid';
-import type GridCell from '../components/cell';
-import type GridRow from '../components/row';
-import type GridHeader from '../components/header';
+import type ApexGrid from '../components/grid';
+import type ApexGridCell from '../components/cell';
+import type ApexGridRow from '../components/row';
+import type ApexGridHeader from '../components/header';
 import type { SortState } from '../operations/sort/types';
 
 export type Keys<T extends object> = keyof T;
@@ -16,7 +16,7 @@ export type PropertyType<T extends object, K extends keyof T> = T[K];
 
 export type DataType = 'number' | 'string' | 'boolean';
 
-export type GridHost<T extends object> = ReactiveControllerHost & Grid<T>;
+export type GridHost<T extends object> = ReactiveControllerHost & ApexGrid<T>;
 
 export interface Template {
   strings: TemplateStringsArray;
@@ -46,8 +46,8 @@ export interface ColumnConfig<T extends object> {
   resizable?: boolean;
   sort?: ColumnSortConfig<T> | boolean;
   filter?: ColumnFilterConfig | boolean;
-  headerTemplate?: (props: HeaderContext<T>) => Template;
-  cellTemplate?: (props: CellContext<T>) => Template;
+  headerTemplate?: (props: ApexHeaderContext<T>) => Template;
+  cellTemplate?: (props: ApexCellContext<T>) => Template;
 }
 
 export interface ActiveNode {
@@ -55,13 +55,13 @@ export interface ActiveNode {
   row: number;
 }
 
-export interface HeaderContext<T extends object> {
-  parent: GridHeader<T>;
+export interface ApexHeaderContext<T extends object> {
+  parent: ApexGridHeader<T>;
   column: ColumnConfig<T>;
 }
-export interface CellContext<T extends object> {
-  parent: GridCell<T>;
-  row: GridRow<T>;
+export interface ApexCellContext<T extends object> {
+  parent: ApexGridCell<T>;
+  row: ApexGridRow<T>;
   column: ColumnConfig<T>;
   value: T[keyof T];
 }

@@ -1,12 +1,12 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { GRID_CELL_TAG } from '../internal/tags.js';
-import type { CellContext, ColumnConfig } from '../internal/types';
+import type { ApexCellContext, ColumnConfig } from '../internal/types';
 import styles from '../styles/body-cell/body-cell-styles';
-import type GridRow from './row';
+import type ApexGridRow from './row';
 
 @customElement(GRID_CELL_TAG)
-export default class GridCell<T extends object> extends LitElement {
+export default class ApexGridCell<T extends object> extends LitElement {
   public static get is() {
     return GRID_CELL_TAG;
   }
@@ -22,9 +22,9 @@ export default class GridCell<T extends object> extends LitElement {
   @property({ type: Boolean, reflect: true })
   public active = false;
 
-  public row!: GridRow<T>;
+  public row!: ApexGridRow<T>;
 
-  protected get context(): CellContext<T> {
+  protected get context(): ApexCellContext<T> {
     return {
       parent: this,
       row: this.row,
@@ -40,6 +40,6 @@ export default class GridCell<T extends object> extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'igc-grid-cell': GridCell<object>;
+    [ApexGridCell.is]: ApexGridCell<object>;
   }
 }

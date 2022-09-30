@@ -1,23 +1,22 @@
 {
-  "name": "igc-grid",
+  "name": "apx-grid",
   "version": "1.0.0-rc.1",
-  "description": "Webcomponent igc-grid following open-wc recommendations",
+  "description": "Webcomponent data grid following open-wc recommendations",
   "keywords": [
     "lit",
     "web-component",
     "lit-element"
   ],
   "license": "SEE LICENSE IN LICENSE.mds",
-  "author": "igc-grid",
+  "author": "apx-grid",
   "exports": {
-    ".": "./dist/index.js",
-    "./igc-grid.js": "./dist/define/igc-grid.js"
+    ".": "./dist/src/index.js"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "dist/src/index.js",
+  "module": "dist/src/index.js",
   "files": [
     "/dist/",
-    "/dist/index.*",
+    "/dist/bundle.*",
     "!/dist/test/"
   ],
   "scripts": {

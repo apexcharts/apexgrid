@@ -27,7 +27,7 @@ export default css`/* stylelint-disable max-line-length */
           box-shadow: var(--ig-elevation-2);
 }
 
-igc-grid-body {
+apx-grid-body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -41,7 +41,7 @@ igc-grid-body {
   background: var(--igx-content-background, var(--content-background));
   color: var(--igx-content-text-color, var(--content-text-color));
 }
-igc-grid-body:focus {
+apx-grid-body:focus {
   outline: none;
 }
 

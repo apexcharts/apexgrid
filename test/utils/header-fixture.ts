@@ -1,9 +1,9 @@
-import type GridHeader from '../../src/components/header';
+import type ApexGridHeader from '../../src/components/header';
 
 const DEFAULT_ARGS: PointerEventInit = { pointerId: 1, bubbles: true, composed: true };
 
 export default class HeaderTestFixture<T extends object> {
-  constructor(public element: GridHeader<T>) {}
+  constructor(public element: ApexGridHeader<T>) {}
 
   protected get contentPart() {
     return this.element.shadowRoot!.querySelector('[part~="content"]')!;

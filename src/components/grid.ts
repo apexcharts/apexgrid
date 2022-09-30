@@ -17,13 +17,13 @@ import { default as indigo } from '../styles/grid/themes/light/grid.indigo-style
 import { default as material } from '../styles/grid/themes/light/grid.material-styles.js';
 import type { ColumnConfig, GridRemoteConfig, GridSortingConfig, Keys } from '../internal/types.js';
 import type { SortExpression } from '../operations/sort/types.js';
-import GridBody from './grid-body.js';
-import GridHeaderRow from './header-row.js';
-import GridRow from './row.js';
-import GridCell from './cell.js';
+import ApexGridBody from './grid-body.js';
+import ApexGridHeaderRow from './header-row.js';
+import ApexGridRow from './row.js';
+import ApexGridCell from './cell.js';
 
 // TODO: Subject to change as these are way too generic names
-export interface GridEventMap<T extends object> {
+export interface ApexGridEventMap<T extends object> {
   sorting: CustomEvent<SortExpression<T>>;
   sorted: CustomEvent<SortExpression<T>>;
 }
@@ -34,7 +34,7 @@ export interface GridEventMap<T extends object> {
   material,
 })
 @customElement(GRID_TAG)
-export default class Grid<T extends object> extends EventEmitterBase<GridEventMap<T>> {
+export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMap<T>> {
   public static get is() {
     return GRID_TAG;
   }
@@ -44,26 +44,26 @@ export default class Grid<T extends object> extends EventEmitterBase<GridEventMa
   protected stateController = new StateController<T>(this);
   protected dataController = new DataOperationsController<T>(this);
   protected rowRenderer = <T>(data: T, index: number): TemplateResult => {
-    return html`<igc-grid-row
+    return html`<apx-grid-row
       style=${styleMap(applyColumnWidths(this.columns))}
       .index=${index}
       .activeNode=${this.stateController.active}
       .data=${data}
       .columns=${this.columns}
-    ></igc-grid-row>`;
+    ></apx-grid-row>`;
   };
 
-  @query(GridBody.is)
-  protected bodyElement!: GridBody;
+  @query(ApexGridBody.is)
+  protected bodyElement!: ApexGridBody;
 
-  @query(GridHeaderRow.is)
-  protected headerRow!: GridHeaderRow<T>;
+  @query(ApexGridHeaderRow.is)
+  protected headerRow!: ApexGridHeaderRow<T>;
 
   @state()
   protected dataState: Array<T> = [];
 
-  @queryAll(GridRow.is)
-  protected _rows!: NodeListOf<GridRow<T>>;
+  @queryAll(ApexGridRow.is)
+  protected _rows!: NodeListOf<ApexGridRow<T>>;
 
   @property({ attribute: false })
   public columns: Array<ColumnConfig<T>> = [];
@@ -126,7 +126,7 @@ export default class Grid<T extends object> extends EventEmitterBase<GridEventMa
 
   @eventOptions({ capture: true })
   protected bodyClickHandler(event: MouseEvent) {
-    const target = event.composedPath().find(el => el instanceof GridCell) as GridCell<T>;
+    const target = event.composedPath().find(el => el instanceof ApexGridCell) as ApexGridCell<T>;
     if (target) {
       this.stateController.active = {
         column: target.column.key,
@@ -136,27 +136,27 @@ export default class Grid<T extends object> extends EventEmitterBase<GridEventMa
   }
 
   protected bodyKeydownHandler(event: KeyboardEvent) {
-    const target = event.target as HTMLElement & GridBody;
+    const target = event.target as HTMLElement & ApexGridBody;
     if (this.bodyElement.isSameNode(target)) {
       this.stateController.navigation.navigate(event, this.bodyElement);
     }
   }
 
   protected renderHeaderRow() {
-    return html`<igc-grid-header-row
+    return html`<apx-grid-header-row
       style=${styleMap(applyColumnWidths(this.columns))}
       .columns=${this.columns}
       .state=${this.stateController}
-    ></igc-grid-header-row>`;
+    ></apx-grid-header-row>`;
   }
 
   protected renderBody() {
-    return html`<igc-grid-body
+    return html`<apx-grid-body
       @keydown=${this.bodyKeydownHandler}
       @click=${this.bodyClickHandler}
       .items=${this.dataState}
       .renderItem=${this.rowRenderer}
-    ></igc-grid-body>`;
+    ></apx-grid-body>`;
   }
 
   protected renderResizeIndicator() {
@@ -177,6 +177,6 @@ export default class Grid<T extends object> extends EventEmitterBase<GridEventMa
 
 declare global {
   interface HTMLElementTagNameMap {
-    'igc-grid': Grid<object>;
+    [ApexGrid.is]: ApexGrid<object>;
   }
 }

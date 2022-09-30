@@ -1,5 +1,5 @@
 import { ReactiveController } from 'lit';
-import type GridBody from '../components/grid-body';
+import type ApexGridBody from '../components/grid-body';
 import { NAVIGATION_STATE, SENTINEL_NODE } from '../internal/constants.js';
 import type { ActiveNode, GridHost } from '../internal/types';
 
@@ -37,7 +37,7 @@ export class NavigationController<T extends object> implements ReactiveControlle
     return this.state.get('current') ?? SENTINEL_NODE;
   }
 
-  protected home(container: GridBody) {
+  protected home(container: ApexGridBody) {
     const current = this.state.get('current')!;
     const next = { ...current };
     if (current !== SENTINEL_NODE) {
@@ -50,7 +50,7 @@ export class NavigationController<T extends object> implements ReactiveControlle
     container.scrollToIndex(next.row, 'center');
   }
 
-  protected end(container: GridBody) {
+  protected end(container: ApexGridBody) {
     const current = this.state.get('current')!;
     const next = { ...current };
     const last = this.host.totalItems - 1;
@@ -64,7 +64,7 @@ export class NavigationController<T extends object> implements ReactiveControlle
     container.scrollToIndex(next.row, 'center');
   }
 
-  protected arrowDown(container: GridBody) {
+  protected arrowDown(container: ApexGridBody) {
     const current = this.state.get('current')!;
     const next = { ...current };
     if (current !== SENTINEL_NODE) {
@@ -77,7 +77,7 @@ export class NavigationController<T extends object> implements ReactiveControlle
     container.scrollToIndex(next.row, 'center');
   }
 
-  protected arrowUp(container: GridBody) {
+  protected arrowUp(container: ApexGridBody) {
     const current = this.state.get('current')!;
     const next = { ...current };
     if (current !== SENTINEL_NODE) {
@@ -126,7 +126,7 @@ export class NavigationController<T extends object> implements ReactiveControlle
     this.state = new Map();
   }
 
-  public navigate(event: KeyboardEvent, container: GridBody) {
+  public navigate(event: KeyboardEvent, container: ApexGridBody) {
     if (this.handlers.has(event.key)) {
       event.preventDefault();
       this.handlers.get(event.key)!.call(this, container);

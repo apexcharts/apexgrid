@@ -197,10 +197,10 @@
       };
       render(
         html`${themeChooser()}
-          <igc-grid
+          <apx-grid
             .columns=${columns}
             .data=${data}
-          ></igc-grid>`,
+          ></apx-grid>`,
         document.querySelector('#demo'),
       );
       await setTheme('bootstrap');

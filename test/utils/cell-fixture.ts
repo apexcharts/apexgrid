@@ -1,7 +1,7 @@
-import type GridCell from '../../src/components/cell';
+import type ApexGridCell from '../../src/components/cell';
 
 export default class CellTestFixture<T extends object> {
-  constructor(public element: GridCell<T>) {}
+  constructor(public element: ApexGridCell<T>) {}
 
   public get value() {
     return this.element.value;

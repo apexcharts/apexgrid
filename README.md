@@ -1,4 +1,4 @@
-# Web component grid
+# Apex data component grid
 
 This is still a **very** early proof of concept for a web component based data grid.
 
