@@ -100,7 +100,7 @@ suite('Column configuration', () => {
     });
 
     test('Resize', async () => {
-      assert.notExists(TDD.grid.getColumn('name')?.resizable);
+      assert.isFalse(TDD.grid.getColumn('name')?.resizable);
 
       await TDD.updateColumn('name', { resizable: true });
 

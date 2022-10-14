@@ -5,14 +5,14 @@ import type ApexGridRow from '../components/row';
 import type ApexGridHeader from '../components/header';
 import type { SortState } from '../operations/sort/types';
 
-export type Keys<T extends object> = keyof T;
-export type Values<T extends object> = T[keyof T];
+export type Keys<T> = keyof T;
+export type Values<T> = T[keyof T];
 export type PropertyType<T extends object, K extends keyof T> = T[K];
-// export type PickTypeKeys<Obj, Type, T extends keyof Obj = keyof Obj> = {
-//   [P in keyof Obj]: Obj[P] extends Type ? P : never;
-// }[T];
+export type PickTypeKeys<Obj, Type, T extends keyof Obj = keyof Obj> = {
+  [P in keyof Obj]: Obj[P] extends Type ? P : never;
+}[T];
 
-// export type PickType<T, Type> = Pick<T, PickTypeKeys<T, Type>>;
+export type PickType<T, Type> = Pick<T, PickTypeKeys<T, Type>>;
 
 export type DataType = 'number' | 'string' | 'boolean';
 

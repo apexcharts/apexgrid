@@ -52,6 +52,42 @@ apx-grid-body:focus {
   z-index: 1;
 }
 
+@-webkit-keyframes slide-down {
+  from {
+    opacity: 0.35;
+    -webkit-transform: translate(0, -0.625rem);
+            transform: translate(0, -0.625rem);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0.35;
+    -webkit-transform: translate(0, -0.625rem);
+            transform: translate(0, -0.625rem);
+  }
+  to {
+    opacity: 1;
+  }
+}
+[part~=filter-row] {
+  -webkit-animation: slide-down 180ms ease-in-out both;
+          animation: slide-down 180ms ease-in-out both;
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  background: var(--igx-header-background, var(--header-background));
+  color: var(--igx-header-text-color, var(--header-text-color));
+  width: 100%;
+  inset-block-start: var(--header-row-bottom);
+  inset-inline-start: 0;
+  z-index: 1;
+}
+
 :host {
   --content-background: var(hsla(var(--ig-gray-50), var(--ig-gray-a)));
   --content-text-color: var(var(--ig-gray-50-contrast));

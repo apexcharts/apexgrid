@@ -71,3 +71,16 @@ $sorted-header-icon-color: var(--igx-sorted-header-icon-color, var(--sorted-head
     z-index: 1;
     cursor: col-resize;
 }
+
+[part~='filter'] {
+    position: relative;
+
+    igc-badge {
+        --size: 10px;
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: scale(.75) translate(50%, -50%);
+    }
+}

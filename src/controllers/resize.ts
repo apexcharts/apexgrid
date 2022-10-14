@@ -1,4 +1,5 @@
-import { ReactiveController } from 'lit';
+import { html, nothing, ReactiveController } from 'lit';
+import { styleMap } from 'lit/directives/style-map.js';
 import type {
   ColumnAutosizeEvent,
   ColumnResizedEvent,
@@ -73,5 +74,16 @@ export class ResizeController<T extends object> implements ReactiveController {
     this.host.removeEventListener('columnResizeEnd', this.resizeStop);
     this.host.removeEventListener('columnResized', this.resize);
     this.host.removeEventListener('columnAutosize', this.autosize);
+  }
+
+  public renderIndicator() {
+    return this.active
+      ? html`<div
+          part="resize-indicator"
+          style=${styleMap({
+            transform: `translateX(${this.x}px)`,
+          })}
+        ></div>`
+      : nothing;
   }
 }

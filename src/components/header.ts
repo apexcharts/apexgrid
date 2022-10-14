@@ -14,8 +14,13 @@ import styles from '../styles/header-cell/header-cell-styles.js';
 
 // TODO: Revise
 // import Icon from 'igniteui-webcomponents/components/icon/icon';
-import { defineComponents, IgcIconComponent } from 'igniteui-webcomponents';
-defineComponents(IgcIconComponent);
+import {
+  defineComponents,
+  IgcIconButtonComponent,
+  IgcIconComponent,
+  IgcBadgeComponent,
+} from 'igniteui-webcomponents';
+defineComponents(IgcIconComponent, IgcIconButtonComponent, IgcBadgeComponent);
 
 export interface ColumnResizeStartEvent {
   anchor: number;
@@ -40,6 +45,7 @@ export interface ApexGridHeaderEventMap<T extends object> {
   columnResized: CustomEvent<ColumnResizedEvent<T>>;
   columnAutosize: CustomEvent<ColumnAutosizeEvent<T>>;
   headerSortClicked: CustomEvent<ColumnConfig<T>>;
+  headerFilterClicked: CustomEvent<ColumnConfig<T>>;
 }
 
 // TODO: Fix
@@ -70,11 +76,18 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
   @property({ attribute: false })
   public sortIndex = -1;
 
+  @property({ attribute: false })
+  public filterCount = 0;
+
   protected get context(): ApexHeaderContext<T> {
     return {
       parent: this,
       column: this.column,
     };
+  }
+
+  #initFilterRow() {
+    this.emitEvent('headerFilterClicked', { detail: this.column });
   }
 
   #handleClick() {
@@ -143,7 +156,19 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
   }
 
   protected renderFilterArea() {
-    return this.column.filter ? html`<div part="filter"></div>` : nothing;
+    return this.column.filter
+      ? html`<div part="filter">
+          <igc-icon-button
+            @click=${this.#initFilterRow}
+            size="small"
+            variant="flat"
+            >∀</igc-icon-button
+          >
+          ${this.filterCount
+            ? html`<igc-badge shape="rounded">${this.filterCount}</igc-badge>`
+            : nothing}
+        </div>`
+      : nothing;
   }
 
   protected renderResizeArea() {

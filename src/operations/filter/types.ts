@@ -1,4 +1,4 @@
-import type { Keys, Values, PropertyType } from '../../internal/types';
+import type { Keys } from '../../internal/types';
 
 export type FilterCriteria = 'and' | 'or';
 
@@ -7,23 +7,16 @@ export type FilterOperationLogic<T> = (
   searchTerm: T,
   caseSensitive?: boolean,
 ) => boolean;
-
-export interface FilterOperation<T> {
+export interface FilterOperation<_, Type> {
   name: string;
   unary: boolean;
-  logic: FilterOperationLogic<T>;
+  logic: FilterOperationLogic<Type>;
 }
 
-export interface FilterExpression<T extends object> {
+export interface FilterExpression<T, Type = any> {
   key: Keys<T>;
-  condition: FilterOperation<Values<T>>;
-  searchTerm?: PropertyType<T, Keys<T>>;
+  condition: FilterOperation<T, Type>;
+  searchTerm?: Type;
+  criteria?: FilterCriteria;
   caseSensitive?: boolean;
 }
-
-export interface FilterTree<T> {
-  criteria: FilterCriteria;
-  operands: Map<string, FilterOperation<T>>;
-}
-
-export type FilterState<T extends object> = Map<Keys<T>, FilterExpression<T>>;

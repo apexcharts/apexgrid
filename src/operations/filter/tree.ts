@@ -1,0 +1,56 @@
+import type { Keys } from '../../internal/types';
+import type { FilterExpression } from './types';
+
+export default class FilterExpressionTree<T extends object> {
+  protected operands: Array<FilterExpression<T>> = [];
+
+  constructor(public key: Keys<T>) {}
+
+  public get empty() {
+    return this.operands.length < 1;
+  }
+
+  public get length() {
+    return this.operands.length;
+  }
+
+  public get all() {
+    return Array.from(this.iterator());
+  }
+
+  public get ands() {
+    return this.operands.filter(each => each.criteria === 'and');
+  }
+
+  public get ors() {
+    return this.operands.filter(each => each.criteria === 'or');
+  }
+
+  public add(expression: FilterExpression<T>) {
+    if (!expression.criteria) {
+      expression.criteria = 'and';
+    }
+
+    if (this.operands.includes(expression)) {
+      return this;
+    }
+
+    this.operands.push(expression);
+    return this;
+  }
+
+  public remove(expression: FilterExpression<T>) {
+    this.operands = this.operands.filter(each => each !== expression);
+    return this;
+  }
+
+  protected *iterator() {
+    for (const operand of this.operands) {
+      yield operand;
+    }
+  }
+
+  public [Symbol.iterator]() {
+    return this.iterator();
+  }
+}

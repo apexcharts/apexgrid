@@ -89,4 +89,17 @@ export default css`/* stylelint-disable max-line-length */
   inset-inline-end: -0.125rem;
   z-index: 1;
   cursor: col-resize;
+}
+
+[part~=filter] {
+  position: relative;
+}
+[part~=filter] igc-badge {
+  --size: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-transform: scale(0.75) translate(50%, -50%);
+      -ms-transform: scale(0.75) translate(50%, -50%);
+          transform: scale(0.75) translate(50%, -50%);
 }`;

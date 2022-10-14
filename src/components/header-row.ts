@@ -36,6 +36,10 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
     return this.state.sorting.state.get(column.key);
   }
 
+  #getFilterState(column: ColumnConfig<T>) {
+    return this.state.filtering.state.get(column.key)?.length ?? 0;
+  }
+
   #getSortIndex(column: ColumnConfig<T>) {
     return Array.from(this.state.sorting.state.values()).indexOf(this.#getColumnSortState(column)!);
   }
@@ -48,6 +52,7 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
             .column=${column}
             .sortState=${this.#getColumnSortState(column)}
             .sortIndex=${this.#getSortIndex(column)}
+            .filterCount=${this.#getFilterState(column)}
           ></apx-grid-header>`,
     )}`;
   }

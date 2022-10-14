@@ -35,3 +35,29 @@ apx-grid-body {
     top: 0;
     z-index: 1;
 }
+
+$header-background: var(--igx-header-background, var(--header-background));
+$header-text-color: var(--igx-header-text-color, var(--header-text-color));
+
+@keyframes slide-down {
+    from {
+        opacity: .35;
+        transform: translate(0, rem(-10px));
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+[part~='filter-row'] {
+    animation: slide-down 180ms ease-in-out both;
+    position: absolute;
+    display: flex;
+    background: $header-background;
+    color: $header-text-color;
+    width: 100%;
+    inset-block-start: var(--header-row-bottom);
+    inset-inline-start: 0;
+    z-index: 1;
+}

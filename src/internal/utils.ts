@@ -1,7 +1,7 @@
 import type { StyleInfo } from 'lit/directives/style-map.js';
 import type { ColumnConfig } from './types';
 
-export function isDefined<T>(value: T) {
+export function isDefined<T>(value: T | null | undefined): value is NonNullable<T> {
   return value !== undefined && value !== null;
 }
 

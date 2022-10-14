@@ -129,22 +129,30 @@
           headerText: 'User ID',
           resizable: true,
           hidden: false,
+          type: 'number',
+          filter: true,
           sort: {
             caseSensitive: true,
           },
         },
-        { key: 'name', cellTemplate: standard, filter: {}, resizable: true },
+        { key: 'name', cellTemplate: standard, filter: true, sort: true, resizable: true },
         { key: 'avatar', cellTemplate: avatarTemplate, resizable: true },
-        { key: 'satisfaction', cellTemplate: satisfactionTemplate, sort: true, resizable: true },
+        { key: 'satisfaction', sort: true, resizable: true, cellTemplate: satisfactionTemplate },
         { key: 'age', resizable: true },
         { key: 'email', resizable: true },
-        { key: 'subscribed', cellTemplate: booleanTemplate, sort: true },
+        {
+          key: 'subscribed',
+          type: 'boolean',
+          cellTemplate: booleanTemplate,
+          sort: true,
+          filter: true,
+        },
       ];
 
-      for (let i = 0; i < 1e3; i++) {
+      for (let i = 0; i < 1e4; i++) {
         data.push({
           id: i,
-          name: `User - ${getRandomInt(1e2)}`,
+          name: `User - ${getRandomInt(1e4)}`,
           age: getRandomInt(75),
           subscribed: Boolean(Math.round(Math.random() * i) % 2),
           satisfaction: getRandomInt(5),

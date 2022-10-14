@@ -1,6 +1,6 @@
-import type { Values } from '../internal/types';
 import DataOperation from './base.js';
-import { SortExpression, SortState } from './sort/types.js';
+import type { Values } from '../internal/types';
+import type { SortExpression, SortState } from './sort/types';
 
 export default class SortOperation<T extends object> extends DataOperation<T> {
   protected orderBy = new Map(
@@ -34,10 +34,12 @@ export default class SortOperation<T extends object> extends DataOperation<T> {
     data.sort((a, b) => {
       let i = 0,
         result = 0;
+
       while (i < length && !result) {
         result = this.compareObjects(a, b, expressions[i]);
         i++;
       }
+
       return result;
     });
 
