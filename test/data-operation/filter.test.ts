@@ -1,6 +1,8 @@
 import { assert, fixtureCleanup } from '@open-wc/testing';
 import { FilterExpression } from '../../src/operations/filter/types';
 import StringOperands from '../../src/operations/filter/operands/string.js';
+import NumberOperands from '../../src/operations/filter/operands/number.js';
+import BooleanOperands from '../../src/operations/filter/operands/boolean.js';
 import FilterState from '../../src/operations/filter/state.js';
 import FilterOperation from '../../src/operations/filter.js';
 import data, { TestData } from '../utils/test-data.js';
@@ -191,6 +193,136 @@ suite('Filter operations', () => {
         key: 'name',
         condition: new StringOperands<TestData>().get('notEmpty'),
       }).run();
+      assert.strictEqual(TDD.result.length, 8);
+    });
+  });
+
+  suite('Number operands', () => {
+    teardown(() => TDD.clearState());
+
+    test('equals', () => {
+      TDD.setState({
+        key: 'id',
+        condition: new NumberOperands<TestData>().get('equals'),
+        searchTerm: 1,
+      }).run();
+      assert.strictEqual(TDD.result.length, 1);
+    });
+
+    test('does not equal', () => {
+      TDD.setState({
+        key: 'id',
+        condition: new NumberOperands<TestData>().get('doesNotEqual'),
+        searchTerm: 1,
+      }).run();
+
+      assert.strictEqual(TDD.result.length, 7);
+    });
+
+    test('greater than', () => {
+      TDD.setState({
+        key: 'id',
+        condition: new NumberOperands<TestData>().get('greaterThan'),
+        searchTerm: 1,
+      }).run();
+
+      assert.strictEqual(TDD.result.length, 7);
+    });
+
+    test('less than', () => {
+      TDD.setState({
+        key: 'id',
+        condition: new NumberOperands<TestData>().get('lessThan'),
+        searchTerm: 8,
+      }).run();
+
+      assert.strictEqual(TDD.result.length, 7);
+    });
+
+    test('greater than or equal', () => {
+      TDD.setState({
+        key: 'id',
+        condition: new NumberOperands<TestData>().get('greaterThanOrEqual'),
+        searchTerm: 1,
+      }).run();
+
+      assert.strictEqual(TDD.result.length, 8);
+    });
+
+    test('less than or equal', () => {
+      TDD.setState({
+        key: 'id',
+        condition: new NumberOperands<TestData>().get('lessThanOrEqual'),
+        searchTerm: 8,
+      }).run();
+
+      assert.strictEqual(TDD.result.length, 8);
+    });
+
+    test('empty', () => {
+      TDD.setState({
+        key: 'id',
+        condition: new NumberOperands<TestData>().get('empty'),
+      }).run();
+
+      assert.strictEqual(TDD.result.length, 0);
+    });
+
+    test('not empty', () => {
+      TDD.setState({
+        key: 'id',
+        condition: new NumberOperands<TestData>().get('notEmpty'),
+      }).run();
+
+      assert.strictEqual(TDD.result.length, 8);
+    });
+  });
+
+  suite('Boolean operands', () => {
+    teardown(() => TDD.clearState());
+
+    test('all', () => {
+      TDD.setState({
+        key: 'active',
+        condition: new BooleanOperands<TestData>().get('all'),
+      }).run();
+
+      assert.strictEqual(TDD.result.length, 8);
+    });
+
+    test('true', () => {
+      TDD.setState({
+        key: 'active',
+        condition: new BooleanOperands<TestData>().get('true'),
+      }).run();
+
+      assert.strictEqual(TDD.result.length, 4);
+    });
+
+    test('false', () => {
+      TDD.setState({
+        key: 'active',
+        condition: new BooleanOperands<TestData>().get('false'),
+      }).run();
+
+      assert.strictEqual(TDD.result.length, 4);
+    });
+
+    test('empty', () => {
+      TDD.setState({
+        key: 'active',
+        condition: new BooleanOperands<TestData>().get('empty'),
+      }).run();
+
+      assert.strictEqual(TDD.result.length, 0);
+    });
+
+    test('not empty', () => {
+      TDD.setState({
+        key: 'active',
+        condition: new BooleanOperands<TestData>().get('notEmpty'),
+      }).run();
+
       assert.strictEqual(TDD.result.length, 8);
     });
   });

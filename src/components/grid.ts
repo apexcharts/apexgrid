@@ -93,9 +93,9 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     registerGridIcons();
   }
 
-  protected override async firstUpdated() {
-    await this.updateComplete;
-    this.columns = this.columns.map(config => ({ ...DEFAULT_COLUMN_CONFIG, ...config }));
+  @watch('columns')
+  protected watchColumns(_: ColumnConfig<T>[], newConfig: ColumnConfig<T>[] = []) {
+    this.columns = newConfig.map(config => ({ ...DEFAULT_COLUMN_CONFIG, ...config }));
   }
 
   public sort(key: Keys<T>, config?: Partial<SortExpression<T>>) {
