@@ -5,13 +5,23 @@ import NumberOperands from '../../src/operations/filter/operands/number.js';
 import BooleanOperands from '../../src/operations/filter/operands/boolean.js';
 import FilterState from '../../src/operations/filter/state.js';
 import FilterOperation from '../../src/operations/filter.js';
-import data, { TestData } from '../utils/test-data.js';
-// import { Values, PropertyType } from '../../src/internal/types';
+import data from '../utils/test-data.js';
+import { Keys } from '../../src/internal/types';
+
+type OperandKeys<T extends object> =
+  | Keys<NumberOperands<T>>
+  | Keys<StringOperands<T>>
+  | Keys<BooleanOperands<T>>;
 
 class TDDFilterState<T extends object> {
   #result: T[] = [];
   #operation: FilterOperation<T> = new FilterOperation();
   #state: FilterState<T> = new FilterState();
+  #operands: Record<string, StringOperands<T> | NumberOperands<T> | BooleanOperands<T>> = {
+    string: new StringOperands<T>(),
+    number: new NumberOperands<T>(),
+    boolean: new BooleanOperands<T>(),
+  };
 
   constructor(protected data: T[]) {}
 
@@ -31,8 +41,17 @@ class TDDFilterState<T extends object> {
     return this.result.at(index) as T;
   }
 
-  public setState(config: Partial<FilterExpression<T>>) {
-    this.#state.set(config as FilterExpression<T>);
+  public addCondition(
+    key: Keys<T>,
+    operand: OperandKeys<T>,
+    opts: Partial<FilterExpression<T>> = {},
+  ) {
+    const type = this.#operands[typeof this.data[0][key]];
+    this.#state.set({
+      key,
+      condition: type.get(operand as any),
+      ...opts,
+    });
     return this;
   }
 
@@ -54,145 +73,72 @@ suite('Filter operations', () => {
     teardown(() => TDD.clearState());
 
     test('contains [case insensitive]', () => {
-      TDD.setState({
-        key: 'name',
-        condition: new StringOperands<TestData>().get('contains'),
-        searchTerm: 'd',
-      }).run();
-
+      TDD.addCondition('name', 'contains', { searchTerm: 'd' }).run();
       assert.strictEqual(TDD.result.length, 2);
     });
 
     test('contains [case sensitive]', () => {
-      TDD.setState({
-        key: 'name',
-        condition: new StringOperands<TestData>().get('contains'),
-        searchTerm: 'd',
-        caseSensitive: true,
-      }).run();
-
+      TDD.addCondition('name', 'contains', { searchTerm: 'd', caseSensitive: true }).run();
       assert.strictEqual(TDD.result.length, 1);
     });
 
     test('does not contain [case insensitive]', () => {
-      TDD.setState({
-        key: 'name',
-        searchTerm: 'a',
-        condition: new StringOperands<TestData>().get('doesNotContain'),
-      }).run();
-
+      TDD.addCondition('name', 'doesNotContain', { searchTerm: 'a' }).run();
       assert.strictEqual(TDD.result.length, 6);
     });
 
     test('does not contain [case sensitive]', () => {
-      TDD.setState({
-        key: 'name',
-        searchTerm: 'd',
-        condition: new StringOperands<TestData>().get('doesNotContain'),
-        caseSensitive: true,
-      }).run();
-
+      TDD.addCondition('name', 'doesNotContain', { searchTerm: 'd', caseSensitive: true }).run();
       assert.strictEqual(TDD.result.length, 7);
     });
 
     test('start with [case insensitive]', () => {
-      TDD.setState({
-        key: 'importance',
-        searchTerm: 'l',
-        condition: new StringOperands<TestData>().get('startsWith'),
-      }).run();
-
+      TDD.addCondition('importance', 'startsWith', { searchTerm: 'l' }).run();
       assert.strictEqual(TDD.result.length, 3);
     });
 
     test('start with [case sensitive]', () => {
-      TDD.setState({
-        key: 'name',
-        searchTerm: 'A',
-        condition: new StringOperands<TestData>().get('startsWith'),
-        caseSensitive: true,
-      }).run();
-
+      TDD.addCondition('name', 'startsWith', { searchTerm: 'A', caseSensitive: true }).run();
       assert.strictEqual(TDD.result.length, 1);
     });
 
     test('ends with [case insensitive]', () => {
-      TDD.setState({
-        key: 'name',
-        searchTerm: 'A',
-        condition: new StringOperands<TestData>().get('endsWith'),
-      }).run();
-
+      TDD.addCondition('name', 'endsWith', { searchTerm: 'A' }).run();
       assert.strictEqual(TDD.result.length, 2);
     });
 
     test('ends with [case sensitive]', () => {
-      TDD.setState({
-        key: 'name',
-        searchTerm: 'A',
-        condition: new StringOperands<TestData>().get('endsWith'),
-        caseSensitive: true,
-      }).run();
-
+      TDD.addCondition('name', 'endsWith', { searchTerm: 'A', caseSensitive: true }).run();
       assert.strictEqual(TDD.result.length, 1);
     });
 
     test('equals [case insensitive]', () => {
-      TDD.setState({
-        key: 'name',
-        searchTerm: 'A',
-        condition: new StringOperands<TestData>().get('equals'),
-      }).run();
-
+      TDD.addCondition('name', 'equals', { searchTerm: 'A' }).run();
       assert.strictEqual(TDD.result.length, 2);
     });
 
     test('equals [case sensitive]', () => {
-      TDD.setState({
-        key: 'name',
-        searchTerm: 'A',
-        condition: new StringOperands<TestData>().get('equals'),
-        caseSensitive: true,
-      }).run();
-
+      TDD.addCondition('name', 'equals', { searchTerm: 'A', caseSensitive: true }).run();
       assert.strictEqual(TDD.result.length, 1);
     });
 
     test('does not equal [case insensitive]', () => {
-      TDD.setState({
-        key: 'name',
-        searchTerm: 'A',
-        condition: new StringOperands<TestData>().get('doesNotContain'),
-      }).run();
-
+      TDD.addCondition('name', 'doesNotEqual', { searchTerm: 'A' }).run();
       assert.strictEqual(TDD.result.length, 6);
     });
 
     test('does not equal [case sensitive]', () => {
-      TDD.setState({
-        key: 'name',
-        searchTerm: 'A',
-        condition: new StringOperands<TestData>().get('doesNotContain'),
-        caseSensitive: true,
-      }).run();
-
+      TDD.addCondition('name', 'doesNotEqual', { searchTerm: 'A', caseSensitive: true }).run();
       assert.strictEqual(TDD.result.length, 7);
     });
 
     test('empty', () => {
-      TDD.setState({
-        key: 'name',
-        condition: new StringOperands<TestData>().get('empty'),
-      }).run();
-
+      TDD.addCondition('name', 'empty').run();
       assert.strictEqual(TDD.result.length, 0);
     });
 
     test('not empty', () => {
-      TDD.setState({
-        key: 'name',
-        condition: new StringOperands<TestData>().get('notEmpty'),
-      }).run();
+      TDD.addCondition('name', 'notEmpty').run();
       assert.strictEqual(TDD.result.length, 8);
     });
   });
@@ -201,79 +147,42 @@ suite('Filter operations', () => {
     teardown(() => TDD.clearState());
 
     test('equals', () => {
-      TDD.setState({
-        key: 'id',
-        condition: new NumberOperands<TestData>().get('equals'),
-        searchTerm: 1,
-      }).run();
+      TDD.addCondition('id', 'equals', { searchTerm: 1 }).run();
       assert.strictEqual(TDD.result.length, 1);
     });
 
     test('does not equal', () => {
-      TDD.setState({
-        key: 'id',
-        condition: new NumberOperands<TestData>().get('doesNotEqual'),
-        searchTerm: 1,
-      }).run();
-
+      TDD.addCondition('id', 'doesNotEqual', { searchTerm: 1 }).run();
       assert.strictEqual(TDD.result.length, 7);
     });
 
     test('greater than', () => {
-      TDD.setState({
-        key: 'id',
-        condition: new NumberOperands<TestData>().get('greaterThan'),
-        searchTerm: 1,
-      }).run();
-
+      TDD.addCondition('id', 'greaterThan', { searchTerm: 1 }).run();
       assert.strictEqual(TDD.result.length, 7);
     });
 
     test('less than', () => {
-      TDD.setState({
-        key: 'id',
-        condition: new NumberOperands<TestData>().get('lessThan'),
-        searchTerm: 8,
-      }).run();
-
+      TDD.addCondition('id', 'lessThan', { searchTerm: 8 }).run();
       assert.strictEqual(TDD.result.length, 7);
     });
 
     test('greater than or equal', () => {
-      TDD.setState({
-        key: 'id',
-        condition: new NumberOperands<TestData>().get('greaterThanOrEqual'),
-        searchTerm: 1,
-      }).run();
-
+      TDD.addCondition('id', 'greaterThanOrEqual', { searchTerm: 1 }).run();
       assert.strictEqual(TDD.result.length, 8);
     });
 
     test('less than or equal', () => {
-      TDD.setState({
-        key: 'id',
-        condition: new NumberOperands<TestData>().get('lessThanOrEqual'),
-        searchTerm: 8,
-      }).run();
-
+      TDD.addCondition('id', 'lessThanOrEqual', { searchTerm: 8 }).run();
       assert.strictEqual(TDD.result.length, 8);
     });
 
     test('empty', () => {
-      TDD.setState({
-        key: 'id',
-        condition: new NumberOperands<TestData>().get('empty'),
-      }).run();
-
+      TDD.addCondition('id', 'empty').run();
       assert.strictEqual(TDD.result.length, 0);
     });
 
     test('not empty', () => {
-      TDD.setState({
-        key: 'id',
-        condition: new NumberOperands<TestData>().get('notEmpty'),
-      }).run();
-
+      TDD.addCondition('id', 'notEmpty').run();
       assert.strictEqual(TDD.result.length, 8);
     });
   });
@@ -282,48 +191,103 @@ suite('Filter operations', () => {
     teardown(() => TDD.clearState());
 
     test('all', () => {
-      TDD.setState({
-        key: 'active',
-        condition: new BooleanOperands<TestData>().get('all'),
-      }).run();
-
+      TDD.addCondition('active', 'all').run();
       assert.strictEqual(TDD.result.length, 8);
     });
 
     test('true', () => {
-      TDD.setState({
-        key: 'active',
-        condition: new BooleanOperands<TestData>().get('true'),
-      }).run();
-
+      TDD.addCondition('active', 'true').run();
       assert.strictEqual(TDD.result.length, 4);
     });
 
     test('false', () => {
-      TDD.setState({
-        key: 'active',
-        condition: new BooleanOperands<TestData>().get('false'),
-      }).run();
-
+      TDD.addCondition('active', 'false').run();
       assert.strictEqual(TDD.result.length, 4);
     });
 
     test('empty', () => {
-      TDD.setState({
-        key: 'active',
-        condition: new BooleanOperands<TestData>().get('empty'),
-      }).run();
-
+      TDD.addCondition('active', 'empty').run();
       assert.strictEqual(TDD.result.length, 0);
     });
 
     test('not empty', () => {
-      TDD.setState({
-        key: 'active',
-        condition: new BooleanOperands<TestData>().get('notEmpty'),
-      }).run();
-
+      TDD.addCondition('active', 'notEmpty').run();
       assert.strictEqual(TDD.result.length, 8);
+    });
+  });
+
+  suite('Combinations', () => {
+    teardown(() => TDD.clearState());
+
+    test('Single field -> A && B', () => {
+      TDD.addCondition('id', 'greaterThan', { searchTerm: 3 })
+        .addCondition('id', 'lessThan', { searchTerm: 5 })
+        .run();
+
+      /**
+       * [
+       *  { id: 4, ... }
+       * ]
+       */
+      assert.strictEqual(TDD.result.length, 1);
+      assert.strictEqual(TDD.first.id, 4);
+    });
+
+    test('Single field -> A || B', () => {
+      TDD.addCondition('id', 'greaterThanOrEqual', { searchTerm: 8 })
+        .addCondition('id', 'lessThan', { searchTerm: 2, criteria: 'or' })
+        .run();
+
+      /**
+       * [
+       *  { id: 1, ... },
+       *  { id: 8, ... }
+       * ]
+       */
+      assert.strictEqual(TDD.result.length, 2);
+      assert.strictEqual(TDD.first.id, 1);
+      assert.strictEqual(TDD.last.id, 8);
+    });
+
+    test('Single field -> A && B || C', () => {
+      TDD.addCondition('id', 'greaterThan', { searchTerm: 3 })
+        .addCondition('id', 'lessThan', {
+          searchTerm: 5,
+        })
+        .addCondition('id', 'greaterThanOrEqual', { searchTerm: 6, criteria: 'or' })
+        .run();
+
+      /**
+       * [
+       *  { id: 4, ... },
+       *  { id: 6 ... },
+       *  { id: 7 ... },
+       *  { id: 8 ... }
+       * ]
+       */
+      assert.strictEqual(TDD.result.length, 4);
+      assert.strictEqual(TDD.first.id, 4);
+      assert.strictEqual(TDD.last.id, 8);
+    });
+
+    test('Multiple fields -> A && B', () => {
+      TDD.addCondition('active', 'true')
+        .addCondition('importance', 'equals', {
+          searchTerm: 'high',
+        })
+        .run();
+
+      /**
+       * [
+       *  { id: 5, name: 'a', active: true, importance: 'high' },
+       *  { id: 8, name: 'd', active: true, importance: 'high' }
+       * ]
+       */
+      assert.strictEqual(TDD.result.length, 2);
+      assert.strictEqual(TDD.first.active, true);
+      assert.strictEqual(TDD.first.importance, 'high');
+      assert.strictEqual(TDD.last.active, true);
+      assert.strictEqual(TDD.last.importance, 'high');
     });
   });
 });

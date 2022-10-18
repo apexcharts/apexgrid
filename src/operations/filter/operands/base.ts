@@ -1,10 +1,7 @@
 import type { FilterOperation } from '../types';
 
-type OmitKey<T, K extends PropertyKey> = { [P in keyof T as Exclude<P, K>]: T[P] };
-type IgnoredKeys = 'get' | 'default';
-
 export default class BaseOperands<T, Type = any> {
-  public get(condition: OmitKey<keyof this, IgnoredKeys>): FilterOperation<T, Type> {
+  public get(condition: keyof this): FilterOperation<T, Type> {
     return this[condition] as FilterOperation<T, Type>;
   }
 
