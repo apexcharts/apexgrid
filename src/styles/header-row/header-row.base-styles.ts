@@ -1,4 +1,4 @@
-import { css } from 'lit';
+import {css} from 'lit';
 
 export default css`/* stylelint-disable max-line-length */
 :host {
@@ -20,8 +20,13 @@ export default css`/* stylelint-disable max-line-length */
   contain: content;
   -webkit-border-after: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
           border-block-end: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
+  z-index: 2;
 }
 
 :host(:focus) {
   outline: none;
+}
+
+[part=filtered] {
+  background: var(--igx-filtering-header-background, var(--filtering-header-background));
 }`;

@@ -1,5 +1,7 @@
 @use '../common' as *;
 
+$filtering-row-background: var(--igx-filtering-row-background, var(--filtering-row-background));
+$filtering-row-text-color: var(--igx-filtering-row-text-color, var(--filtering-row-text-color));
 $header-background: var(--igx-header-background, var(--header-background));
 $header-text-color: var(--igx-header-text-color, var(--header-text-color));
 
@@ -17,13 +19,32 @@ $header-text-color: var(--igx-header-text-color, var(--header-text-color));
 :host {
     --ig-size: 1;
 
-    animation: slide-down 180ms ease-in-out both;
-    position: absolute;
     display: flex;
-    background: $header-background;
-    color: $header-text-color;
-    width: 100%;
+    gap: rem(16px);
+    position: absolute;
+    align-items: center;
     inset-block-start: var(--header-row-bottom);
     inset-inline-start: 0;
+    width: 100%;
+    min-height: $ig-cells-min-height;
     z-index: 1;
+    background: $filtering-row-background;
+    color: $header-text-color;
+    padding: 0 $ig-cells-padding;
+    box-sizing: border-box;
+    animation: slide-down 180ms ease-in-out both;
+    box-shadow: elevation(1);
+}
+
+[part~='filter-row-input'],
+[part~='filter-row-filters'],
+[part~='filter-actions'], {
+    display: flex;
+    align-items: center;
+    gap: rem(8px);
+}
+
+[part~='filter-row-filters'] {
+    flex: 1;
+    overflow: hidden;
 }

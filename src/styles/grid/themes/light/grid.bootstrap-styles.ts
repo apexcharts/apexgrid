@@ -1,4 +1,4 @@
-import { css } from 'lit';
+import {css} from 'lit';
 
 export default css`/* stylelint-disable max-line-length */
 :host {
@@ -60,7 +60,11 @@ apx-grid-body:focus {
   --header-border-width: 0.0625rem;
   --header-border-style: solid;
   --header-border-color: hsla(var(--ig-gray-400), 0.38);
+  --filtering-header-background: hsla(var(--ig-gray-50), var(--ig-gray-a));
+  --filtering-row-background: hsla(var(--ig-gray-50), var(--ig-gray-a));
+  --filtering-row-text-color: var(--ig-gray-50-contrast);
   --sorted-header-icon-color: hsla(var(--ig-primary-500), var(--ig-primary-a));
+  --icon-color: "currentColor";
   --row-hover-background: hsla(var(--ig-gray-200), var(--ig-gray-a));
   --row-hover-text-color: var(--ig-gray-200-contrast);
   --row-even-background: hsla(var(--ig-gray-50), var(--ig-gray-a));

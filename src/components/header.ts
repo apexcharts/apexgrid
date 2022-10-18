@@ -138,6 +138,7 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
     return this.sortState
       ? html`
           <igc-icon
+            part="sorting-action"
             data-sortIndex=${this.sortIndex > -1 ? this.sortIndex + 1 : nothing}
             size="small"
             name=${this.sortState.direction === 'ascending'
@@ -146,7 +147,11 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
             collection="internal"
           ></igc-icon>
         `
-      : nothing;
+      : html`<igc-icon
+          size="small"
+          name="arrow-upward"
+          collection="internal"
+        ></igc-icon>`;
   }
 
   protected renderContent() {
@@ -158,15 +163,13 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
   protected renderFilterArea() {
     return this.column.filter
       ? html`<div part="filter">
-          <igc-icon-button
+          <igc-icon
+            name="filter"
+            collection="internal"
             @click=${this.#initFilterRow}
             size="small"
-            variant="flat"
-            >∀</igc-icon-button
-          >
-          ${this.filterCount
-            ? html`<igc-badge shape="rounded">${this.filterCount}</igc-badge>`
-            : nothing}
+          ></igc-icon>
+          ${this.filterCount ? html`<span part="filter-count">${this.filterCount}</span>` : nothing}
         </div>`
       : nothing;
   }
@@ -189,14 +192,22 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
           sortable: !!this.column.sort,
           resizing: this.isResizing,
         })}
-        @click=${this.column.sort ? this.#handleClick : nothing}
       >
         <span part="title">
           <span>${this.renderContent()}</span>
         </span>
-        <span part="action">${this.renderSortState()}</span>
+        <div part="actions">
+          <span
+            part="action ${this.sortState?.direction ? 'sorted' : nothing}"
+            @click=${this.column.sort ? this.#handleClick : nothing}
+            >${this.renderSortState()}</span
+          >
+          <span part="action ${this.filterCount > 0 ? 'filtered' : nothing}"
+            >${this.renderFilterArea()}</span
+          >
+        </div>
       </div>
-      ${this.renderResizeArea()} ${this.renderFilterArea()}
+      ${this.renderResizeArea()}
     `;
   }
 }

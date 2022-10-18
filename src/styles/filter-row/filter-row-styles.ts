@@ -1,4 +1,4 @@
-import { css } from 'lit';
+import {css} from 'lit';
 
 export default css`/* stylelint-disable max-line-length */
 :host {
@@ -35,16 +35,45 @@ export default css`/* stylelint-disable max-line-length */
 }
 :host {
   --ig-size: 1;
-  -webkit-animation: slide-down 180ms ease-in-out both;
-          animation: slide-down 180ms ease-in-out both;
-  position: absolute;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  background: var(--igx-header-background, var(--header-background));
-  color: var(--igx-header-text-color, var(--header-text-color));
-  width: 100%;
+  gap: 1rem;
+  position: absolute;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   inset-block-start: var(--header-row-bottom);
   inset-inline-start: 0;
+  width: 100%;
+  min-height: max(var(--is-large, 1) * 3.125rem, var(--is-medium, 1) * 2.125rem, var(--is-small, 1) * 1.5rem);
   z-index: 1;
+  background: var(--igx-filtering-row-background, var(--filtering-row-background));
+  color: var(--igx-header-text-color, var(--header-text-color));
+  padding: 0 max(var(--is-large, 1) * 1.5rem, var(--is-medium, 1) * 1rem, var(--is-small, 1) * 0.5rem);
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-animation: slide-down 180ms ease-in-out both;
+          animation: slide-down 180ms ease-in-out both;
+  -webkit-box-shadow: var(--ig-elevation-1);
+          box-shadow: var(--ig-elevation-1);
+}
+
+[part~=filter-row-input],
+[part~=filter-row-filters],
+[part~=filter-actions] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 0.5rem;
+}
+
+[part~=filter-row-filters] {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  overflow: hidden;
 }`;
