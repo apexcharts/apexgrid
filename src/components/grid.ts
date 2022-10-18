@@ -21,6 +21,7 @@ import ApexGridBody from './grid-body.js';
 import ApexGridHeaderRow from './header-row.js';
 import ApexGridRow from './row.js';
 import ApexGridCell from './cell.js';
+import ApexFilterRow from './filter-row.js';
 
 // TODO: Subject to change as these are way too generic names
 export interface ApexGridEventMap<T extends object> {
@@ -58,6 +59,9 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
 
   @query(ApexGridHeaderRow.is)
   protected headerRow!: ApexGridHeaderRow<T>;
+
+  @query(ApexFilterRow.is)
+  protected filterRow!: ApexFilterRow<T>;
 
   @state()
   protected dataState: Array<T> = [];
@@ -113,6 +117,11 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     if (!config.sort) {
       this.stateController.sorting.reset(key);
     }
+
+    if (!config.filter) {
+      this.stateController.filtering.reset(key);
+    }
+
     this.columns = this.columns.map(each => {
       if (key === each.key) {
         each = { ...each, ...config };

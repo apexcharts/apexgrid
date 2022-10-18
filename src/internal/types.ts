@@ -4,6 +4,7 @@ import type ApexGridCell from '../components/cell';
 import type ApexGridRow from '../components/row';
 import type ApexGridHeader from '../components/header';
 import type { SortState } from '../operations/sort/types';
+import BaseOperands from '../operations/filter/operands/base.js';
 
 export type Keys<T> = keyof T;
 export type Values<T> = T[keyof T];
@@ -33,8 +34,9 @@ export interface ColumnSortConfig<T extends object> {
   comparer?: (a: Values<T>, b: Values<T>) => number;
 }
 
-export interface ColumnFilterConfig {
-  remote?: unknown;
+export interface ColumnFilterConfig<T> {
+  caseSensitive?: boolean;
+  strategy?: BaseOperands<T>;
 }
 
 export interface ColumnConfig<T extends object> {
@@ -45,7 +47,7 @@ export interface ColumnConfig<T extends object> {
   hidden?: boolean;
   resizable?: boolean;
   sort?: ColumnSortConfig<T> | boolean;
-  filter?: ColumnFilterConfig | boolean;
+  filter?: ColumnFilterConfig<T> | boolean;
   headerTemplate?: (props: ApexHeaderContext<T>) => Template;
   cellTemplate?: (props: ApexCellContext<T>) => Template;
 }
