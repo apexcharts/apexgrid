@@ -13,6 +13,14 @@ export default class HeaderTestFixture<T extends object> {
     return this.element.shadowRoot!.querySelector('[part~="action"]')!;
   }
 
+  protected get filterPart() {
+    return this.element.shadowRoot!.querySelector('[part~="filter"]')!;
+  }
+
+  public get filterIcon() {
+    return this.filterPart.querySelector('igc-icon-button')!;
+  }
+
   public get resizePart() {
     return this.element.shadowRoot!.querySelector('[part~="resizable"]')!;
   }

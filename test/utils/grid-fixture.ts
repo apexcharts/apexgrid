@@ -8,6 +8,7 @@ import '../../src/index.js';
 import HeaderTestFixture from './header-fixture.js';
 import RowTestFixture from './row-fixture.js';
 import CellTestFixture from './cell-fixture.js';
+import FilterRowFixture from './filter-row.fixture.js';
 
 interface RowCollection<T extends object> {
   first: RowTestFixture<T>;
@@ -60,6 +61,11 @@ export default class GridTestFixture<T extends object> {
     await elementUpdated(this.grid);
   }
 
+  public get filterRow() {
+    // @ts-expect-error - Protected member access
+    return new FilterRowFixture(this.grid.filterRow);
+  }
+
   public get gridBody() {
     // @ts-expect-error - Protected member access
     return this.grid.bodyElement;
@@ -106,6 +112,11 @@ export default class GridTestFixture<T extends object> {
         ? this.headerRow.headers.at(id)!
         : this.headerRow.headers.find(({ column }) => column.key === id)!,
     );
+  }
+
+  public async clickHeaderFilter(key: Keys<T>) {
+    this.getHeader(key).filterIcon.click();
+    await elementUpdated(this.grid);
   }
 
   public async clickHeader(key: Keys<T>) {

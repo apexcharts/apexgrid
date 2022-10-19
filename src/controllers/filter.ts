@@ -52,6 +52,14 @@ export class FilterController<T extends object> implements ReactiveController {
     }
   }
 
+  #handleCriteriaChanged = (ev: CustomEvent<FilterExpression<T>>) => {
+    ev.stopPropagation();
+
+    ev.detail.criteria = ev.detail.criteria === 'and' ? 'or' : 'and';
+    this._filter(ev.detail);
+    this.row.requestUpdate();
+  };
+
   #handleInputChanged = (ev: CustomEvent<string | number>) => {
     ev.stopPropagation();
 
@@ -90,7 +98,7 @@ export class FilterController<T extends object> implements ReactiveController {
     this.host.requestUpdate();
     this.row.requestUpdate();
 
-    if (this.row.input.value || this.activeExpression.condition.unary) {
+    if (this.row.input?.value || this.activeExpression.condition.unary) {
       this._filter(this.activeExpression as FilterExpression<T>);
     }
   };
@@ -117,7 +125,7 @@ export class FilterController<T extends object> implements ReactiveController {
     this.row.requestUpdate();
 
     await this.row.updateComplete;
-    this.row.input.select();
+    this.row.input?.select();
   };
 
   #handleFilterIconClick = async (ev: CustomEvent<ColumnConfig<T>>) => {
@@ -145,6 +153,7 @@ export class FilterController<T extends object> implements ReactiveController {
           .column=${this.activeColumn}
           .expression=${this.activeExpression as FilterExpression<T>}
           .state=${this.state}
+          @criteriaChanged=${this.#handleCriteriaChanged}
           @conditionChanged=${this.#handleConditionChanged}
           @inputChanged=${this.#handleInputChanged}
           @inputCleared=${this.#handleInputCleared}
