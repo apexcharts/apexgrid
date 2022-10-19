@@ -138,12 +138,17 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
     return state
       ? html`
           <igc-icon
+            part="sorting-action"
             data-sortIndex=${attr}
             name=${state.direction === 'ascending' ? SORT_ICON_ASCENDING : SORT_ICON_DESCENDING}
             collection="internal"
           ></igc-icon>
         `
-      : nothing;
+      : html`<igc-icon
+          size="small"
+          name="arrow-upward"
+          collection="internal"
+        ></igc-icon>`;
   }
 
   protected renderContent() {
@@ -157,13 +162,13 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
 
     return this.column.filter
       ? html`<div part="filter">
-          <igc-icon-button
+          <igc-icon
+            name="filter"
+            collection="internal"
             @click=${this.#initFilterRow}
             size="small"
-            variant="flat"
-            >∀</igc-icon-button
-          >
-          ${count ? html`<igc-badge shape="rounded">${count}</igc-badge>` : nothing}
+          ></igc-icon>
+          ${count ? html`<span part="filter-count">${count}</span>` : nothing}
         </div>`
       : nothing;
   }
@@ -186,14 +191,20 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
           sortable: !!this.column.sort,
           resizing: this.isResizing,
         })}
-        @click=${this.column.sort ? this.#handleClick : nothing}
       >
         <span part="title">
           <span>${this.renderContent()}</span>
         </span>
-        <span part="action">${this.renderSortState()}</span>
+        <div part="actions">
+          <span
+            part="action"
+            @click=${this.column.sort ? this.#handleClick : nothing}
+            >${this.renderSortState()}</span
+          >
+          <span part="action">${this.renderFilterArea()}</span>
+        </div>
       </div>
-      ${this.renderResizeArea()} ${this.renderFilterArea()}
+      ${this.renderResizeArea()}
     `;
   }
 }

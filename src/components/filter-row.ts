@@ -160,6 +160,7 @@ export default class ApexFilterRow<T extends object> extends EventEmitterBase<
           .value=${this.expression.searchTerm ?? ''}
           @igcInput=${this.#handleInput}
           @keydown=${this.#handleKeydown}
+          placeholder="Type and pres enter."
         ></igc-input>`;
   }
 
@@ -205,7 +206,28 @@ export default class ApexFilterRow<T extends object> extends EventEmitterBase<
   }
 
   protected override render() {
-    return html`${this.renderSelect()}${this.renderInput()}${this.renderExpressionChips()}`;
+    return html`
+      <div part="filter-row-input">${this.renderSelect()} - ${this.renderInput()}</div>
+      <div part="filter-row-filters">${this.renderExpressionChips()}</div>
+      <div part="filter-actions">
+        <igc-button variant="flat">
+          <igc-icon
+            slot="prefix"
+            name="refresh"
+            collection="internal"
+          ></igc-icon>
+          Reset
+        </igc-button>
+        <igc-button variant="flat">
+          <igc-icon
+            slot="prefix"
+            name="close"
+            collection="internal"
+          ></igc-icon>
+          Close
+        </igc-button>
+      </div>
+    `;
   }
 }
 
