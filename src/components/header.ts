@@ -1,15 +1,17 @@
 import { html, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { contextProvided } from '@lit-labs/context';
 import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { partNameMap } from '../internal/part-map.js';
 import { GRID_HEADER_TAG } from '../internal/tags.js';
 import {
+  gridStateContext,
   MIN_COL_RESIZE_WIDTH,
   SORT_ICON_ASCENDING,
   SORT_ICON_DESCENDING,
 } from '../internal/constants.js';
 import type { ColumnConfig, ApexHeaderContext } from '../internal/types';
-import type { SortExpression } from '../operations/sort/types';
+import type { StateController } from '../controllers/state.js';
 import styles from '../styles/header-cell/header-cell-styles.js';
 
 // TODO: Revise
@@ -64,20 +66,15 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
 
   public static override styles = styles;
 
+  @contextProvided({ context: gridStateContext, subscribe: true })
+  @property({ attribute: false })
+  public state!: StateController<T>;
+
   @state()
   protected isResizing = false;
 
   @property({ attribute: false })
   public column!: ColumnConfig<T>;
-
-  @property({ attribute: false })
-  public sortState?: SortExpression<T>;
-
-  @property({ attribute: false })
-  public sortIndex = -1;
-
-  @property({ attribute: false })
-  public filterCount = 0;
 
   protected get context(): ApexHeaderContext<T> {
     return {
@@ -133,16 +130,16 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
   #autosize = () =>
     this.emitEvent('columnAutosize', { detail: { column: this.column, header: this } });
 
-  // TODO: Remove sort index for single sort
   protected renderSortState() {
-    return this.sortState
+    const state = this.state.sorting.state.get(this.column.key);
+    const idx = Array.from(this.state.sorting.state.values()).indexOf(state!);
+    const attr = this.state.host.sortingConfig.multiple ? (idx > -1 ? idx + 1 : nothing) : nothing;
+
+    return state
       ? html`
           <igc-icon
-            data-sortIndex=${this.sortIndex > -1 ? this.sortIndex + 1 : nothing}
-            size="small"
-            name=${this.sortState.direction === 'ascending'
-              ? SORT_ICON_ASCENDING
-              : SORT_ICON_DESCENDING}
+            data-sortIndex=${attr}
+            name=${state.direction === 'ascending' ? SORT_ICON_ASCENDING : SORT_ICON_DESCENDING}
             collection="internal"
           ></igc-icon>
         `
@@ -156,6 +153,8 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
   }
 
   protected renderFilterArea() {
+    const count = this.state.filtering.state.get(this.column.key)?.length ?? 0;
+
     return this.column.filter
       ? html`<div part="filter">
           <igc-icon-button
@@ -164,9 +163,7 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
             variant="flat"
             >∀</igc-icon-button
           >
-          ${this.filterCount
-            ? html`<igc-badge shape="rounded">${this.filterCount}</igc-badge>`
-            : nothing}
+          ${count ? html`<igc-badge shape="rounded">${count}</igc-badge>` : nothing}
         </div>`
       : nothing;
   }

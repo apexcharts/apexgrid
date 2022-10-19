@@ -26,6 +26,7 @@
       }
 
       .sample-drop-down {
+        --ig-size: 1;
         display: flex;
         justify-content: center;
         padding: 0.5rem 0;
@@ -53,7 +54,7 @@
         IgcCheckboxComponent,
         IgcRatingComponent,
         IgcButtonComponent,
-        IgcDropdownComponent,
+        IgcSelectComponent,
         IgcSwitchComponent,
         configureTheme,
       } from 'igniteui-webcomponents';
@@ -64,7 +65,7 @@
         IgcAvatarComponent,
         IgcRatingComponent,
         IgcButtonComponent,
-        IgcDropdownComponent,
+        IgcSelectComponent,
         IgcSwitchComponent,
       );
 
@@ -164,17 +165,20 @@
       }
 
       async function setTheme(theme) {
-        theme = theme ?? document.getElementById('theme').textContent;
         const variant = document.querySelector('igc-switch')?.checked ? 'dark' : 'light';
+
         await import(
           /* @vite-ignore */
-          `/node_modules/igniteui-webcomponents/themes/${variant}/${theme}.css?${Date.now()}`
+          `/node_modules/igniteui-webcomponents/themes/${variant}/${
+            theme ?? 'bootstrap'
+          }.css?${Date.now()}`
         );
+
         Array.from(document.head.querySelectorAll('style[type="text/css"]'))
           .slice(0, -1)
           .forEach(style => style.remove());
+
         configureTheme(theme);
-        document.getElementById('theme').textContent = theme;
       }
 
       const themeChooser = () => {
@@ -182,22 +186,20 @@
 
         return html`
           <div class="sample-drop-down">
-            <igc-dropdown
+            <igc-select
+              outlined
+              placeholder="Choose a theme..."
+              label="Choose theme"
               same-width
               flip
               @igcChange=${e => setTheme(e.detail.value)}
             >
-              <igc-button
-                title="Choose theme"
-                id="theme"
-                slot="target"
-                >Choose theme
-              </igc-button>
-              ${themes.map(each => html`<igc-dropdown-item>${each}</igc-dropdown-item>`)}
-            </igc-dropdown>
+              ${themes.map(each => html`<igc-select-item .value=${each}>${each}</igc-select-item>`)}
+            </igc-select>
+
             <igc-switch
               @igcChange=${() => setTheme()}
-              label-position="before"
+              label-position="after"
               >Dark variant</igc-switch
             >
           </div>

@@ -17,7 +17,7 @@ export class StateController<T extends object> implements ReactiveController {
     this.navigation.active = node;
   }
 
-  constructor(protected host: GridHost<T>) {
+  constructor(public host: GridHost<T>) {
     this.host.addController(this);
     this.init();
   }

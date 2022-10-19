@@ -1,11 +1,12 @@
-import { html, LitElement, nothing } from 'lit';
+import { html, LitElement, nothing, PropertyValueMap } from 'lit';
 import { customElement, property, queryAll } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { GRID_HEADER_ROW_TAG } from '../internal/tags.js';
-import type { StateController } from '../controllers/state';
-import type { ColumnConfig } from '../internal/types';
-import styles from '../styles/header-row/header-row.base-styles.js';
+
 import ApexGridHeader from './header.js';
+import styles from '../styles/header-row/header-row.base-styles.js';
+
+import type { ColumnConfig } from '../internal/types';
 
 @customElement(GRID_HEADER_ROW_TAG)
 export default class ApexGridHeaderRow<T extends object> extends LitElement {
@@ -20,9 +21,6 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
   @property({ attribute: false })
   public columns: Array<ColumnConfig<T>> = [];
 
-  @property({ attribute: false })
-  public state!: StateController<T>;
-
   public get headers() {
     return Array.from(this._headers);
   }
@@ -32,28 +30,14 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
     this.setAttribute('tabindex', '0');
   }
 
-  #getColumnSortState(column: ColumnConfig<T>) {
-    return this.state.sorting.state.get(column.key);
-  }
-
-  #getFilterState(column: ColumnConfig<T>) {
-    return this.state.filtering.state.get(column.key)?.length ?? 0;
-  }
-
-  #getSortIndex(column: ColumnConfig<T>) {
-    return Array.from(this.state.sorting.state.values()).indexOf(this.#getColumnSortState(column)!);
+  protected override shouldUpdate(props: PropertyValueMap<this> | Map<PropertyKey, this>): boolean {
+    this.headers.forEach(header => header.requestUpdate());
+    return super.shouldUpdate(props);
   }
 
   protected override render() {
     return html`${map(this.columns, column =>
-      column.hidden
-        ? nothing
-        : html`<apx-grid-header
-            .column=${column}
-            .sortState=${this.#getColumnSortState(column)}
-            .sortIndex=${this.#getSortIndex(column)}
-            .filterCount=${this.#getFilterState(column)}
-          ></apx-grid-header>`,
+      column.hidden ? nothing : html`<apx-grid-header .column=${column}></apx-grid-header>`,
     )}`;
   }
 }

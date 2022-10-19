@@ -1,4 +1,5 @@
 import { html, TemplateResult } from 'lit';
+import { ContextProvider } from '@lit-labs/context';
 import { customElement, eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { themes } from 'igniteui-webcomponents/theming/theming-decorator.js';
@@ -8,7 +9,7 @@ import { DataOperationsController } from '../controllers/data-operation.js';
 import { ResizeController } from '../controllers/resize.js';
 import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { watch } from '../internal/watch.js';
-import { DEFAULT_COLUMN_CONFIG, PIPELINE } from '../internal/constants.js';
+import { DEFAULT_COLUMN_CONFIG, PIPELINE, gridStateContext } from '../internal/constants.js';
 import { registerGridIcons } from '../internal/icon-registry.js';
 import { applyColumnWidths } from '../internal/utils.js';
 import { default as bootstrap } from '../styles/grid/themes/light/grid.bootstrap-styles.js';
@@ -39,11 +40,13 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   public static get is() {
     return GRID_TAG;
   }
+
   public static override styles = bootstrap;
 
   protected resizeController = new ResizeController<T>(this);
   protected stateController = new StateController<T>(this);
   protected dataController = new DataOperationsController<T>(this);
+
   protected rowRenderer = <T>(data: T, index: number): TemplateResult => {
     return html`<apx-grid-row
       style=${styleMap(applyColumnWidths(this.columns))}
@@ -53,6 +56,8 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
       .columns=${this.columns}
     ></apx-grid-row>`;
   };
+
+  protected stateProvider = new ContextProvider(this, gridStateContext, this.stateController);
 
   @query(ApexGridBody.is)
   protected bodyElement!: ApexGridBody;
@@ -160,7 +165,6 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     return html`<apx-grid-header-row
       style=${styleMap(applyColumnWidths(this.columns))}
       .columns=${this.columns}
-      .state=${this.stateController}
     ></apx-grid-header-row>`;
   }
 

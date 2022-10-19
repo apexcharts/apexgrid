@@ -152,7 +152,6 @@ export class FilterController<T extends object> implements ReactiveController {
           })}
           .column=${this.activeColumn}
           .expression=${this.activeExpression as FilterExpression<T>}
-          .state=${this.state}
           @criteriaChanged=${this.#handleCriteriaChanged}
           @conditionChanged=${this.#handleConditionChanged}
           @inputChanged=${this.#handleInputChanged}

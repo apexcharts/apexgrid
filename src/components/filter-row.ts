@@ -1,8 +1,8 @@
 import { html, nothing } from 'lit';
+import { contextProvided } from '@lit-labs/context';
 import { customElement, property, query } from 'lit/decorators.js';
 import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { GRID_FILTER_ROW_TAG } from '../internal/tags.js';
-import FilterState from '../operations/filter/state.js';
 import BooleanOperands from '../operations/filter/operands/boolean.js';
 import NumberOperands from '../operations/filter/operands/number.js';
 import StringOperands from '../operations/filter/operands/string.js';
@@ -20,6 +20,8 @@ import {
   IgcSelectComponent,
   IgcSelectItemComponent,
 } from 'igniteui-webcomponents';
+import { gridStateContext } from '../internal/constants.js';
+import { StateController } from '../controllers/state.js';
 
 defineComponents(IgcChipComponent, IgcSelectComponent, IgcInputComponent, IgcIconButtonComponent);
 
@@ -72,8 +74,9 @@ export default class ApexFilterRow<T extends object> extends EventEmitterBase<
   @property({ attribute: false })
   public expression!: FilterExpression<T>;
 
+  @contextProvided({ context: gridStateContext, subscribe: true })
   @property({ attribute: false })
-  public state!: FilterState<T>;
+  public state!: StateController<T>;
 
   #handleConditionChange(event: CustomEvent<IgcSelectItemComponent>) {
     event.stopPropagation();
@@ -161,7 +164,7 @@ export default class ApexFilterRow<T extends object> extends EventEmitterBase<
   }
 
   protected renderExpressionChips() {
-    const state = this.state.get(this.column.key);
+    const state = this.state.filtering.state.get(this.column.key);
 
     return !state
       ? nothing

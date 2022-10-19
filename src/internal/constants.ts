@@ -1,3 +1,5 @@
+import { createContext } from '@lit-labs/context';
+import type { StateController } from '../controllers/state';
 import type { ActiveNode, ColumnConfig, NavigationState } from './types';
 
 export const PIPELINE = 'pipeline';
@@ -18,3 +20,5 @@ export const NAVIGATION_STATE = new Map<NavigationState, ActiveNode>([
   ['previous', SENTINEL_NODE],
   ['current', SENTINEL_NODE],
 ]);
+
+export const gridStateContext = createContext<StateController<any>>('gridStateController');
