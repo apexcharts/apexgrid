@@ -24,6 +24,9 @@ import ApexGridRow from './row.js';
 import ApexGridCell from './cell.js';
 import ApexFilterRow from './filter-row.js';
 
+import { defineComponents, IgcIconComponent } from 'igniteui-webcomponents';
+defineComponents(IgcIconComponent);
+
 // TODO: Subject to change as these are way too generic names
 export interface ApexGridEventMap<T extends object> {
   sorting: CustomEvent<SortExpression<T>>;

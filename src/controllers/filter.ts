@@ -115,6 +115,7 @@ export class FilterController<T extends object> implements ReactiveController {
     }
 
     this.host.requestUpdate(PIPELINE);
+    this.row.requestUpdate();
   };
 
   #handleSelectionChanged = async (ev: CustomEvent<FilterExpression<T>>) => {

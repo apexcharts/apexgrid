@@ -20,7 +20,7 @@ import {
   IgcSelectComponent,
   IgcSelectItemComponent,
 } from 'igniteui-webcomponents';
-import { gridStateContext } from '../internal/constants.js';
+import { gridStateContext, PIPELINE } from '../internal/constants.js';
 import { StateController } from '../controllers/state.js';
 
 defineComponents(IgcChipComponent, IgcSelectComponent, IgcInputComponent, IgcIconButtonComponent);
@@ -110,6 +110,14 @@ export default class ApexFilterRow<T extends object> extends EventEmitterBase<
     }
   }
 
+  #handleResetClick() {
+    this.state.filtering.reset(this.column.key);
+    this.state.host.requestUpdate(PIPELINE);
+    this.requestUpdate();
+  }
+
+  #handleCloseClick() {}
+
   protected renderPrefixIcon() {
     return html`<igc-icon
       slot="prefix"
@@ -151,7 +159,7 @@ export default class ApexFilterRow<T extends object> extends EventEmitterBase<
   }
 
   protected renderInput() {
-    return this.column.type === 'boolean'
+    return this.isBoolean
       ? nothing
       : html` <igc-input
           id="filter-input"
@@ -160,7 +168,9 @@ export default class ApexFilterRow<T extends object> extends EventEmitterBase<
           .value=${this.expression.searchTerm ?? ''}
           @igcInput=${this.#handleInput}
           @keydown=${this.#handleKeydown}
-          placeholder="Type and pres enter."
+          placeholder=${`Filter '${String(this.expression.key)}' by ${
+            this.expression.condition?.name
+          }`}
         ></igc-input>`;
   }
 
@@ -200,7 +210,8 @@ export default class ApexFilterRow<T extends object> extends EventEmitterBase<
               @igcRemove=${remove}
               @igcSelect=${select}
             >
-              ${this.renderChipPrefix(each)} ${each.searchTerm}
+              ${this.renderChipPrefix(each)}
+              ${each.condition.unary ? each.condition.name : each.searchTerm}
             </igc-chip>`;
         });
   }
@@ -210,7 +221,10 @@ export default class ApexFilterRow<T extends object> extends EventEmitterBase<
       <div part="filter-row-input">${this.renderSelect()} - ${this.renderInput()}</div>
       <div part="filter-row-filters">${this.renderExpressionChips()}</div>
       <div part="filter-actions">
-        <igc-button variant="flat">
+        <igc-button
+          variant="flat"
+          @click=${this.#handleResetClick}
+        >
           <igc-icon
             slot="prefix"
             name="refresh"
@@ -218,7 +232,10 @@ export default class ApexFilterRow<T extends object> extends EventEmitterBase<
           ></igc-icon>
           Reset
         </igc-button>
-        <igc-button variant="flat">
+        <igc-button
+          variant="flat"
+          @click=${this.#handleCloseClick}
+        >
           <igc-icon
             slot="prefix"
             name="close"

@@ -14,16 +14,6 @@ import type { ColumnConfig, ApexHeaderContext } from '../internal/types';
 import type { StateController } from '../controllers/state.js';
 import styles from '../styles/header-cell/header-cell-styles.js';
 
-// TODO: Revise
-// import Icon from 'igniteui-webcomponents/components/icon/icon';
-import {
-  defineComponents,
-  IgcIconButtonComponent,
-  IgcIconComponent,
-  IgcBadgeComponent,
-} from 'igniteui-webcomponents';
-defineComponents(IgcIconComponent, IgcIconButtonComponent, IgcBadgeComponent);
-
 export interface ColumnResizeStartEvent {
   anchor: number;
 }
@@ -65,6 +55,10 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
   }
 
   public static override styles = styles;
+
+  protected get isSortable() {
+    return Boolean(this.column.sort);
+  }
 
   @contextProvided({ context: gridStateContext, subscribe: true })
   @property({ attribute: false })
@@ -130,50 +124,60 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
   #autosize = () =>
     this.emitEvent('columnAutosize', { detail: { column: this.column, header: this } });
 
-  protected renderSortState() {
+  protected renderSortPart() {
     const state = this.state.sorting.state.get(this.column.key);
     const idx = Array.from(this.state.sorting.state.values()).indexOf(state!);
     const attr = this.state.host.sortingConfig.multiple ? (idx > -1 ? idx + 1 : nothing) : nothing;
+    const icon = state
+      ? state.direction === 'ascending'
+        ? SORT_ICON_ASCENDING
+        : SORT_ICON_DESCENDING
+      : SORT_ICON_ASCENDING;
 
-    return state
-      ? html`
+    return state || this.isSortable
+      ? html`<span
+          part=${partNameMap({ action: true, sorted: !!state?.direction })}
+          @click=${this.isSortable ? this.#handleClick : nothing}
+        >
           <igc-icon
-            part="sorting-action"
+            part=${partNameMap({ 'sorting-action': !!state })}
             data-sortIndex=${attr}
-            name=${state.direction === 'ascending' ? SORT_ICON_ASCENDING : SORT_ICON_DESCENDING}
+            name=${icon}
             collection="internal"
           ></igc-icon>
-        `
-      : html`<igc-icon
-          size="small"
-          name="arrow-upward"
-          collection="internal"
-        ></igc-icon>`;
-  }
-
-  protected renderContent() {
-    return this.column.headerTemplate
-      ? this.column.headerTemplate(this.context)
-      : html`${this.column.headerText ?? this.column.key}`;
-  }
-
-  protected renderFilterArea() {
-    const count = this.state.filtering.state.get(this.column.key)?.length ?? 0;
-
-    return this.column.filter
-      ? html`<div part="filter">
-          <igc-icon
-            name="filter"
-            collection="internal"
-            @click=${this.#initFilterRow}
-            size="small"
-          ></igc-icon>
-          ${count ? html`<span part="filter-count">${count}</span>` : nothing}
-        </div>`
+        </span>`
       : nothing;
   }
 
-  protected renderResizeArea() {
+  protected renderContentPart() {
+    const defaultContent = this.column.headerText ?? this.column.key;
+    const template = this.column.headerTemplate;
+
+    return html`
+      <span part="title">
+        <span>${template ? template(this.context) : html`${defaultContent}`}</span>
+      </span>
+    `;
+  }
+
+  protected renderFilterPart() {
+    const count = this.state.filtering.state.get(this.column.key)?.length ?? 0;
+
+    return this.column.filter
+      ? html`<span part=${partNameMap({ action: true, filtered: count })}
+          ><div part="filter">
+            <igc-icon
+              name="filter"
+              collection="internal"
+              @click=${this.#initFilterRow}
+            ></igc-icon>
+            ${count ? html`<span part="filter-count">${count}</span>` : nothing}
+          </div></span
+        >`
+      : nothing;
+  }
+
+  protected renderResizePart() {
     return this.column.resizable
       ? html`<span
           part="resizable"
@@ -188,23 +192,14 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
       <div
         part=${partNameMap({
           content: true,
-          sortable: !!this.column.sort,
+          sortable: this.isSortable,
           resizing: this.isResizing,
         })}
       >
-        <span part="title">
-          <span>${this.renderContent()}</span>
-        </span>
-        <div part="actions">
-          <span
-            part="action"
-            @click=${this.column.sort ? this.#handleClick : nothing}
-            >${this.renderSortState()}</span
-          >
-          <span part="action">${this.renderFilterArea()}</span>
-        </div>
+        ${this.renderContentPart()}
+        <div part="actions">${this.renderSortPart()}${this.renderFilterPart()}</div>
       </div>
-      ${this.renderResizeArea()}
+      ${this.renderResizePart()}
     `;
   }
 }

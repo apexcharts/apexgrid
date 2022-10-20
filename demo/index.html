@@ -165,13 +165,12 @@
       }
 
       async function setTheme(theme) {
+        theme = theme ?? document.querySelector('igc-select').value;
         const variant = document.querySelector('igc-switch')?.checked ? 'dark' : 'light';
 
         await import(
           /* @vite-ignore */
-          `/node_modules/igniteui-webcomponents/themes/${variant}/${
-            theme ?? 'bootstrap'
-          }.css?${Date.now()}`
+          `/node_modules/igniteui-webcomponents/themes/${variant}/${theme}.css?${Date.now()}`
         );
 
         Array.from(document.head.querySelectorAll('style[type="text/css"]'))
@@ -190,6 +189,7 @@
               outlined
               placeholder="Choose a theme..."
               label="Choose theme"
+              value="bootstrap"
               same-width
               flip
               @igcChange=${e => setTheme(e.detail.value)}

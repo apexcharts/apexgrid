@@ -5,16 +5,24 @@ const DEFAULT_ARGS: PointerEventInit = { pointerId: 1, bubbles: true, composed: 
 export default class HeaderTestFixture<T extends object> {
   constructor(public element: ApexGridHeader<T>) {}
 
+  protected get(selector: string) {
+    return this.element.shadowRoot!.querySelector(selector) as HTMLElement;
+  }
+
   protected get contentPart() {
-    return this.element.shadowRoot!.querySelector('[part~="content"]')!;
+    return this.get('[part~="content"]');
   }
 
-  protected get actionPart() {
-    return this.element.shadowRoot!.querySelector('[part~="action"]')!;
+  protected get actionsPart() {
+    return this.get('[part~="actions"]');
   }
 
-  protected get filterPart() {
-    return this.element.shadowRoot!.querySelector('[part~="filter"]')!;
+  public get sortPart() {
+    return this.actionsPart.querySelector('[part~="action"]')! as HTMLElement;
+  }
+
+  public get filterPart() {
+    return this.get('[part~="filter"]');
   }
 
   public get filterIcon() {
@@ -22,15 +30,23 @@ export default class HeaderTestFixture<T extends object> {
   }
 
   public get resizePart() {
-    return this.element.shadowRoot!.querySelector('[part~="resizable"]')!;
+    return this.get('[part~="resizable"]');
   }
 
   public get titlePart() {
-    return this.element.shadowRoot!.querySelector('[part~="title"]')!;
+    return this.get('[part~="title"]');
   }
 
   public get sortIcon() {
-    return this.actionPart.querySelector('igc-icon')!;
+    return this.sortPart.querySelector('igc-icon')!;
+  }
+
+  public get isSorted() {
+    return this.sortPart.part.value.includes('sorted');
+  }
+
+  public get isFiltered() {
+    return this.filterPart.part.value.includes('filtered');
   }
 
   public get text() {
@@ -59,7 +75,7 @@ export default class HeaderTestFixture<T extends object> {
     this.resizePart.dispatchEvent(new Event('dblclick', DEFAULT_ARGS));
   }
 
-  public click() {
-    this.contentPart.dispatchEvent(new Event('click', DEFAULT_ARGS));
+  public sort() {
+    this.sortPart.click();
   }
 }

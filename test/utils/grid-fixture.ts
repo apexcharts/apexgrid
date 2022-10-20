@@ -119,8 +119,8 @@ export default class GridTestFixture<T extends object> {
     await elementUpdated(this.grid);
   }
 
-  public async clickHeader(key: Keys<T>) {
-    this.getHeader(key).click();
+  public async sortHeader(key: Keys<T>) {
+    this.getHeader(key).sort();
     await elementUpdated(this.grid);
   }
 
