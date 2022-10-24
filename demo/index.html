@@ -29,8 +29,10 @@
         --ig-size: 1;
         display: flex;
         justify-content: center;
+        align-items: center;
         padding: 0.5rem 0;
         gap: 1rem;
+        min-height: 79px;
       }
 
       #demo {
@@ -192,6 +194,7 @@
               value="bootstrap"
               same-width
               flip
+              type="outlined"
               @igcChange=${e => setTheme(e.detail.value)}
             >
               ${themes.map(each => html`<igc-select-item .value=${each}>${each}</igc-select-item>`)}

@@ -317,14 +317,19 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
   protected renderFilterState(column: ColumnConfig<T>) {
     return html`
-      <igc-button
-        variant="flat"
+      <igc-chip
         @click=${() => {
           this.column = column;
           this.expression = this.#defaultExpression;
           this.#show();
         }}
-        >Filter</igc-button
+      >
+        <igc-icon
+          slot="prefix"
+          name="filter"
+          collection="internal"
+        ></igc-icon>
+        Filter</igc-chip
       >
     `;
   }
