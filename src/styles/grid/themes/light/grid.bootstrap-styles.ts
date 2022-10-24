@@ -20,8 +20,8 @@ export default css`/* stylelint-disable max-line-length */
   -webkit-box-shadow: var(--ig-elevation-2);
           box-shadow: var(--ig-elevation-2);
   overflow: auto hidden;
-  grid-template-rows: -webkit-max-content auto;
-  grid-template-rows: max-content auto;
+  grid-template-rows: -webkit-max-content -webkit-max-content auto;
+  grid-template-rows: max-content max-content auto;
 }
 
 apx-grid-body {

@@ -12,51 +12,14 @@ export default css`/* stylelint-disable max-line-length */
   --component-size: 3;
 }
 
-@-webkit-keyframes slide-down {
-  0% {
-    opacity: 0.35;
-    -webkit-transform: translate(0, -0.625rem);
-            transform: translate(0, -0.625rem);
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes slide-down {
-  0% {
-    opacity: 0.35;
-    -webkit-transform: translate(0, -0.625rem);
-            transform: translate(0, -0.625rem);
-  }
-  100% {
-    opacity: 1;
-  }
-}
 :host {
   --ig-size: 1;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 1rem;
-  position: absolute;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  inset-block-start: var(--header-row-bottom);
-  inset-inline-start: 0;
-  width: 100%;
+  display: grid;
   min-height: max(var(--is-large, 1) * 3.125rem, var(--is-medium, 1) * 2.125rem, var(--is-small, 1) * 1.5rem);
-  z-index: 1;
-  background: var(--igx-filtering-row-background, var(--filtering-row-background));
+  background: var(--igx-header-background, var(--header-background));
   color: var(--igx-header-text-color, var(--header-text-color));
-  padding: 0 max(var(--is-large, 1) * 1.5rem, var(--is-medium, 1) * 1rem, var(--is-small, 1) * 0.5rem);
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  -webkit-animation: slide-down 180ms ease-in-out both;
-          animation: slide-down 180ms ease-in-out both;
-  -webkit-box-shadow: var(--ig-elevation-1);
-          box-shadow: var(--ig-elevation-1);
+  -webkit-border-after: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
+          border-block-end: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
 }
 
 [part~=filter-row-input],
@@ -76,4 +39,11 @@ export default css`/* stylelint-disable max-line-length */
       -ms-flex: 1;
           flex: 1;
   overflow: hidden;
+}
+
+[part~=active-state] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
 }`;

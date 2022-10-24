@@ -11,7 +11,7 @@ $grid-resize-line-color: var(--igx-grid-resize-line-color, var(--grid-resize-lin
     font-family: var(--ig-font-family);
     box-shadow: elevation(2);
     overflow: auto hidden;
-    grid-template-rows: max-content auto;
+    grid-template-rows: max-content max-content auto;
 }
 
 apx-grid-body {

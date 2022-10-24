@@ -1,12 +1,8 @@
 import { html, nothing, ReactiveController } from 'lit';
 import { styleMap } from 'lit/directives/style-map.js';
-import type {
-  ColumnAutosizeEvent,
-  ColumnResizedEvent,
-  ColumnResizeStartEvent,
-} from '../components/header';
+import ApexGridHeader from '../components/header.js';
 import { MIN_COL_RESIZE_WIDTH } from '../internal/constants.js';
-import type { GridHost, Keys } from '../internal/types';
+import type { ColumnConfig, GridHost, Keys } from '../internal/types';
 
 export class ResizeController<T extends object> implements ReactiveController {
   constructor(protected host: GridHost<T>) {
@@ -16,33 +12,27 @@ export class ResizeController<T extends object> implements ReactiveController {
   public active = false;
   public x = 0;
 
-  protected resizeStart = (ev: CustomEvent<ColumnResizeStartEvent>) => {
-    ev.stopPropagation();
-
+  public start(header: ApexGridHeader<T>) {
     this.active = true;
-    this.x = ev.detail.anchor;
+    this.x = header.offsetLeft + header.offsetWidth;
     this.host.requestUpdate();
-  };
+  }
 
-  protected resizeStop = (ev: CustomEvent<void>) => {
-    ev.stopPropagation();
-
+  public stop() {
     this.active = false;
     this.host.requestUpdate();
-  };
+  }
 
-  protected resize = (ev: CustomEvent<ColumnResizedEvent<T>>) => {
-    ev.stopPropagation();
+  public resize(column: ColumnConfig<T>, width: number, sizerOffset?: number) {
+    if (sizerOffset) {
+      this.x = sizerOffset;
+    }
 
-    this.x = ev.detail.x;
-    ev.detail.column.width = `${ev.detail.newWidth}px`;
+    column.width = `${width}px`;
     this.host.requestUpdate();
-  };
+  }
 
-  protected autosize = async (ev: CustomEvent<ColumnAutosizeEvent<T>>) => {
-    ev.stopPropagation();
-    const { column, header } = ev.detail;
-
+  public async autosize(column: ColumnConfig<T>, header: ApexGridHeader<T>) {
     column.width = `max-content`;
 
     this.host.requestUpdate();
@@ -50,7 +40,7 @@ export class ResizeController<T extends object> implements ReactiveController {
 
     column.width = `${this.#maxSize(column.key, header.offsetWidth)}px`;
     this.host.requestUpdate();
-  };
+  }
 
   #maxSize(key: Keys<T>, headerWidth: number) {
     const maxCellWidth = this.host.rows
@@ -62,19 +52,7 @@ export class ResizeController<T extends object> implements ReactiveController {
     return Math.max(...[MIN_COL_RESIZE_WIDTH, maxCellWidth, headerWidth]);
   }
 
-  public hostConnected() {
-    this.host.addEventListener('columnResizeStart', this.resizeStart);
-    this.host.addEventListener('columnResizeEnd', this.resizeStop);
-    this.host.addEventListener('columnResized', this.resize);
-    this.host.addEventListener('columnAutosize', this.autosize);
-  }
-
-  public hostDisconnected() {
-    this.host.removeEventListener('columnResizeStart', this.resizeStart);
-    this.host.removeEventListener('columnResizeEnd', this.resizeStop);
-    this.host.removeEventListener('columnResized', this.resize);
-    this.host.removeEventListener('columnAutosize', this.autosize);
-  }
+  public hostConnected() {}
 
   public renderIndicator() {
     return this.active

@@ -1,43 +1,20 @@
 import { html, nothing } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { contextProvided } from '@lit-labs/context';
 import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { partNameMap } from '../internal/part-map.js';
 import { GRID_HEADER_TAG } from '../internal/tags.js';
 import {
-  gridStateContext,
   MIN_COL_RESIZE_WIDTH,
   SORT_ICON_ASCENDING,
   SORT_ICON_DESCENDING,
 } from '../internal/constants.js';
 import type { ColumnConfig, ApexHeaderContext } from '../internal/types';
-import type { StateController } from '../controllers/state.js';
+import { StateController, gridStateContext } from '../controllers/state.js';
 import styles from '../styles/header-cell/header-cell-styles.js';
 
-export interface ColumnResizeStartEvent {
-  anchor: number;
-}
-
-interface ColumnResizeBase<T extends object> {
-  column: ColumnConfig<T>;
-}
-
-export interface ColumnResizedEvent<T extends object> extends ColumnResizeBase<T> {
-  newWidth: number;
-  x: number;
-}
-
-export interface ColumnAutosizeEvent<T extends object> extends ColumnResizeBase<T> {
-  header: ApexGridHeader<T>;
-}
-
 export interface ApexGridHeaderEventMap<T extends object> {
-  columnResizeStart: CustomEvent<ColumnResizeStartEvent>;
-  columnResizeEnd: CustomEvent<void>;
-  columnResized: CustomEvent<ColumnResizedEvent<T>>;
-  columnAutosize: CustomEvent<ColumnAutosizeEvent<T>>;
   headerSortClicked: CustomEvent<ColumnConfig<T>>;
-  headerFilterClicked: CustomEvent<ColumnConfig<T>>;
 }
 
 // TODO: Fix
@@ -60,12 +37,13 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
     return Boolean(this.column.sort);
   }
 
+  protected get resizeController() {
+    return this.state.resizing;
+  }
+
   @contextProvided({ context: gridStateContext, subscribe: true })
   @property({ attribute: false })
   public state!: StateController<T>;
-
-  @state()
-  protected isResizing = false;
 
   @property({ attribute: false })
   public column!: ColumnConfig<T>;
@@ -77,52 +55,45 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
     };
   }
 
-  #initFilterRow() {
-    this.emitEvent('headerFilterClicked', { detail: this.column });
+  #addResizeEventHandlers() {
+    const config: AddEventListenerOptions = { once: true };
+
+    this.addEventListener('gotpointercapture', () => (this.resizeController.active = true), config);
+    this.addEventListener('lostpointercapture', this.#handlePointerLost, config);
+    this.addEventListener('pointerup', e => this.releasePointerCapture(e.pointerId), config);
+    this.addEventListener('pointermove', this.#handleResize);
   }
 
   #handleClick() {
     this.emitEvent('headerSortClicked', { detail: this.column });
   }
 
-  #resize = ({ clientX }: PointerEvent) => {
-    const val = Math.max(clientX - this.offsetLeft, MIN_COL_RESIZE_WIDTH);
-    this.emitEvent('columnResized', {
-      detail: {
-        column: this.column,
-        newWidth: val,
-        x: Math.max(clientX, this.offsetLeft + val),
-      },
-    });
+  #handleResize = ({ clientX }: PointerEvent) => {
+    const left = this.offsetLeft;
+    const width = Math.max(clientX - left, MIN_COL_RESIZE_WIDTH);
+    const x = Math.max(clientX, left + width);
+
+    this.resizeController.resize(this.column, width, x);
   };
 
-  #resizeStart(ev: PointerEvent) {
-    ev.preventDefault();
-
+  #handleResizeStart(ev: PointerEvent) {
     const { target, pointerId } = ev;
 
-    this.addEventListener('gotpointercapture', this.#pointerCaptured, { once: true });
-    this.addEventListener('lostpointercapture', this.#pointerLost, { once: true });
-    this.addEventListener('pointermove', this.#resize);
-    this.addEventListener('pointerup', this.#resizeStop, { once: true });
+    ev.preventDefault();
 
-    this.emitEvent('columnResizeStart', { detail: { anchor: this.offsetLeft + this.offsetWidth } });
+    this.#addResizeEventHandlers();
+    this.resizeController.start(this);
 
     (target as HTMLElement).setPointerCapture(pointerId);
   }
 
-  #resizeStop = ({ pointerId }: PointerEvent) => this.releasePointerCapture(pointerId);
-
-  #pointerCaptured = () => (this.isResizing = true);
-
-  #pointerLost = () => {
-    this.isResizing = false;
-    this.removeEventListener('pointermove', this.#resize);
-    this.emitEvent('columnResizeEnd');
+  #handlePointerLost = () => {
+    this.resizeController.active = false;
+    this.removeEventListener('pointermove', this.#handleResize);
+    this.resizeController.stop();
   };
 
-  #autosize = () =>
-    this.emitEvent('columnAutosize', { detail: { column: this.column, header: this } });
+  #handleAutosize = () => this.resizeController.autosize(this.column, this);
 
   protected renderSortPart() {
     const state = this.state.sorting.state.get(this.column.key);
@@ -160,29 +131,12 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
     `;
   }
 
-  protected renderFilterPart() {
-    const count = this.state.filtering.state.get(this.column.key)?.length ?? 0;
-
-    return this.column.filter
-      ? html`<span part=${partNameMap({ action: true, filtered: count })}
-          ><div part="filter">
-            <igc-icon
-              name="filter"
-              collection="internal"
-              @click=${this.#initFilterRow}
-            ></igc-icon>
-            ${count ? html`<span part="filter-count">${count}</span>` : nothing}
-          </div></span
-        >`
-      : nothing;
-  }
-
   protected renderResizePart() {
     return this.column.resizable
       ? html`<span
           part="resizable"
-          @dblclick=${this.#autosize}
-          @pointerdown=${this.#resizeStart}
+          @dblclick=${this.#handleAutosize}
+          @pointerdown=${this.#handleResizeStart}
         ></span>`
       : nothing;
   }
@@ -193,11 +147,11 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
         part=${partNameMap({
           content: true,
           sortable: this.isSortable,
-          resizing: this.isResizing,
+          resizing: this.resizeController.active,
         })}
       >
         ${this.renderContentPart()}
-        <div part="actions">${this.renderSortPart()}${this.renderFilterPart()}</div>
+        <div part="actions">${this.renderSortPart()}</div>
       </div>
       ${this.renderResizePart()}
     `;

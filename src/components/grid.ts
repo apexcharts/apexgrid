@@ -1,15 +1,14 @@
-import { html, TemplateResult } from 'lit';
+import { html, nothing, TemplateResult } from 'lit';
 import { ContextProvider } from '@lit-labs/context';
 import { customElement, eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { themes } from 'igniteui-webcomponents/theming/theming-decorator.js';
 import { GRID_TAG } from '../internal/tags.js';
-import { StateController } from '../controllers/state.js';
+import { StateController, gridStateContext } from '../controllers/state.js';
 import { DataOperationsController } from '../controllers/data-operation.js';
-import { ResizeController } from '../controllers/resize.js';
 import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { watch } from '../internal/watch.js';
-import { DEFAULT_COLUMN_CONFIG, PIPELINE, gridStateContext } from '../internal/constants.js';
+import { DEFAULT_COLUMN_CONFIG, PIPELINE } from '../internal/constants.js';
 import { registerGridIcons } from '../internal/icon-registry.js';
 import { applyColumnWidths } from '../internal/utils.js';
 import { default as bootstrap } from '../styles/grid/themes/light/grid.bootstrap-styles.js';
@@ -46,7 +45,6 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
 
   public static override styles = bootstrap;
 
-  protected resizeController = new ResizeController<T>(this);
   protected stateController = new StateController<T>(this);
   protected dataController = new DataOperationsController<T>(this);
 
@@ -180,11 +178,14 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     ></apx-grid-body>`;
   }
 
+  protected renderFilterRow() {
+    return this.columns.some(column => column.filter)
+      ? html`<apx-filter-row style=${styleMap(applyColumnWidths(this.columns))}></apx-filter-row>`
+      : nothing;
+  }
+
   protected override render() {
-    return html`
-      ${this.stateController.filtering.renderFilterRow(this.headerRow)}
-      ${this.resizeController.renderIndicator()} ${this.renderHeaderRow()} ${this.renderBody()}
-    `;
+    return html`${this.stateController.resizing.renderIndicator()}${this.renderHeaderRow()}${this.renderFilterRow()}${this.renderBody()}`;
   }
 }
 

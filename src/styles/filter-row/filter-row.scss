@@ -4,41 +4,25 @@ $filtering-row-background: var(--igx-filtering-row-background, var(--filtering-r
 $filtering-row-text-color: var(--igx-filtering-row-text-color, var(--filtering-row-text-color));
 $header-background: var(--igx-header-background, var(--header-background));
 $header-text-color: var(--igx-header-text-color, var(--header-text-color));
-
-@keyframes slide-down {
-    0% {
-        opacity: .35;
-        transform: translate(0, rem(-10px));
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
+$header-border-width: var(--igx-header-border-width, var(--header-border-width));
+$header-border-style: var(--igx-header-border-style, var(--header-border-style));
+$header-border-color: var(--igx-header-border-color, var(--header-border-color));
 
 :host {
     --ig-size: 1;
 
-    display: flex;
-    gap: rem(16px);
-    position: absolute;
-    align-items: center;
-    inset-block-start: var(--header-row-bottom);
-    inset-inline-start: 0;
-    width: 100%;
+    display: grid;
     min-height: $ig-cells-min-height;
-    z-index: 1;
-    background: $filtering-row-background;
+    background: $header-background;
     color: $header-text-color;
-    padding: 0 $ig-cells-padding;
-    box-sizing: border-box;
-    animation: slide-down 180ms ease-in-out both;
-    box-shadow: elevation(1);
+    border-block-end: $header-border-width $header-border-style $header-border-color;
+
+    // z-index: 2;
 }
 
 [part~='filter-row-input'],
 [part~='filter-row-filters'],
-[part~='filter-actions'], {
+[part~='filter-actions'] {
     display: flex;
     align-items: center;
     gap: rem(8px);
@@ -47,4 +31,9 @@ $header-text-color: var(--igx-header-text-color, var(--header-text-color));
 [part~='filter-row-filters'] {
     flex: 1;
     overflow: hidden;
+}
+
+[part~='active-state'] {
+    display: flex;
+    width: 100%;
 }
