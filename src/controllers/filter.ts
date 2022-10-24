@@ -1,10 +1,8 @@
 import { ReactiveController } from 'lit';
 import { PIPELINE } from '../internal/constants';
-import type { ColumnConfig, GridHost, Keys } from '../internal/types';
-import BooleanOperands from '../operations/filter/operands/boolean.js';
-import NumberOperands from '../operations/filter/operands/number.js';
-import StringOperands from '../operations/filter/operands/string.js';
 import FilterState from '../operations/filter/state.js';
+
+import type { ColumnConfig, GridHost, Keys } from '../internal/types';
 import type { FilterExpression } from '../operations/filter/types';
 
 export class FilterController<T extends object> implements ReactiveController {
@@ -14,16 +12,16 @@ export class FilterController<T extends object> implements ReactiveController {
 
   public state: FilterState<T> = new FilterState();
 
-  protected getOperandsFor(column: ColumnConfig<T>) {
-    switch (column.type) {
-      case 'boolean':
-        return new BooleanOperands<T>();
-      case 'number':
-        return new NumberOperands<T>();
-      default:
-        return new StringOperands<T>();
-    }
-  }
+  // protected getOperandsFor(column: ColumnConfig<T>) {
+  //   switch (column.type) {
+  //     case 'boolean':
+  //       return new BooleanOperands<T>();
+  //     case 'number':
+  //       return new NumberOperands<T>();
+  //     default:
+  //       return new StringOperands<T>();
+  //   }
+  // }
 
   protected activeExpression!: Partial<FilterExpression<T>>;
   protected activeColumn?: ColumnConfig<T>;

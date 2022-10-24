@@ -143,6 +143,10 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     this.requestUpdate();
   }
 
+  #openDropdownList() {
+    this.dropdown.toggle(this.input);
+  }
+
   @watch('active', { waitUntilFirstUpdate: true })
   protected activeChanged() {
     this.active ? (this.style.display = 'flex') : (this.style.display = '');
@@ -256,9 +260,9 @@ export default class ApexFilterRow<T extends object> extends LitElement {
    * Renders the applicable filtering conditions for the active column
    * in the dropdown list.
    */
-  protected renderConditions() {
+  protected renderDropdownList() {
     return Array.from(getOperandsFor(this.column)).map(
-      each => html` <igc-dropdown-item
+      each => html`<igc-dropdown-item
         .value=${each}
         ?selected=${this.expression?.condition?.name === each}
       >
@@ -272,6 +276,25 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     );
   }
 
+  protected renderDropdown() {
+    return html`<igc-dropdown
+      flip
+      same-width
+      @igcChange=${this.#handleConditionChanged}
+      >${this.renderDropdownList()}</igc-dropdown
+    >`;
+  }
+
+  protected renderDropdownTarget() {
+    return html`<igc-icon
+      id="condition"
+      slot="prefix"
+      collection="internal"
+      .name=${this.expression.condition.name}
+      @click=${this.#openDropdownList}
+    ></igc-icon>`;
+  }
+
   protected renderInputArea() {
     return html`<igc-input
         outlined
@@ -280,21 +303,9 @@ export default class ApexFilterRow<T extends object> extends LitElement {
         @igcInput=${this.#handleInput}
         @keydown=${this.#handleKeydown}
       >
-        <igc-icon
-          @click=${() => this.dropdown.toggle(this.input)}
-          .name=${this.expression.condition.name}
-          collection="internal"
-          id="condition"
-          slot="prefix"
-        ></igc-icon>
+        ${this.renderDropdownTarget()}
       </igc-input>
-      <igc-dropdown
-        @igcChange=${this.#handleConditionChanged}
-        flip
-        same-width
-      >
-        ${this.renderConditions()}
-      </igc-dropdown>`;
+      ${this.renderDropdown()}`;
   }
 
   protected renderActiveState() {
@@ -316,6 +327,12 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   }
 
   protected renderFilterState(column: ColumnConfig<T>) {
+    // const state = this.state.filtering.state.get(column.key);
+
+    // if (state && state.length < 3) {
+    //   return this.renderExpressionChips();
+    // }
+
     return html`
       <igc-button
         variant="flat"

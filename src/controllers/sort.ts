@@ -10,6 +10,14 @@ export class SortController<T extends object> implements ReactiveController {
 
   public state: SortState<T> = new Map();
 
+  get #isMultipleSort() {
+    return this.host.sortingConfig.multiple;
+  }
+
+  get #isTriStateSort() {
+    return this.host.sortingConfig.triState;
+  }
+
   #resolveSortOptions(
     options: boolean | undefined | ColumnSortConfig<T>,
   ): Partial<SortExpression<T>> {
@@ -31,12 +39,16 @@ export class SortController<T extends object> implements ReactiveController {
     };
   }
 
-  get #isMultipleSort() {
-    return this.host.sortingConfig.multiple;
-  }
-
-  get #isTriStateSort() {
-    return this.host.sortingConfig.triState;
+  #orderBy(dir?: SortingDirection): SortingDirection {
+    return this.#isTriStateSort
+      ? dir === 'ascending'
+        ? 'descending'
+        : dir === 'descending'
+        ? 'none'
+        : 'ascending'
+      : dir === 'ascending'
+      ? 'descending'
+      : 'ascending';
   }
 
   #emitSortingEvent(detail: SortExpression<T>) {
@@ -47,9 +59,8 @@ export class SortController<T extends object> implements ReactiveController {
     return this.host.emitEvent('sorted', { detail });
   }
 
-  #headerSortHandler = async (ev: CustomEvent<ColumnConfig<T>>) => {
-    ev.stopPropagation();
-    const expression = this.prepareExpression(ev.detail);
+  public async sortFromHeaderClick(column: ColumnConfig<T>) {
+    const expression = this.prepareExpression(column);
 
     if (!this.#emitSortingEvent(expression)) {
       return;
@@ -65,7 +76,7 @@ export class SortController<T extends object> implements ReactiveController {
 
     await this.host.updateComplete;
     this.#emitSortedEvent(expression);
-  };
+  }
 
   public prepareExpression({ key, sort: options }: ColumnConfig<T>): SortExpression<T> {
     if (this.state.has(key)) {
@@ -79,18 +90,6 @@ export class SortController<T extends object> implements ReactiveController {
 
     // Initial state
     return this.#createDefaultExpression(key);
-  }
-
-  #orderBy(dir?: SortingDirection): SortingDirection {
-    return this.#isTriStateSort
-      ? dir === 'ascending'
-        ? 'descending'
-        : dir === 'descending'
-        ? 'none'
-        : 'ascending'
-      : dir === 'ascending'
-      ? 'descending'
-      : 'ascending';
   }
 
   public reset(key?: Keys<T>) {
@@ -108,11 +107,5 @@ export class SortController<T extends object> implements ReactiveController {
     this._sort(key, Object.assign(value, expression));
   }
 
-  public hostConnected() {
-    this.host.addEventListener('headerSortClicked', this.#headerSortHandler);
-  }
-
-  public hostDisconnected(): void {
-    this.host.removeEventListener('headerSortClicked', this.#headerSortHandler);
-  }
+  public hostConnected() {}
 }

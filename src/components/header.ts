@@ -1,7 +1,6 @@
-import { html, nothing } from 'lit';
+import { html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { contextProvided } from '@lit-labs/context';
-import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { partNameMap } from '../internal/part-map.js';
 import { GRID_HEADER_TAG } from '../internal/tags.js';
 import {
@@ -13,25 +12,20 @@ import type { ColumnConfig, ApexHeaderContext } from '../internal/types';
 import { StateController, gridStateContext } from '../controllers/state.js';
 import styles from '../styles/header-cell/header-cell-styles.js';
 
-export interface ApexGridHeaderEventMap<T extends object> {
-  headerSortClicked: CustomEvent<ColumnConfig<T>>;
-}
-
-// TODO: Fix
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface HTMLElementEventMap extends ApexGridHeaderEventMap<any> {}
-}
-
 @customElement(GRID_HEADER_TAG)
-export default class ApexGridHeader<T extends object> extends EventEmitterBase<
-  ApexGridHeaderEventMap<T>
-> {
+export default class ApexGridHeader<T extends object> extends LitElement {
   public static get is() {
     return GRID_HEADER_TAG;
   }
 
   public static override styles = styles;
+
+  protected get context(): ApexHeaderContext<T> {
+    return {
+      parent: this,
+      column: this.column,
+    };
+  }
 
   protected get isSortable() {
     return Boolean(this.column.sort);
@@ -48,24 +42,21 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
   @property({ attribute: false })
   public column!: ColumnConfig<T>;
 
-  protected get context(): ApexHeaderContext<T> {
-    return {
-      parent: this,
-      column: this.column,
-    };
-  }
-
   #addResizeEventHandlers() {
     const config: AddEventListenerOptions = { once: true };
 
-    this.addEventListener('gotpointercapture', () => (this.resizeController.active = true), config);
+    this.addEventListener(
+      'gotpointercapture',
+      () => (this.resizeController.indicatorActive = true),
+      config,
+    );
     this.addEventListener('lostpointercapture', this.#handlePointerLost, config);
     this.addEventListener('pointerup', e => this.releasePointerCapture(e.pointerId), config);
     this.addEventListener('pointermove', this.#handleResize);
   }
 
   #handleClick() {
-    this.emitEvent('headerSortClicked', { detail: this.column });
+    this.state.sorting.sortFromHeaderClick(this.column);
   }
 
   #handleResize = ({ clientX }: PointerEvent) => {
@@ -88,7 +79,7 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
   }
 
   #handlePointerLost = () => {
-    this.resizeController.active = false;
+    this.resizeController.indicatorActive = false;
     this.removeEventListener('pointermove', this.#handleResize);
     this.resizeController.stop();
   };
@@ -147,7 +138,7 @@ export default class ApexGridHeader<T extends object> extends EventEmitterBase<
         part=${partNameMap({
           content: true,
           sortable: this.isSortable,
-          resizing: this.resizeController.active,
+          resizing: this.resizeController.indicatorActive,
         })}
       >
         ${this.renderContentPart()}
