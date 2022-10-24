@@ -16,8 +16,13 @@ $header-border-color: var(--igx-header-border-color, var(--header-border-color))
     background: $header-background;
     color: $header-text-color;
     border-block-end: $header-border-width $header-border-style $header-border-color;
+}
 
-    // z-index: 2;
+[part='filter-row-preview'] {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: 0 $ig-cells-padding;
 }
 
 [part~='filter-row-input'],
@@ -35,5 +40,8 @@ $header-border-color: var(--igx-header-border-color, var(--header-border-color))
 
 [part~='active-state'] {
     display: flex;
+    align-items: center;
+    padding: 0 $ig-cells-padding;
     width: 100%;
+    gap: rem(8px);
 }

@@ -22,6 +22,17 @@ export default css`/* stylelint-disable max-line-length */
           border-block-end: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
 }
 
+[part=filter-row-preview] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  overflow: hidden;
+  padding: 0 max(var(--is-large, 1) * 1.5rem, var(--is-medium, 1) * 1rem, var(--is-small, 1) * 0.5rem);
+}
+
 [part~=filter-row-input],
 [part~=filter-row-filters],
 [part~=filter-actions] {
@@ -45,5 +56,10 @@ export default css`/* stylelint-disable max-line-length */
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 max(var(--is-large, 1) * 1.5rem, var(--is-medium, 1) * 1rem, var(--is-small, 1) * 0.5rem);
   width: 100%;
+  gap: 0.5rem;
 }`;
