@@ -17,6 +17,14 @@ export default class FilterState<T extends object> {
     return Array.from(this.state.values());
   }
 
+  public get ands() {
+    return this.values.map(each => each.ands).flat();
+  }
+
+  public get ors() {
+    return this.values.map(each => each.ors).flat();
+  }
+
   public has(key: Keys<T>) {
     return this.state.has(key);
   }

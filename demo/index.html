@@ -8,6 +8,7 @@
     />
     <meta charset="utf-8" />
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
       html,
       body {
         height: 100%;
@@ -75,12 +76,9 @@
         return Math.floor(Math.random() * max);
       }
 
-      const lipsum = `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto aut vitae ea sit repudiandae.`;
-
       const standard = props => {
         const change = e => console.log(`Changed to ${e.target.value}`);
         return html` <igc-input
-          size="medium"
           .value=${props.value}
           @igcChange=${change}
         >
@@ -95,23 +93,8 @@
         ></igc-checkbox>`;
       };
 
-      const _emailTemplate = props => {
-        const subscribed = props.row.data.subscribed;
-        const text = lipsum.substring(0, 140);
-        return html`<div>
-          <style>
-            .strong {
-              font-weight: bold;
-            }
-          </style>
-          <p class="strong">${props.value}</p>
-          ${subscribed ? html`<p>${text}...</p>` : ''}
-        </div>`;
-      };
-
       const avatarTemplate = props => {
         return html`<igc-avatar
-          size="small"
           shape="circle"
           .src=${props.value}
         ></igc-avatar>`;
@@ -120,12 +103,21 @@
       const satisfactionTemplate = props => {
         return html`<igc-rating
           readonly
-          size="medium"
           .value=${props.value}
         ></igc-rating>`;
       };
 
+      const priorityTemplate = props => {
+        return html`<igc-select
+          outlined
+          .value=${props.value}
+        >
+          ${choices.map(each => html`<igc-select-item .value=${each}>${each}</igc-select-item>`)}
+        </igc-select>`;
+      };
+
       const data = [];
+      const choices = ['low', 'standard', 'high'];
       const columns = [
         {
           key: 'id',
@@ -140,7 +132,14 @@
         },
         { key: 'name', cellTemplate: standard, filter: true, sort: true, resizable: true },
         { key: 'avatar', cellTemplate: avatarTemplate, resizable: true },
-        { key: 'satisfaction', sort: true, resizable: true, cellTemplate: satisfactionTemplate },
+        { key: 'satisfaction', sort: true, resizable: true, cellTemplate: undefined },
+        {
+          key: 'priority',
+          sort: {
+            comparer: (a, b) => choices.indexOf(a) - choices.indexOf(b),
+          },
+          cellTemplate: priorityTemplate,
+        },
         { key: 'age', resizable: true },
         { key: 'email', resizable: true },
         {
@@ -159,6 +158,7 @@
           age: getRandomInt(75),
           subscribed: Boolean(Math.round(Math.random() * i) % 2),
           satisfaction: getRandomInt(5),
+          priority: choices.at(getRandomInt(3)),
           email: `user${i}@organization.com`,
           avatar: `https://static.infragistics.com/xplatform/images/people/${
             getRandomInt(2) % 2 ? 'women' : 'men'
@@ -208,10 +208,14 @@
           </div>
         `;
       };
+
+      const f = e => console.log(e.detail);
+
       render(
         html`${themeChooser()}
           <apx-grid
             .columns=${columns}
+            @filtering=${f}
             .data=${data}
           ></apx-grid>`,
         document.querySelector('#demo'),

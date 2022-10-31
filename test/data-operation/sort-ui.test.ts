@@ -311,23 +311,39 @@ suite('Grid UI sort', () => {
 
   suite('API', () => {
     test('Default', async () => {
-      await TDD.sort('id', { direction: 'descending' });
+      await TDD.sort({ key: 'id', direction: 'descending' });
       assert.strictEqual(TDD.rows.first.data.id, 8);
     });
 
     test('Sort works on non-sortable columns', async () => {
       await TDD.updateColumn('id', { sort: false });
-      await TDD.sort('id', { direction: 'descending' });
+      await TDD.sort({ key: 'id', direction: 'descending' });
 
       assert.strictEqual(TDD.rows.first.data.id, 8);
     });
 
     test('Config object', async () => {
-      await TDD.sort('importance', { direction: 'descending', comparer: importanceComparer });
+      await TDD.sort({ key: 'importance', direction: 'descending', comparer: importanceComparer });
       assert.strictEqual(TDD.rows.first.data.importance, 'high');
 
-      await TDD.sort('importance', { direction: 'ascending', comparer: importanceComparer });
+      await TDD.sort({ key: 'importance', direction: 'ascending', comparer: importanceComparer });
       assert.strictEqual(TDD.rows.first.data.importance, 'low');
+    });
+
+    test('Multiple expressions', async () => {
+      await TDD.sort([
+        {
+          key: 'importance',
+          comparer: importanceComparer,
+        },
+        {
+          key: 'active',
+        },
+      ]);
+
+      assert.strictEqual(TDD.rows.first.data.importance, 'low');
+      TDD.columnIsSorted('importance');
+      TDD.columnIsSorted('active');
     });
   });
 });

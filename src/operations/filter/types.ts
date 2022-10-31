@@ -1,4 +1,7 @@
 import type { Keys } from '../../internal/types';
+import type BooleanOperands from './operands/boolean';
+import type NumberOperands from './operands/number';
+import type StringOperands from './operands/string';
 
 export type FilterCriteria = 'and' | 'or';
 
@@ -20,3 +23,8 @@ export interface FilterExpression<T, Type = any> {
   criteria?: FilterCriteria;
   caseSensitive?: boolean;
 }
+
+export type OperandKeys<T> =
+  | Keys<NumberOperands<T>>
+  | Keys<StringOperands<T>>
+  | Keys<BooleanOperands<T>>;

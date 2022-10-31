@@ -21,14 +21,6 @@ export default class HeaderTestFixture<T extends object> {
     return this.actionsPart.querySelector('[part~="action"]')! as HTMLElement;
   }
 
-  public get filterPart() {
-    return this.get('[part~="filter"]');
-  }
-
-  public get filterIcon() {
-    return this.filterPart.querySelector('igc-icon-button')!;
-  }
-
   public get resizePart() {
     return this.get('[part~="resizable"]');
   }
@@ -43,10 +35,6 @@ export default class HeaderTestFixture<T extends object> {
 
   public get isSorted() {
     return this.sortPart.part.value.includes('sorted');
-  }
-
-  public get isFiltered() {
-    return this.filterPart.part.value.includes('filtered');
   }
 
   public get text() {

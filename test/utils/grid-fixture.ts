@@ -3,6 +3,7 @@ import ApexGridHeaderRow from '../../src/components/header-row.js';
 import ApexGridRow from '../../src/components/row.js';
 import type { ColumnConfig, Keys } from '../../src/internal/types';
 import type { SortExpression } from '../../src/operations/sort/types';
+import type { FilterExpression } from '../../src/operations/filter/types';
 import type ApexGrid from '../../src/components/grid';
 import '../../src/index.js';
 import HeaderTestFixture from './header-fixture.js';
@@ -114,11 +115,6 @@ export default class GridTestFixture<T extends object> {
     );
   }
 
-  public async clickHeaderFilter(key: Keys<T>) {
-    this.getHeader(key).filterIcon.click();
-    await elementUpdated(this.grid);
-  }
-
   public async sortHeader(key: Keys<T>) {
     this.getHeader(key).sort();
     await elementUpdated(this.grid);
@@ -162,8 +158,14 @@ export default class GridTestFixture<T extends object> {
     return this;
   }
 
-  public async sort(key: Keys<T>, config?: Partial<SortExpression<T>>) {
-    this.grid.sort(key, config);
+  public async sort(config: Partial<SortExpression<T>> | Partial<SortExpression<T>>[]) {
+    this.grid.sort(config);
+    await elementUpdated(this.grid);
+    return this;
+  }
+
+  public async filter(config: Partial<FilterExpression<T>> | Partial<FilterExpression<T>>[]) {
+    this.grid.filter(config);
     await elementUpdated(this.grid);
     return this;
   }

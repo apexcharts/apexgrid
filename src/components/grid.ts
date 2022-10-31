@@ -2,7 +2,7 @@ import { html, nothing, TemplateResult } from 'lit';
 import { ContextProvider } from '@lit-labs/context';
 import { customElement, eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import { themes } from 'igniteui-webcomponents/theming/theming-decorator.js';
+
 import { GRID_TAG } from '../internal/tags.js';
 import { StateController, gridStateContext } from '../controllers/state.js';
 import { DataOperationsController } from '../controllers/data-operation.js';
@@ -11,25 +11,38 @@ import { watch } from '../internal/watch.js';
 import { DEFAULT_COLUMN_CONFIG, PIPELINE } from '../internal/constants.js';
 import { registerGridIcons } from '../internal/icon-registry.js';
 import { applyColumnWidths } from '../internal/utils.js';
+
+import type { ColumnConfig, GridRemoteConfig, GridSortingConfig, Keys } from '../internal/types';
+import type FilterExpressionTree from '../operations/filter/tree';
+import type { FilterExpression } from '../operations/filter/types';
+import type { SortExpression } from '../operations/sort/types';
+
 import { default as bootstrap } from '../styles/grid/themes/light/grid.bootstrap-styles.js';
 import { default as fluent } from '../styles/grid/themes/light/grid.fluent-styles.js';
 import { default as indigo } from '../styles/grid/themes/light/grid.indigo-styles.js';
 import { default as material } from '../styles/grid/themes/light/grid.material-styles.js';
-import type { ColumnConfig, GridRemoteConfig, GridSortingConfig, Keys } from '../internal/types.js';
-import type { SortExpression } from '../operations/sort/types.js';
+
 import ApexGridBody from './grid-body.js';
 import ApexGridHeaderRow from './header-row.js';
 import ApexGridRow from './row.js';
 import ApexGridCell from './cell.js';
 import ApexFilterRow from './filter-row.js';
 
+import { themes } from 'igniteui-webcomponents/theming/theming-decorator.js';
 import { defineComponents, IgcIconComponent } from 'igniteui-webcomponents';
 defineComponents(IgcIconComponent);
+
+export interface ApexFilteringEvent<T extends object> {
+  expression: FilterExpression<T>;
+  state: FilterExpressionTree<T>;
+}
 
 // TODO: Subject to change as these are way too generic names
 export interface ApexGridEventMap<T extends object> {
   sorting: CustomEvent<SortExpression<T>>;
   sorted: CustomEvent<SortExpression<T>>;
+  filtering: CustomEvent<ApexFilteringEvent<T>>;
+  filtered: CustomEvent<FilterExpressionTree<T>>;
 }
 @themes({
   bootstrap,
@@ -108,8 +121,27 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     this.columns = newConfig.map(config => ({ ...DEFAULT_COLUMN_CONFIG, ...config }));
   }
 
-  public sort(key: Keys<T>, config?: Partial<SortExpression<T>>) {
-    this.stateController.sorting.sort(key, config as SortExpression<T>);
+  @watch(PIPELINE, { waitUntilFirstUpdate: true })
+  @watch('data')
+  protected pipeline() {
+    this.dataState = this.dataController.apply(structuredClone(this.data), this.stateController);
+    this.headerRow?.requestUpdate();
+    this.filterRow?.requestUpdate();
+  }
+
+  // TODO: Move the checks here if applicable
+  // protected override shouldUpdate(props: PropertyValueMap<this> | Map<PropertyKey, this>): boolean {
+  //   this.headerRow?.requestUpdate();
+  //   this.filterRow?.requestUpdate();
+  //   return super.shouldUpdate(props);
+  // }
+
+  public filter(config: Partial<FilterExpression<T>> | Partial<FilterExpression<T>>[]) {
+    this.stateController.filtering.filter(config as FilterExpression<T>[]);
+  }
+
+  public sort(expressions: Partial<SortExpression<T>> | Partial<SortExpression<T>>[]) {
+    this.stateController.sorting.sort(expressions as SortExpression<T>[]);
   }
 
   public getColumn(id: Keys<T> | number) {
@@ -135,13 +167,6 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
       return each;
     });
     this.requestUpdate(PIPELINE);
-  }
-
-  @watch(PIPELINE, { waitUntilFirstUpdate: true })
-  @watch('data')
-  protected pipeline() {
-    this.dataState = this.dataController.apply(structuredClone(this.data), this.stateController);
-    this.headerRow?.requestUpdate();
   }
 
   @eventOptions({ capture: true })

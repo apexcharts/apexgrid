@@ -2,16 +2,16 @@ import { html, LitElement, nothing } from 'lit';
 import { contextProvided } from '@lit-labs/context';
 import { customElement, property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { GRID_FILTER_ROW_TAG } from '../internal/tags.js';
-import { PIPELINE } from '../internal/constants.js';
+
 import { StateController, gridStateContext } from '../controllers/state.js';
+import { PIPELINE } from '../internal/constants.js';
+import { GRID_FILTER_ROW_TAG } from '../internal/tags.js';
+import { getFilterOperandsFor } from '../internal/utils.js';
 import { watch } from '../internal/watch.js';
-import BooleanOperands from '../operations/filter/operands/boolean.js';
-import NumberOperands from '../operations/filter/operands/number.js';
-import StringOperands from '../operations/filter/operands/string.js';
 
 import styles from '../styles/filter-row/filter-row-styles.js';
 
+import type FilterExpressionTree from '../operations/filter/tree';
 import type { FilterExpression } from '../operations/filter/types';
 import type { ColumnConfig } from '../internal/types';
 
@@ -26,15 +26,19 @@ import {
 
 defineComponents(IgcChipComponent, IgcInputComponent, IgcDropdownComponent);
 
-function getOperandsFor<T extends object>(column: ColumnConfig<T>) {
-  switch (column.type) {
-    case 'boolean':
-      return new BooleanOperands<T>();
-    case 'number':
-      return new NumberOperands<T>();
-    default:
-      return new StringOperands<T>();
-  }
+type ExpressionChipProps<T> = {
+  expression: FilterExpression<T>;
+  selected: boolean;
+  onRemove: Function;
+  onSelect: Function;
+};
+
+function prefixedIcon(icon?: string) {
+  return html`<igc-icon
+    slot="prefix"
+    name=${ifDefined(icon)}
+    collection="internal"
+  ></igc-icon>`;
 }
 
 @customElement(GRID_FILTER_ROW_TAG)
@@ -53,12 +57,8 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     return this.column.type === 'number';
   }
 
-  protected get isBoolean() {
-    return this.column.type === 'boolean';
-  }
-
-  protected get stateForColumn() {
-    return this.state.filtering.state.get(this.column.key);
+  protected get filterController() {
+    return this.state.filtering;
   }
 
   @property({ attribute: false })
@@ -79,21 +79,27 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   @property({ attribute: false })
   public expression!: FilterExpression<T>;
 
-  get #defaultExpression(): FilterExpression<T> {
-    return {
-      key: this.column?.key,
-      condition: getOperandsFor(this.column!).default,
-      criteria: 'and',
-    };
+  #setDefaultExpression() {
+    this.expression = this.filterController.getDefaultExpression(this.column);
+  }
+
+  #removeExpression(expression: FilterExpression<T>) {
+    this.filterController.removeExpression(expression);
+  }
+
+  async #show() {
+    this.active = true;
+    await this.updateComplete;
+    this.input.select();
   }
 
   #handleConditionChanged(event: CustomEvent<IgcDropdownItemComponent>) {
     event.stopPropagation();
 
-    this.expression.condition = getOperandsFor(this.column).get(event.detail.value as any);
+    this.expression.condition = getFilterOperandsFor(this.column).get(event.detail.value as any);
 
     if (this.input.value || this.expression.condition.unary) {
-      this.state.filtering.filter(this.expression);
+      this.filterController.filterWithEvent(this.expression);
     }
 
     this.requestUpdate();
@@ -104,11 +110,11 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
     const value = this.isNumeric ? parseFloat(event.detail) : event.detail;
 
-    if (value) {
+    if (value || !isNaN(value as number)) {
       this.expression.searchTerm = value;
-      this.state.filtering.filter(this.expression);
+      this.filterController.filterWithEvent(this.expression);
     } else {
-      this.stateForColumn?.remove(this.expression);
+      this.#removeExpression(this.expression);
       this.state.host.requestUpdate(PIPELINE);
     }
     this.requestUpdate();
@@ -120,13 +126,13 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     switch (event.key) {
       case 'Enter':
         this.input.value = '';
-        this.expression = this.#defaultExpression;
+        this.#setDefaultExpression();
         return;
       case 'Escape':
         // TODO: Revise
         if (this.input.value) {
           this.input.value = '';
-          this.stateForColumn?.remove(this.expression);
+          this.#removeExpression(this.expression);
           this.state.host.requestUpdate(PIPELINE);
         } else {
           this.active = false;
@@ -138,7 +144,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   }
 
   #handleResetClick() {
-    this.state.filtering.reset(this.column.key);
+    this.filterController.reset(this.column.key);
     this.state.host.requestUpdate(PIPELINE);
     this.requestUpdate();
   }
@@ -152,128 +158,107 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     this.active ? (this.style.display = 'flex') : (this.style.display = '');
   }
 
-  protected renderPrefixIcon() {
-    return html`<igc-icon
-      slot="prefix"
-      .name=${this.expression.condition.name}
-      collection="internal"
-    ></igc-icon>`;
-  }
+  #chipCriteriaFor(expression: FilterExpression<T>) {
+    return async (e: Event) => {
+      e.stopPropagation();
 
-  protected getChipHandlers(expression: FilterExpression<T>) {
-    return {
-      remove: async (e: Event) => {
-        e.stopPropagation();
-
-        this.stateForColumn?.remove(expression);
-
-        if (this.expression === expression) {
-          this.expression = this.#defaultExpression;
-          await this.updateComplete;
-          this.input.focus();
-        }
-        this.state.host.requestUpdate(PIPELINE);
-        this.requestUpdate();
-      },
-      select: async (e: Event) => {
-        e.stopPropagation();
-
-        this.expression = expression;
-        this.input.focus();
-      },
-      changeCriteria: async (e: Event) => {
-        e.stopPropagation();
-
-        expression.criteria = expression.criteria === 'and' ? 'or' : 'and';
-        this.state.filtering.filter(expression);
-        this.requestUpdate();
-      },
+      expression.criteria = expression.criteria === 'and' ? 'or' : 'and';
+      this.filterController.filterWithEvent(expression);
+      this.requestUpdate();
     };
   }
 
-  protected renderChipPrefix(value: FilterExpression<T>) {
-    return html`<span slot="select"></span
-      ><igc-icon
-        slot="prefix"
-        .name=${value.condition.name}
-        collection="internal"
-      ></igc-icon>`;
+  #chipSelectFor(expression: FilterExpression<T>) {
+    return async (e: Event) => {
+      e.stopPropagation();
+      this.expression = expression;
+      await this.updateComplete;
+      this.input.select();
+    };
   }
 
-  protected renderExpressionChips() {
-    const state = this.state.filtering.state.get(this.column.key);
+  #chipRemoveFor(expression: FilterExpression<T>) {
+    return async (e: Event) => {
+      e.stopPropagation();
+      this.#removeExpression(expression);
+
+      if (this.active && this.expression === expression) {
+        this.#setDefaultExpression();
+        await this.updateComplete;
+        this.input.focus();
+      }
+
+      this.state.host.requestUpdate(PIPELINE);
+      this.requestUpdate();
+    };
+  }
+
+  protected renderCriteriaButton(expr: FilterExpression<T>, index: number) {
+    return index
+      ? html`<igc-button
+          variant="flat"
+          @click=${this.#chipCriteriaFor(expr)}
+        >
+          ${expr.criteria}
+        </igc-button>`
+      : nothing;
+  }
+
+  protected renderExpressionChip(props: ExpressionChipProps<T>) {
+    const prefix = html`<span slot="select"></span>${prefixedIcon(
+        props.expression.condition.name,
+      )}`;
+
+    return html`<igc-chip
+      selectable
+      removable
+      ?selected=${props.selected}
+      @igcRemove=${props.onRemove}
+      @igcSelect=${props.onSelect}
+    >
+      ${prefix}
+      ${props.expression.condition.unary
+        ? props.expression.condition.name
+        : props.expression.searchTerm}
+    </igc-chip>`;
+  }
+
+  protected renderActiveChips() {
+    const state = this.filterController.get(this.column.key);
 
     return !state
       ? nothing
-      : Array.from(state).map((each, idx) => {
-          const { remove, select, changeCriteria } = this.getChipHandlers(each);
+      : Array.from(state).map((expression, idx) => {
+          const props: ExpressionChipProps<T> = {
+            expression,
+            selected: this.expression === expression,
+            onRemove: this.#chipRemoveFor(expression),
+            onSelect: this.#chipSelectFor(expression),
+          };
 
-          const criteriaPart = idx
-            ? html`<igc-button
-                variant="flat"
-                @click=${changeCriteria}
-                >${each.criteria}</igc-button
-              >`
-            : nothing;
-
-          return html`${criteriaPart}<igc-chip
-              selectable
-              removable
-              ?selected=${this.expression === each}
-              @igcRemove=${remove}
-              @igcSelect=${select}
-            >
-              ${this.renderChipPrefix(each)}
-              ${each.condition.unary ? each.condition.name : each.searchTerm}
-            </igc-chip>`;
+          return html`${this.renderCriteriaButton(expression, idx)}${this.renderExpressionChip(
+            props,
+          )}`;
         });
   }
 
   protected renderFilterActions() {
     return html`
       <igc-button
+        id="reset"
         variant="flat"
         @click=${this.#handleResetClick}
       >
-        <igc-icon
-          slot="prefix"
-          name="refresh"
-          collection="internal"
-        ></igc-icon>
-        Reset
+        ${prefixedIcon('refresh')} Reset
       </igc-button>
       <igc-button
+        id="close"
         variant="flat"
-        @click=${this.#hide}
+        @click=${() => (this.active = false)}
       >
-        <igc-icon
-          slot="prefix"
-          name="close"
-          collection="internal"
-        ></igc-icon>
-        Close
+        ${prefixedIcon('close')} Close
       </igc-button>
     `;
-  }
-
-  /**
-   * Renders the applicable filtering conditions for the active column
-   * in the dropdown list.
-   */
-  protected renderDropdownList() {
-    return Array.from(getOperandsFor(this.column)).map(
-      each => html`<igc-dropdown-item
-        .value=${each}
-        ?selected=${this.expression?.condition?.name === each}
-      >
-        <igc-icon
-          slot="prefix"
-          .name=${each}
-          collection="internal"
-        ></igc-icon>
-        ${each}
-      </igc-dropdown-item>`,
-    );
   }
 
   protected renderDropdown() {
@@ -281,8 +266,15 @@ export default class ApexFilterRow<T extends object> extends LitElement {
       flip
       same-width
       @igcChange=${this.#handleConditionChanged}
-      >${this.renderDropdownList()}</igc-dropdown
-    >`;
+      >${Array.from(getFilterOperandsFor(this.column)).map(
+        each => html`<igc-dropdown-item
+          .value=${each}
+          ?selected=${this.expression?.condition?.name === each}
+        >
+          ${prefixedIcon(each)}${each}
+        </igc-dropdown-item>`,
+      )}
+    </igc-dropdown>`;
   }
 
   protected renderDropdownTarget() {
@@ -292,13 +284,15 @@ export default class ApexFilterRow<T extends object> extends LitElement {
       collection="internal"
       .name=${this.expression.condition.name}
       @click=${this.#openDropdownList}
-    ></igc-icon>`;
+    >
+    </igc-icon>`;
   }
 
   protected renderInputArea() {
     return html`<igc-input
         outlined
         value=${ifDefined(this.expression.searchTerm)}
+        placeholder="Add filter value"
         ?readonly=${this.expression.condition.unary}
         @igcInput=${this.#handleInput}
         @keydown=${this.#handleKeydown}
@@ -311,63 +305,63 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   protected renderActiveState() {
     return html`<div part="active-state">
       <div part="filter-row-inputs">${this.renderInputArea()}</div>
-      <div part="filter-row-filters">${this.renderExpressionChips()}</div>
+      <div part="filter-row-filters">${this.renderActiveChips()}</div>
       <div part="filter-row-actions">${this.renderFilterActions()}</div>
     </div> `;
   }
 
-  #hide() {
-    this.active = false;
-  }
+  protected renderInactiveChips(column: ColumnConfig<T>, state: FilterExpressionTree<T>) {
+    return Array.from(state).map((expression, idx) => {
+      const props: ExpressionChipProps<T> = {
+        expression,
+        selected: false,
+        onRemove: this.#chipRemoveFor(expression),
+        onSelect: (e: Event) => {
+          e.stopPropagation();
+          this.column = column;
+          this.expression = expression;
+          this.#show();
+        },
+      };
 
-  async #show() {
-    this.active = true;
-    await this.updateComplete;
-    this.input.focus();
+      return html`${this.renderCriteriaButton(expression, idx)}${this.renderExpressionChip(props)}`;
+    });
   }
 
   protected renderFilterState(column: ColumnConfig<T>) {
-    // const state = this.state.filtering.state.get(column.key);
+    const state = this.filterController.get(column.key);
 
-    // if (state && state.length < 3) {
-    //   return this.renderExpressionChips();
-    // }
+    const partial = state && state.length < 3;
+    const hidden = state && state.length >= 3;
 
-    return html`
-      <igc-chip
-        @click=${() => {
-          this.column = column;
-          this.expression = this.#defaultExpression;
-          this.#show();
-        }}
-      >
-        <igc-icon
-          slot="prefix"
-          name="filter"
-          collection="internal"
-        ></igc-icon>
-        Filter</igc-chip
-      >
-    `;
+    const open = () => {
+      this.column = column;
+      this.#setDefaultExpression();
+      this.#show();
+    };
+
+    const count = hidden ? html`<span slot="suffix">${state.length}</span>` : nothing;
+    const chip = html`<igc-chip
+      data-column=${column.key}
+      @click=${open}
+      >${prefixedIcon('filter')}Filter${count}</igc-chip
+    >`;
+
+    return partial ? this.renderInactiveChips(column, state) : chip;
   }
 
   protected renderInactiveState() {
-    return this.state.host.columns
-      .filter(column => !column.hidden)
-      .map(
-        column =>
-          html`<div part="filter-row-preview">
+    return this.state.host.columns.map(column =>
+      column.hidden
+        ? nothing
+        : html`<div part="filter-row-preview">
             ${column.filter ? this.renderFilterState(column) : nothing}
           </div>`,
-      );
+    );
   }
 
   protected override render() {
     return html`${this.active ? this.renderActiveState() : this.renderInactiveState()}`;
-
-    // return html`
-    //   <div part="filter-row-input">${this.renderSelect()} - ${this.renderInput()}</div>
-    //   <div part="filter-row-filters">${this.renderExpressionChips()}</div>
   }
 }
 

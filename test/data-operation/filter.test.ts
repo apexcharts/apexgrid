@@ -1,17 +1,13 @@
 import { assert, fixtureCleanup } from '@open-wc/testing';
-import { FilterExpression } from '../../src/operations/filter/types';
 import StringOperands from '../../src/operations/filter/operands/string.js';
 import NumberOperands from '../../src/operations/filter/operands/number.js';
 import BooleanOperands from '../../src/operations/filter/operands/boolean.js';
 import FilterState from '../../src/operations/filter/state.js';
 import FilterOperation from '../../src/operations/filter.js';
 import data from '../utils/test-data.js';
-import { Keys } from '../../src/internal/types';
 
-type OperandKeys<T extends object> =
-  | Keys<NumberOperands<T>>
-  | Keys<StringOperands<T>>
-  | Keys<BooleanOperands<T>>;
+import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types';
+import type { Keys } from '../../src/internal/types';
 
 class TDDFilterState<T extends object> {
   #result: T[] = [];
