@@ -1,4 +1,4 @@
-import { html, nothing, TemplateResult } from 'lit';
+import { html, nothing, PropertyDeclaration, TemplateResult } from 'lit';
 import { ContextProvider } from '@lit-labs/context';
 import { customElement, eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -10,7 +10,7 @@ import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { watch } from '../internal/watch.js';
 import { DEFAULT_COLUMN_CONFIG, PIPELINE } from '../internal/constants.js';
 import { registerGridIcons } from '../internal/icon-registry.js';
-import { applyColumnWidths } from '../internal/utils.js';
+import { applyColumnWidths, asArray, getFilterOperandsFor } from '../internal/utils.js';
 
 import type { ColumnConfig, GridRemoteConfig, GridSortingConfig, Keys } from '../internal/types';
 import type FilterExpressionTree from '../operations/filter/tree';
@@ -116,6 +116,16 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     registerGridIcons();
   }
 
+  public override requestUpdate(
+    name?: PropertyKey,
+    oldValue?: unknown,
+    options?: PropertyDeclaration<this, unknown>,
+  ): void {
+    this.headerRow?.requestUpdate();
+    this.filterRow?.requestUpdate();
+    super.requestUpdate(name, oldValue, options);
+  }
+
   @watch('columns')
   protected watchColumns(_: ColumnConfig<T>[], newConfig: ColumnConfig<T>[] = []) {
     this.columns = newConfig.map(config => ({ ...DEFAULT_COLUMN_CONFIG, ...config }));
@@ -125,19 +135,18 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   @watch('data')
   protected pipeline() {
     this.dataState = this.dataController.apply(structuredClone(this.data), this.stateController);
-    this.headerRow?.requestUpdate();
-    this.filterRow?.requestUpdate();
   }
 
-  // TODO: Move the checks here if applicable
-  // protected override shouldUpdate(props: PropertyValueMap<this> | Map<PropertyKey, this>): boolean {
-  //   this.headerRow?.requestUpdate();
-  //   this.filterRow?.requestUpdate();
-  //   return super.shouldUpdate(props);
-  // }
-
-  public filter(config: Partial<FilterExpression<T>> | Partial<FilterExpression<T>>[]) {
-    this.stateController.filtering.filter(config as FilterExpression<T>[]);
+  public filter(config: FilterExpression<T> | FilterExpression<T>[]) {
+    this.stateController.filtering.filter(
+      asArray(config).map(each =>
+        typeof each.condition === 'string'
+          ? Object.assign(each, {
+              condition: getFilterOperandsFor(this.getColumn(each.key)!).get(each.condition),
+            })
+          : each,
+      ),
+    );
   }
 
   public sort(expressions: Partial<SortExpression<T>> | Partial<SortExpression<T>>[]) {

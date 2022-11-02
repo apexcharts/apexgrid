@@ -130,7 +130,7 @@ suite('Grid UI filter', () => {
 
   suite('API', () => {
     test('Default', async () => {
-      // await TDD.filter({ key: 'name', condition: , searchTerm: 'a' });
+      // await TDD.filter({ key: 'name', condition: '', searchTerm: '1' });
     });
   });
 });

@@ -1,6 +1,9 @@
 import { html, LitElement, nothing, PropertyValueMap } from 'lit';
+import { contextProvided } from '@lit-labs/context';
 import { customElement, property, queryAll } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
+import { gridStateContext, StateController } from '../controllers/state.js';
+import { partNameMap } from '../internal/part-map.js';
 import { GRID_HEADER_ROW_TAG } from '../internal/tags.js';
 
 import ApexGridHeader from './header.js';
@@ -18,6 +21,10 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
   @queryAll(ApexGridHeader.is)
   protected _headers!: NodeListOf<ApexGridHeader<T>>;
 
+  @contextProvided({ context: gridStateContext, subscribe: true })
+  @property({ attribute: false })
+  public state!: StateController<T>;
+
   @property({ attribute: false })
   public columns: Array<ColumnConfig<T>> = [];
 
@@ -25,9 +32,23 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
     return Array.from(this._headers);
   }
 
+  constructor() {
+    super();
+    this.addEventListener('click', this.#activeFilterColumn);
+  }
+
   public override connectedCallback() {
     super.connectedCallback();
     this.setAttribute('tabindex', '0');
+  }
+
+  #activeFilterColumn(event: MouseEvent) {
+    const header = event
+      .composedPath()
+      .filter(target => target instanceof ApexGridHeader)
+      .at(0) as ApexGridHeader<T>;
+
+    this.state.filtering.setActiveColumn(header.column);
   }
 
   protected override shouldUpdate(props: PropertyValueMap<this> | Map<PropertyKey, this>): boolean {
@@ -36,8 +57,17 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
   }
 
   protected override render() {
+    const filterRow = this.state.filtering.filterRow;
+
     return html`${map(this.columns, column =>
-      column.hidden ? nothing : html`<apx-grid-header .column=${column}></apx-grid-header>`,
+      column.hidden
+        ? nothing
+        : html`<apx-grid-header
+            part=${partNameMap({
+              filtered: column === filterRow?.column,
+            })}
+            .column=${column}
+          ></apx-grid-header>`,
     )}`;
   }
 }

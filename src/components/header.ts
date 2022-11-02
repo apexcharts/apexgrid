@@ -55,7 +55,8 @@ export default class ApexGridHeader<T extends object> extends LitElement {
     this.addEventListener('pointermove', this.#handleResize);
   }
 
-  #handleClick() {
+  #handleClick(e: Event) {
+    e.stopPropagation();
     this.state.sorting.sortFromHeaderClick(this.column);
   }
 

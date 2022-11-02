@@ -164,7 +164,7 @@ export default class GridTestFixture<T extends object> {
     return this;
   }
 
-  public async filter(config: Partial<FilterExpression<T>> | Partial<FilterExpression<T>>[]) {
+  public async filter(config: FilterExpression<T> | FilterExpression<T>[]) {
     this.grid.filter(config);
     await elementUpdated(this.grid);
     return this;

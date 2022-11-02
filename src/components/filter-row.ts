@@ -4,7 +4,7 @@ import { customElement, property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { StateController, gridStateContext } from '../controllers/state.js';
-import { PIPELINE } from '../internal/constants.js';
+import { PIPELINE, DEFAULT_COLUMN_CONFIG } from '../internal/constants.js';
 import { GRID_FILTER_ROW_TAG } from '../internal/tags.js';
 import { getFilterOperandsFor } from '../internal/utils.js';
 import { watch } from '../internal/watch.js';
@@ -74,7 +74,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   public dropdown!: IgcDropdownComponent;
 
   @property({ attribute: false })
-  public column!: ColumnConfig<T>;
+  public column: ColumnConfig<T> = DEFAULT_COLUMN_CONFIG;
 
   @property({ attribute: false })
   public expression!: FilterExpression<T>;
@@ -89,6 +89,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
   async #show() {
     this.active = true;
+
     await this.updateComplete;
     this.input.select();
   }
@@ -109,8 +110,9 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     event.stopPropagation();
 
     const value = this.isNumeric ? parseFloat(event.detail) : event.detail;
+    const shouldUpdate = this.isNumeric ? !isNaN(value as number) : !!value;
 
-    if (value || !isNaN(value as number)) {
+    if (shouldUpdate) {
       this.expression.searchTerm = value;
       this.filterController.filterWithEvent(this.expression);
     } else {
@@ -155,7 +157,13 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
   @watch('active', { waitUntilFirstUpdate: true })
   protected activeChanged() {
-    this.active ? (this.style.display = 'flex') : (this.style.display = '');
+    this.style.display = this.active ? 'flex' : '';
+
+    if (!this.active) {
+      this.column = DEFAULT_COLUMN_CONFIG;
+    }
+
+    this.state.host.requestUpdate();
   }
 
   #chipCriteriaFor(expression: FilterExpression<T>) {

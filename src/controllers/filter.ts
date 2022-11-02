@@ -14,8 +14,10 @@ export class FilterController<T extends object> implements ReactiveController {
 
   public state: FilterState<T> = new FilterState();
 
-  protected activeExpression!: Partial<FilterExpression<T>>;
-  protected activeColumn?: ColumnConfig<T>;
+  public get filterRow() {
+    // @ts-expect-error - protected access
+    return this.host.filterRow;
+  }
 
   #emitFilteringEvent(expression: FilterExpression<T>) {
     return this.host.emitEvent('filtering', {
@@ -44,6 +46,14 @@ export class FilterController<T extends object> implements ReactiveController {
 
   public reset(key?: Keys<T>) {
     key ? this.state.delete(key) : this.state.clear();
+  }
+
+  public setActiveColumn(column: ColumnConfig<T>) {
+    if (column.filter && this.filterRow?.active) {
+      this.filterRow.column = column;
+      this.filterRow.expression = this.getDefaultExpression(column);
+      this.host.requestUpdate();
+    }
   }
 
   public getDefaultExpression(column: ColumnConfig<T>): FilterExpression<T> {

@@ -3,8 +3,8 @@ import type ApexGrid from '../components/grid';
 import type ApexGridCell from '../components/cell';
 import type ApexGridRow from '../components/row';
 import type ApexGridHeader from '../components/header';
+import type BaseOperands from '../operations/filter/operands/base';
 import type { SortState } from '../operations/sort/types';
-import BaseOperands from '../operations/filter/operands/base.js';
 
 export type Keys<T> = keyof T;
 export type Values<T> = T[keyof T];
@@ -65,7 +65,7 @@ export interface ApexCellContext<T extends object> {
   parent: ApexGridCell<T>;
   row: ApexGridRow<T>;
   column: ColumnConfig<T>;
-  value: T[keyof T];
+  value: Values<T>;
 }
 
 export type NavigationState = 'previous' | 'current';
