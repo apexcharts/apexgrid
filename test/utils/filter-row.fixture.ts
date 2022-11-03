@@ -1,4 +1,5 @@
 import type ApexFilterRow from '../../src/components/filter-row';
+import type { OperandKeys } from '../../src/operations/filter/types';
 import type { Keys } from '../../src/internal/types';
 
 export default class FilterRowFixture<T extends object> {
@@ -45,7 +46,7 @@ export default class FilterRowFixture<T extends object> {
   }
 
   public get dropdownItems() {
-    return Array.from(this.dropdown.querySelectorAll('igc-select-item'));
+    return Array.from(this.dropdown.querySelectorAll('igc-dropdown-item'));
   }
 
   public getInactiveChip(key: Keys<T>) {
@@ -54,6 +55,14 @@ export default class FilterRowFixture<T extends object> {
 
   public open(key: Keys<T>) {
     this.getInactiveChip(key).click();
+  }
+
+  public openDropdown() {
+    this.dropdownTarget.click();
+  }
+
+  public selectDropdownCondition(name: OperandKeys<T>) {
+    this.dropdownItems.find(item => item.value === name)?.click();
   }
 
   public fireInputEvent(value: string) {

@@ -3,6 +3,7 @@ import GridTestFixture from '../utils/grid-fixture.js';
 import data from '../utils/test-data.js';
 
 import type { Keys } from '../../src/internal/types';
+import type { OperandKeys } from '../../src/operations/filter/types';
 
 class FilterFixture<T extends object> extends GridTestFixture<T> {
   public override updateConfig(): void {
@@ -14,6 +15,10 @@ class FilterFixture<T extends object> extends GridTestFixture<T> {
 
   public get filterableColumns() {
     return this.grid.columns.filter(each => each.filter);
+  }
+
+  public get activeChips() {
+    return this.filterRow.activeStateChips;
   }
 
   public async activateFilterRow(key: Keys<T>) {
@@ -34,6 +39,41 @@ class FilterFixture<T extends object> extends GridTestFixture<T> {
   public async filterByInput(value: string) {
     this.filterRow.fireInputEvent(value);
     await elementUpdated(this.grid);
+  }
+
+  public async commitInput() {
+    this.filterRow.commitInput();
+    await elementUpdated(this.grid);
+  }
+
+  public async resetInput() {
+    this.filterRow.resetInput();
+    await elementUpdated(this.grid);
+  }
+
+  public async changeFilterCondition(name: OperandKeys<T>) {
+    this.filterRow.openDropdown();
+    await elementUpdated(this.grid);
+    this.filterRow.selectDropdownCondition(name);
+    await elementUpdated(this.grid);
+  }
+
+  public async selectChip(chip: HTMLElement) {
+    (chip.shadowRoot!.querySelector('[part="base"]') as HTMLElement).click();
+    await elementUpdated(this.grid);
+  }
+
+  public async removeChip(chip: HTMLElement) {
+    (chip.shadowRoot!.querySelector('slot[name="remove"]') as HTMLElement).click();
+    await elementUpdated(this.grid);
+  }
+
+  public assertHasHeaderFilterStyle(name: Keys<T>) {
+    assert.isTrue(this.headers.get(name).hasFilterStyle);
+  }
+
+  public assertDoesNotHaveHeaderFilterStyle(name: Keys<T>) {
+    assert.isFalse(this.headers.get(name).hasFilterStyle);
   }
 
   public assertActiveFilterRowState() {
@@ -81,7 +121,9 @@ suite('Grid UI filter', () => {
 
     test('Default state when clicking on a filter chip', async () => {
       await TDD.activateFilterRow('name');
+
       TDD.assertActiveFilterRowState();
+      TDD.assertHasHeaderFilterStyle('name');
     });
 
     test('Default state when exiting from active filter row state', async () => {
@@ -89,10 +131,88 @@ suite('Grid UI filter', () => {
       await TDD.closeFilterRow();
 
       TDD.assertInactiveFilterRowState();
+      TDD.assertDoesNotHaveHeaderFilterStyle('name');
+    });
+
+    test('Correctly changes header style for active column', async () => {
+      await TDD.activateFilterRow('name');
+
+      TDD.assertHasHeaderFilterStyle('name');
+
+      await TDD.clickHeader('id');
+
+      TDD.assertActiveFilterRowState();
+      TDD.assertDoesNotHaveHeaderFilterStyle('name');
+      TDD.assertHasHeaderFilterStyle('id');
+    });
+
+    test('Does not change header style when clicking on a non-filterable column', async () => {
+      await TDD.updateColumn('active', { filter: false });
+      await TDD.activateFilterRow('name');
+      await TDD.clickHeader('active');
+
+      TDD.assertActiveFilterRowState();
+      TDD.assertHasHeaderFilterStyle('name');
+      TDD.assertDoesNotHaveHeaderFilterStyle('active');
     });
   });
 
   suite('Default UI filtering', () => {
+    test('Chip state on input', async () => {
+      await TDD.activateFilterRow('name');
+      await TDD.filterByInput('a');
+
+      assert.strictEqual(TDD.activeChips.length, 1);
+      assert.strictEqual(TDD.activeChips.at(0)?.textContent?.trim(), 'a');
+
+      await TDD.filterByInput('');
+
+      assert.strictEqual(TDD.activeChips.length, 0);
+    });
+
+    test('Chip state on commit and reset', async () => {
+      await TDD.activateFilterRow('name');
+      await TDD.filterByInput('a');
+      await TDD.commitInput();
+      await TDD.filterByInput('b');
+
+      assert.strictEqual(TDD.activeChips.length, 2);
+
+      await TDD.resetInput();
+
+      assert.strictEqual(TDD.activeChips.length, 1);
+    });
+
+    test('Chip interactions', async () => {
+      await TDD.activateFilterRow('name');
+      await TDD.filterByInput('a');
+      await TDD.commitInput();
+      await TDD.filterByInput('b');
+      await TDD.commitInput();
+
+      await TDD.selectChip(TDD.activeChips.at(0)!);
+
+      assert.isTrue(TDD.activeChips.at(0)!.hasAttribute('selected'));
+      assert.strictEqual(TDD.filterRow.input.value, TDD.activeChips.at(0)!.textContent?.trim());
+
+      await TDD.removeChip(TDD.activeChips.at(-1)!);
+
+      assert.strictEqual(TDD.activeChips.length, 1);
+    });
+
+    test('Condition changed', async () => {
+      await TDD.activateFilterRow('importance');
+      await TDD.filterByInput('l');
+
+      assert.strictEqual(TDD.grid.totalItems, 3);
+
+      await TDD.changeFilterCondition('endsWith');
+      assert.strictEqual(TDD.grid.totalItems, 0);
+
+      await TDD.changeFilterCondition('startsWith');
+      assert.strictEqual(TDD.grid.totalItems, 3);
+    });
+
     test('String column, single filter [case insensitive]', async () => {
       await TDD.activateFilterRow('name');
       await TDD.filterByInput('a');
@@ -125,6 +245,12 @@ suite('Grid UI filter', () => {
       await TDD.filterByInput('3');
 
       assert.strictEqual(TDD.grid.totalItems, 1);
+    });
+
+    test('String column, multiple filters [AND]', async () => {
+      await TDD.activateFilterRow('importance');
+      await TDD.filterByInput('l');
+      await TDD.commitInput();
     });
   });
 

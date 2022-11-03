@@ -145,6 +145,11 @@ export default class GridTestFixture<T extends object> {
     await elementUpdated(this.grid);
   }
 
+  public async clickHeader(name: Keys<T>) {
+    this.headers.get(name).element.click();
+    await elementUpdated(this.grid);
+  }
+
   public async fireNavigationEvent(options?: KeyboardEventInit) {
     this.gridBody.dispatchEvent(
       new KeyboardEvent('keydown', Object.assign({ composed: true, bubbles: true }, options)),

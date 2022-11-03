@@ -34,7 +34,11 @@ export default class HeaderTestFixture<T extends object> {
   }
 
   public get isSorted() {
-    return this.sortPart.part.value.includes('sorted');
+    return this.sortPart.part.contains('sorted');
+  }
+
+  public get hasFilterStyle() {
+    return this.element.part.contains('filtered');
   }
 
   public get text() {
