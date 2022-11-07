@@ -16,6 +16,7 @@ $header-border-color: var(--igx-header-border-color, var(--header-border-color))
     background: $header-background;
     color: $header-text-color;
     border-block-end: $header-border-width $header-border-style $header-border-color;
+    z-index: -1;
 }
 
 [part='filter-row-preview'] {
@@ -23,6 +24,7 @@ $header-border-color: var(--igx-header-border-color, var(--header-border-color))
     align-items: center;
     overflow: hidden;
     padding: 0 $ig-cells-padding;
+    border-inline-end: $header-border-width $header-border-style $header-border-color;
 }
 
 [part~='filter-row-input'],
