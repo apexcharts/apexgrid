@@ -45,8 +45,8 @@ export default css`/* stylelint-disable max-line-length */
 
 igc-input {
   position: absolute;
-  top: 0.0625rem;
-  left: 0.0625rem;
+  inset-block-start: 0.0625rem;
+  inset-inline-start: 0.0625rem;
   width: calc(100% - 0.0625rem * 2);
   height: calc(100% - 0.0625rem * 2);
 }

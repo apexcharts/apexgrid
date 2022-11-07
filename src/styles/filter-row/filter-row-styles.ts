@@ -20,6 +20,7 @@ export default css`/* stylelint-disable max-line-length */
   color: var(--igx-header-text-color, var(--header-text-color));
   -webkit-border-after: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
           border-block-end: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
+  z-index: -1;
 }
 
 [part=filter-row-preview] {
@@ -31,6 +32,8 @@ export default css`/* stylelint-disable max-line-length */
           align-items: center;
   overflow: hidden;
   padding: 0 max(var(--is-large, 1) * 1.5rem, var(--is-medium, 1) * 1rem, var(--is-small, 1) * 0.5rem);
+  -webkit-border-end: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
+          border-inline-end: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
 }
 
 [part~=filter-row-input],

@@ -30,8 +30,8 @@ $inset-shadow-width: #{rem(1px)};
 
 igc-input {
     position: absolute;
-    top: $inset-shadow-width;
-    left: $inset-shadow-width;
+    inset-block-start: $inset-shadow-width;
+    inset-inline-start: $inset-shadow-width;
     width: calc(100% - ($inset-shadow-width * 2));
     height: calc(100% - ($inset-shadow-width * 2));
 
