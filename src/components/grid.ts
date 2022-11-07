@@ -142,7 +142,7 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
       asArray(config).map(each =>
         typeof each.condition === 'string'
           ? Object.assign(each, {
-              condition: getFilterOperandsFor(this.getColumn(each.key)!).get(each.condition),
+              condition: getFilterOperandsFor(this.getColumn(each.key)!).get(each.condition as any),
             })
           : each,
       ),

@@ -12,7 +12,7 @@ import { watch } from '../internal/watch.js';
 import styles from '../styles/filter-row/filter-row-styles.js';
 
 import type FilterExpressionTree from '../operations/filter/tree';
-import type { FilterExpression } from '../operations/filter/types';
+import type { FilterExpression, FilterOperation } from '../operations/filter/types';
 import type { ColumnConfig } from '../internal/types';
 
 import {
@@ -59,6 +59,10 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
   protected get filterController() {
     return this.state.filtering;
+  }
+
+  protected get condition() {
+    return this.expression.condition as FilterOperation<T, any>;
   }
 
   @property({ attribute: false })
@@ -131,14 +135,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
         this.#setDefaultExpression();
         return;
       case 'Escape':
-        // TODO: Revise
-        if (this.input.value) {
-          this.input.value = '';
-          this.#removeExpression(this.expression);
-          this.state.host.requestUpdate(PIPELINE);
-        } else {
-          this.active = false;
-        }
+        this.active = false;
         return;
       default:
         return;
@@ -213,9 +210,10 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   }
 
   protected renderExpressionChip(props: ExpressionChipProps<T>) {
-    const prefix = html`<span slot="select"></span>${prefixedIcon(
-        props.expression.condition.name,
-      )}`;
+    const { name, unary } = props.expression.condition as FilterOperation<T, any>;
+    const { searchTerm: term } = props.expression;
+
+    const prefix = html`<span slot="select"></span>${prefixedIcon(name)}`;
 
     return html`<igc-chip
       selectable
@@ -224,10 +222,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
       @igcRemove=${props.onRemove}
       @igcSelect=${props.onSelect}
     >
-      ${prefix}
-      ${props.expression.condition.unary
-        ? props.expression.condition.name
-        : props.expression.searchTerm}
+      ${prefix}${unary ? name : term}
     </igc-chip>`;
   }
 
@@ -277,7 +272,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
       >${Array.from(getFilterOperandsFor(this.column)).map(
         each => html`<igc-dropdown-item
           .value=${each}
-          ?selected=${this.expression?.condition?.name === each}
+          ?selected=${this.condition?.name === each}
         >
           ${prefixedIcon(each)}${each}
         </igc-dropdown-item>`,
@@ -290,7 +285,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
       id="condition"
       slot="prefix"
       collection="internal"
-      .name=${this.expression.condition.name}
+      .name=${this.condition.name}
       @click=${this.#openDropdownList}
     >
     </igc-icon>`;
@@ -301,7 +296,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
         outlined
         value=${ifDefined(this.expression.searchTerm)}
         placeholder="Add filter value"
-        ?readonly=${this.expression.condition.unary}
+        ?readonly=${this.condition.unary}
         @igcInput=${this.#handleInput}
         @keydown=${this.#handleKeydown}
       >

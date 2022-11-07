@@ -2,7 +2,7 @@ import DataOperation from './base.js';
 import type { Values } from '../internal/types';
 import type { SortExpression, SortState } from './sort/types';
 
-export default class SortOperation<T extends object> extends DataOperation<T> {
+export default class SortDataOperation<T> extends DataOperation<T> {
   protected orderBy = new Map(
     Object.entries({
       ascending: 1,

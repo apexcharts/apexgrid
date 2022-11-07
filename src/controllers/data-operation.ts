@@ -1,12 +1,12 @@
 import { ReactiveController } from 'lit';
-import SortOperation from '../operations/sort.js';
+import SortDataOperation from '../operations/sort.js';
+import FilterDataOperation from '../operations/filter.js';
 import type { GridHost } from '../internal/types';
 import type { StateController } from './state';
-import FilterOperation from '../operations/filter.js';
 
 export class DataOperationsController<T extends object> implements ReactiveController {
-  protected sorting = new SortOperation<T>();
-  protected filtering = new FilterOperation<T>();
+  protected sorting = new SortDataOperation<T>();
+  protected filtering = new FilterDataOperation<T>();
 
   constructor(protected host: GridHost<T>) {
     this.host.addController(this);

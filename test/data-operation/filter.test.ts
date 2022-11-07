@@ -3,7 +3,7 @@ import StringOperands from '../../src/operations/filter/operands/string.js';
 import NumberOperands from '../../src/operations/filter/operands/number.js';
 import BooleanOperands from '../../src/operations/filter/operands/boolean.js';
 import FilterState from '../../src/operations/filter/state.js';
-import FilterOperation from '../../src/operations/filter.js';
+import FilterDataOperation from '../../src/operations/filter.js';
 import data from '../utils/test-data.js';
 
 import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types';
@@ -11,7 +11,7 @@ import type { Keys } from '../../src/internal/types';
 
 class TDDFilterState<T extends object> {
   #result: T[] = [];
-  #operation: FilterOperation<T> = new FilterOperation();
+  #operation: FilterDataOperation<T> = new FilterDataOperation();
   #state: FilterState<T> = new FilterState();
   #operands: Record<string, StringOperands<T> | NumberOperands<T> | BooleanOperands<T>> = {
     string: new StringOperands<T>(),

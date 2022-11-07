@@ -21,6 +21,18 @@ export default class FilterRowFixture<T extends object> {
     );
   }
 
+  public get activeCriteriaButtons(): HTMLElement[] {
+    return Array.from(
+      this.element.shadowRoot!.querySelectorAll('[part~="filter-row-filters"] igc-button'),
+    );
+  }
+
+  public get inactiveCriteriaButtons(): HTMLElement[] {
+    return Array.from(
+      this.element.shadowRoot!.querySelectorAll('[part~="filter-row-preview"] igc-button'),
+    );
+  }
+
   public get active() {
     return this.element.active;
   }

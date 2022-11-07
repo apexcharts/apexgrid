@@ -18,7 +18,7 @@ export interface FilterOperation<_, Type> {
 
 export interface FilterExpression<T, Type = any> {
   key: Keys<T>;
-  condition: FilterOperation<T, Type>;
+  condition: FilterOperation<T, Type> | OperandKeys<T>;
   searchTerm?: Type;
   criteria?: FilterCriteria;
   caseSensitive?: boolean;

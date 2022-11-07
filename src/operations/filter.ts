@@ -1,15 +1,23 @@
 import DataOperation from './base.js';
 import type FilterState from './filter/state.js';
-import type { FilterExpression } from './filter/types.js';
+import type { FilterExpression, FilterOperation } from './filter/types.js';
 
-export default class FilterOperation<T extends object> extends DataOperation<T> {
+export default class FilterDataOperation<T extends object> extends DataOperation<T> {
   protected match(record: T, ands: FilterExpression<T>[], ors: FilterExpression<T>[]) {
     return (
       ors.some(e =>
-        e.condition.logic(this.resolveValue(record, e.key), e.searchTerm, e.caseSensitive),
+        (e.condition as FilterOperation<T, any>).logic(
+          this.resolveValue(record, e.key),
+          e.searchTerm,
+          e.caseSensitive,
+        ),
       ) ||
       ands.every(e =>
-        e.condition.logic(this.resolveValue(record, e.key), e.searchTerm, e.caseSensitive),
+        (e.condition as FilterOperation<T, any>).logic(
+          this.resolveValue(record, e.key),
+          e.searchTerm,
+          e.caseSensitive,
+        ),
       )
     );
   }

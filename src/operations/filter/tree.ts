@@ -1,7 +1,7 @@
 import type { Keys } from '../../internal/types';
 import type { FilterExpression } from './types';
 
-export default class FilterExpressionTree<T extends object> {
+export default class FilterExpressionTree<T> {
   protected operands: Array<FilterExpression<T>> = [];
 
   constructor(public key: Keys<T>) {}

@@ -1,9 +1,11 @@
 import { assert, elementUpdated } from '@open-wc/testing';
+import StringOperands from '../../src/operations/filter/operands/string.js';
 import GridTestFixture from '../utils/grid-fixture.js';
 import data from '../utils/test-data.js';
 
 import type { Keys } from '../../src/internal/types';
 import type { OperandKeys } from '../../src/operations/filter/types';
+import type { TestData } from '../utils/test-data.js';
 
 class FilterFixture<T extends object> extends GridTestFixture<T> {
   public override updateConfig(): void {
@@ -55,6 +57,11 @@ class FilterFixture<T extends object> extends GridTestFixture<T> {
     this.filterRow.openDropdown();
     await elementUpdated(this.grid);
     this.filterRow.selectDropdownCondition(name);
+    await elementUpdated(this.grid);
+  }
+
+  public async toggleCriteria(element: HTMLElement) {
+    element.click();
     await elementUpdated(this.grid);
   }
 
@@ -170,17 +177,24 @@ suite('Grid UI filter', () => {
       assert.strictEqual(TDD.activeChips.length, 0);
     });
 
-    test('Chip state on commit and reset', async () => {
+    test('State on Enter keypress', async () => {
       await TDD.activateFilterRow('name');
       await TDD.filterByInput('a');
       await TDD.commitInput();
-      await TDD.filterByInput('b');
-
-      assert.strictEqual(TDD.activeChips.length, 2);
-
-      await TDD.resetInput();
 
       assert.strictEqual(TDD.activeChips.length, 1);
+      assert.strictEqual(TDD.grid.totalItems, 2);
+      assert.isTrue(TDD.filterRow.active);
+    });
+
+    test('State on Escape keypress', async () => {
+      await TDD.activateFilterRow('name');
+      await TDD.filterByInput('a');
+      await TDD.resetInput();
+
+      assert.strictEqual(TDD.activeChips.length, 0);
+      assert.strictEqual(TDD.grid.totalItems, 2);
+      assert.isFalse(TDD.filterRow.active);
     });
 
     test('Chip interactions', async () => {
@@ -211,6 +225,28 @@ suite('Grid UI filter', () => {
 
       await TDD.changeFilterCondition('startsWith');
       assert.strictEqual(TDD.grid.totalItems, 3);
+    });
+
+    test('Criteria changed', async () => {
+      await TDD.activateFilterRow('importance');
+      await TDD.changeFilterCondition('startsWith');
+
+      await TDD.filterByInput('l');
+      await TDD.commitInput();
+      await TDD.filterByInput('h');
+      await TDD.commitInput();
+
+      assert.strictEqual(TDD.grid.totalItems, 0);
+
+      await TDD.toggleCriteria(TDD.filterRow.activeCriteriaButtons.at(0)!);
+
+      assert.strictEqual(TDD.grid.totalItems, 5);
+    });
+
+    test('Inactive state', async () => {
+      await TDD.filter({ key: 'name', condition: 'contains', searchTerm: 'a' });
+
+      assert.strictEqual(TDD.grid.totalItems, 2);
     });
 
     test('String column, single filter [case insensitive]', async () => {
@@ -255,8 +291,52 @@ suite('Grid UI filter', () => {
   });
 
   suite('API', () => {
-    test('Default', async () => {
-      // await TDD.filter({ key: 'name', condition: '', searchTerm: '1' });
+    test('Use of an operand param', async () => {
+      const operands = new StringOperands<TestData>();
+
+      await TDD.filter({ key: 'name', condition: operands.contains, searchTerm: 'b' });
+
+      assert.strictEqual(TDD.grid.totalItems, 2);
+    });
+
+    test('Single expression (single column)', async () => {
+      await TDD.filter({ key: 'name', condition: 'contains', searchTerm: 'a' });
+
+      assert.strictEqual(TDD.grid.totalItems, 2);
+    });
+
+    test('Single expression (multiple columns)', async () => {
+      await TDD.updateColumn('id', { type: 'number' });
+      await TDD.filter([
+        { key: 'id', condition: 'greaterThan', searchTerm: '4' },
+        { key: 'importance', condition: 'startsWith', searchTerm: 'medium' },
+      ]);
+
+      assert.strictEqual(TDD.grid.totalItems, 1);
+    });
+
+    test('Multiple expressions (single column)', async () => {
+      await TDD.updateColumn('id', { type: 'number' });
+      await TDD.filter([
+        { key: 'id', condition: 'greaterThan', searchTerm: 4 },
+        { key: 'id', condition: 'lessThan', searchTerm: 6 },
+      ]);
+
+      assert.strictEqual(TDD.grid.totalItems, 1);
+    });
+
+    test('Multiple expressions (multiple columns)', async () => {
+      await TDD.updateColumn('id', { type: 'number' });
+      const operands = new StringOperands<TestData>();
+
+      await TDD.filter([
+        { key: 'id', condition: 'greaterThan', searchTerm: 1 },
+        { key: 'id', condition: 'lessThan', searchTerm: 5 },
+        { key: 'name', condition: operands.contains, searchTerm: 'b' },
+        { key: 'name', condition: operands.endsWith, searchTerm: 'd', criteria: 'or' },
+      ]);
+
+      assert.strictEqual(TDD.grid.totalItems, 3);
     });
   });
 });

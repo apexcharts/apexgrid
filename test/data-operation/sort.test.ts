@@ -1,12 +1,12 @@
 import { assert, fixtureCleanup } from '@open-wc/testing';
-import SortOperation from '../../src/operations/sort.js';
+import SortDataOperation from '../../src/operations/sort.js';
 import type { Keys } from '../../src/internal/types';
 import type { SortExpression, SortState } from '../../src/operations/sort/types';
 import data, { importanceComparer } from '../utils/test-data.js';
 
 class TDDSortState<T extends object> {
   #result: T[] = [];
-  #operation: SortOperation<T> = new SortOperation();
+  #operation: SortDataOperation<T> = new SortDataOperation();
   #state: SortState<T> = new Map();
 
   constructor(protected data: T[]) {}

@@ -1,6 +1,6 @@
 import type { Keys, Values } from '../internal/types';
 
-export default abstract class DataOperation<T extends object> {
+export default abstract class DataOperation<T> {
   protected resolveValue(record: T, key: Keys<T>) {
     return record[key];
   }
