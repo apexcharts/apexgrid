@@ -1,10 +1,12 @@
 import { assert, elementUpdated } from '@open-wc/testing';
+import sinon from 'sinon';
 import StringOperands from '../../src/operations/filter/operands/string.js';
+import NumberOperands from '../../src/operations/filter/operands/number.js';
 import GridTestFixture from '../utils/grid-fixture.js';
 import data from '../utils/test-data.js';
 
 import type { Keys } from '../../src/internal/types';
-import type { OperandKeys } from '../../src/operations/filter/types';
+import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types';
 import type { TestData } from '../utils/test-data.js';
 
 class FilterFixture<T extends object> extends GridTestFixture<T> {
@@ -164,6 +166,8 @@ suite('Grid UI filter', () => {
     });
   });
 
+  suite('Default UI inactive state', () => {});
+
   suite('Default UI filtering', () => {
     test('Chip state on input', async () => {
       await TDD.activateFilterRow('name');
@@ -195,6 +199,20 @@ suite('Grid UI filter', () => {
       assert.strictEqual(TDD.activeChips.length, 0);
       assert.strictEqual(TDD.grid.totalItems, 2);
       assert.isFalse(TDD.filterRow.active);
+    });
+
+    test('State on Reset button', async () => {
+      await TDD.activateFilterRow('name');
+      await TDD.filterByInput('a');
+      await TDD.commitInput();
+
+      assert.strictEqual(TDD.activeChips.length, 1);
+      assert.strictEqual(TDD.grid.totalItems, 2);
+
+      await TDD.resetFilterRow();
+
+      assert.strictEqual(TDD.activeChips.length, 0);
+      assert.notStrictEqual(TDD.grid.totalItems, 2);
     });
 
     test('Chip interactions', async () => {
@@ -243,12 +261,6 @@ suite('Grid UI filter', () => {
       assert.strictEqual(TDD.grid.totalItems, 5);
     });
 
-    test('Inactive state', async () => {
-      await TDD.filter({ key: 'name', condition: 'contains', searchTerm: 'a' });
-
-      assert.strictEqual(TDD.grid.totalItems, 2);
-    });
-
     test('String column, single filter [case insensitive]', async () => {
       await TDD.activateFilterRow('name');
       await TDD.filterByInput('a');
@@ -287,10 +299,98 @@ suite('Grid UI filter', () => {
       await TDD.activateFilterRow('importance');
       await TDD.filterByInput('l');
       await TDD.commitInput();
+      await TDD.filterByInput('h');
+      await TDD.commitInput();
+
+      assert.strictEqual(TDD.grid.totalItems, 0);
+    });
+
+    test('String column, multiple filters [OR]', async () => {
+      await TDD.activateFilterRow('importance');
+      await TDD.filterByInput('l');
+      await TDD.commitInput();
+      await TDD.filterByInput('h');
+      await TDD.commitInput();
+
+      await TDD.toggleCriteria(TDD.filterRow.activeCriteriaButtons.at(0)!);
+      assert.strictEqual(TDD.grid.totalItems, 5);
+    });
+  });
+
+  suite('Events', () => {
+    test('Event sequence', async () => {
+      // TODO
+      const spy = sinon.spy(TDD.grid, 'emitEvent');
+
+      await TDD.activateFilterRow('name');
+      await TDD.filterByInput('a');
+
+      assert.strictEqual(spy.callCount, 2);
+
+      const [filtering, filtered] = [spy.firstCall, spy.secondCall];
+
+      assert.strictEqual(filtering.firstArg, 'filtering');
+      assert.strictEqual(filtered.firstArg, 'filtered');
+    });
+
+    test('Cancellable events', async () => {
+      const spy = sinon.spy(TDD.grid, 'emitEvent');
+
+      TDD.grid.addEventListener('filtering', e => e.preventDefault());
+
+      await TDD.activateFilterRow('name');
+      await TDD.filterByInput('a');
+
+      assert.strictEqual(spy.callCount, 1);
+
+      // No filter operation
+      assert.strictEqual(TDD.grid.totalItems, 8);
+    });
+
+    test('Modify event arguments mid-flight', async () => {
+      const spy = sinon.spy(TDD.grid, 'emitEvent');
+
+      const expression: FilterExpression<TestData, number> = {
+        key: 'id',
+        condition: new NumberOperands<TestData>().greaterThan,
+        searchTerm: 7,
+      };
+
+      TDD.grid.addEventListener('filtering', e => Object.assign(e.detail.expression, expression));
+
+      await TDD.activateFilterRow('name');
+      await TDD.filterByInput('a');
+
+      const eventData = spy.firstCall.lastArg.detail;
+      assert.strictEqual(eventData.expression.key, 'id');
+      assert.strictEqual(eventData.expression.searchTerm, 7);
+      assert.strictEqual(eventData.expression.condition.name, 'greaterThan');
+
+      assert.strictEqual(TDD.grid.totalItems, 1);
+      assert.strictEqual(TDD.rows.first.data.id, 8);
     });
   });
 
   suite('API', () => {
+    test('Honors column configuration parameters', async () => {
+      await TDD.updateColumn('name', { filter: { caseSensitive: true } });
+      await TDD.filter({ key: 'name', condition: 'contains', searchTerm: 'D' });
+
+      assert.strictEqual(TDD.grid.totalItems, 1);
+    });
+
+    test('Honors overwriting column configuration parameters', async () => {
+      await TDD.updateColumn('name', { filter: { caseSensitive: true } });
+      await TDD.filter({
+        key: 'name',
+        condition: 'contains',
+        searchTerm: 'D',
+        caseSensitive: false,
+      });
+
+      assert.strictEqual(TDD.grid.totalItems, 2);
+    });
+
     test('Use of an operand param', async () => {
       const operands = new StringOperands<TestData>();
 
@@ -336,7 +436,7 @@ suite('Grid UI filter', () => {
         { key: 'name', condition: operands.endsWith, searchTerm: 'd', criteria: 'or' },
       ]);
 
-      assert.strictEqual(TDD.grid.totalItems, 3);
+      assert.strictEqual(TDD.grid.totalItems, 2);
     });
   });
 });

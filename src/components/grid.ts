@@ -63,6 +63,7 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
 
   protected rowRenderer = <T>(data: T, index: number): TemplateResult => {
     return html`<apx-grid-row
+      part="row"
       style=${styleMap(applyColumnWidths(this.columns))}
       .index=${index}
       .activeNode=${this.stateController.active}
@@ -135,6 +136,11 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   @watch('data')
   protected pipeline() {
     this.dataState = this.dataController.apply(structuredClone(this.data), this.stateController);
+  }
+
+  public override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute('exportparts', 'row');
   }
 
   public filter(config: FilterExpression<T> | FilterExpression<T>[]) {

@@ -14,9 +14,7 @@ $grid-resize-line-color: var(--igx-grid-resize-line-color, var(--grid-resize-lin
     grid-template-rows: max-content max-content auto;
 
     --scrollbar-offset: 0;
-    --z-index-base:
-        1
-;
+    --z-index-base: 1;
 }
 
 apx-grid-body {

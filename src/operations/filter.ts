@@ -3,23 +3,26 @@ import type FilterState from './filter/state.js';
 import type { FilterExpression, FilterOperation } from './filter/types.js';
 
 export default class FilterDataOperation<T extends object> extends DataOperation<T> {
-  protected match(record: T, ands: FilterExpression<T>[], ors: FilterExpression<T>[]) {
-    return (
-      ors.some(e =>
-        (e.condition as FilterOperation<T, any>).logic(
-          this.resolveValue(record, e.key),
-          e.searchTerm,
-          e.caseSensitive,
-        ),
-      ) ||
-      ands.every(e =>
-        (e.condition as FilterOperation<T, any>).logic(
-          this.resolveValue(record, e.key),
-          e.searchTerm,
-          e.caseSensitive,
-        ),
-      )
+  protected resolveFilter(record: T, expr: FilterExpression<T>) {
+    const condition = expr.condition as FilterOperation<T, any>;
+    return condition.logic(
+      this.resolveValue(record, expr.key),
+      expr.searchTerm,
+      expr.caseSensitive,
     );
+  }
+
+  protected match(record: T, ands: FilterExpression<T>[], ors: FilterExpression<T>[]): boolean {
+    for (const or of ors) {
+      if (this.resolveFilter(record, or)) {
+        return this.match(
+          record,
+          ands.filter(f => f.key !== or.key),
+          [],
+        );
+      }
+    }
+    return ands.every(f => this.resolveFilter(record, f));
   }
 
   public apply(data: T[], state: FilterState<T>): T[] {

@@ -87,10 +87,11 @@ export class FilterController<T extends object> implements ReactiveController {
     this.#emitFilteredEvent(this.get(expression.key)!);
   }
 
-  // TODO: Revise
   public filter(expression: FilterExpression<T> | FilterExpression<T>[]) {
-    this._filter(expression);
-    // this.state.set(expression);
-    // this.host.requestUpdate(PIPELINE);
+    this._filter(
+      asArray(expression).map(expr =>
+        Object.assign(this.getDefaultExpression(this.host.getColumn(expr.key)!), expr),
+      ),
+    );
   }
 }
