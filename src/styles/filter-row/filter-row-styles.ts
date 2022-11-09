@@ -20,7 +20,7 @@ export default css`/* stylelint-disable max-line-length */
   color: var(--igx-header-text-color, var(--header-text-color));
   -webkit-border-after: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
           border-block-end: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
-  z-index: -1;
+  z-index: 1;
 }
 
 [part=filter-row-preview] {

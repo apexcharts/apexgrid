@@ -32,6 +32,11 @@ export default class ApexGridRow<T extends object> extends LitElement {
   @property({ attribute: false, type: Number })
   public index = -1;
 
+  public override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute('exportparts', 'cell');
+  }
+
   protected override render() {
     const { column: key, row: index } = this.activeNode;
 
@@ -40,6 +45,7 @@ export default class ApexGridRow<T extends object> extends LitElement {
         column.hidden
           ? nothing
           : html`<apx-grid-cell
+              part="cell"
               .active=${key === column.key && index === this.index}
               .column=${column}
               .row=${this as ApexGridRow<T>}
