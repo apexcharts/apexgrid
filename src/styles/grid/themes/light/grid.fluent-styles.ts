@@ -15,13 +15,16 @@ export default css`/* stylelint-disable max-line-length */
 :host {
   display: grid;
   height: 100%;
-  contain: content;
+  position: relative;
   font-family: var(--ig-font-family);
   -webkit-box-shadow: var(--ig-elevation-2);
           box-shadow: var(--ig-elevation-2);
   overflow: auto hidden;
   grid-template-rows: -webkit-max-content -webkit-max-content auto;
   grid-template-rows: max-content max-content auto;
+  --scrollbar-offset: 0;
+  --z-index-base:
+      1 ;
 }
 
 apx-grid-body {
@@ -49,7 +52,7 @@ apx-grid-body:focus {
   width: 0.125rem;
   inset-inline-start: 0;
   top: 0;
-  z-index: 1;
+  z-index: calc(var(--z-index-base) + 1);
 }
 
 :host {

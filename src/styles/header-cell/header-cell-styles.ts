@@ -108,6 +108,10 @@ export default css`/* stylelint-disable max-line-length */
   color: var(--igx-sorted-header-icon-color, var(--sorted-header-icon-color));
 }
 
+[part~=filtered] {
+  background: var(--igx-filtering-header-background, var(--filtering-header-background));
+}
+
 [part~=action]:empty {
   display: none;
 }
@@ -117,7 +121,7 @@ export default css`/* stylelint-disable max-line-length */
   height: 100%;
   position: absolute;
   inset-inline-end: -0.125rem;
-  z-index: 1;
+  z-index: var(--z-index-base);
   cursor: col-resize;
 }
 

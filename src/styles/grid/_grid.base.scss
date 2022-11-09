@@ -7,11 +7,16 @@ $grid-resize-line-color: var(--igx-grid-resize-line-color, var(--grid-resize-lin
 :host {
     display: grid;
     height: 100%;
-    contain: content;
+    position: relative;
     font-family: var(--ig-font-family);
     box-shadow: elevation(2);
     overflow: auto hidden;
     grid-template-rows: max-content max-content auto;
+
+    --scrollbar-offset: 0;
+    --z-index-base:
+        1
+;
 }
 
 apx-grid-body {
@@ -33,5 +38,5 @@ apx-grid-body {
     width: rem(2px);
     inset-inline-start: 0;
     top: 0;
-    z-index: 1;
+    z-index: calc(var(--z-index-base) + 1);
 }

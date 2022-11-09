@@ -13,13 +13,13 @@ export default css`/* stylelint-disable max-line-length */
 }
 
 :host {
+  position: relative;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-box-flex: 1;
       -ms-flex: 1 0 0px;
           flex: 1 0 0;
-  contain: content;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -45,21 +45,26 @@ export default css`/* stylelint-disable max-line-length */
 
 igc-input {
   position: absolute;
-  inset-block-start: 0.0625rem;
-  inset-inline-start: 0.0625rem;
-  width: calc(100% - 0.0625rem * 2);
+  left: 0;
   height: calc(100% - 0.0625rem * 2);
+  width: 100%;
 }
 igc-input::part(container), igc-input::part(input) {
-  height: 100%;
-  border: none;
+  border-color: transparent;
   -webkit-box-shadow: none;
           box-shadow: none;
+  height: 100%;
+}
+
+igc-input::part(container), igc-input::part(input),
+igc-select::part(container),
+igc-select::part(input) {
   background: inherit;
   color: inherit;
-  border-radius: 0;
   font-size: 0.8125rem;
 }
-igc-input::part(helper-text)::after, igc-input::part(container)::after {
+igc-input::part(helper-text)::after, igc-input::part(container)::after,
+igc-select::part(helper-text)::after,
+igc-select::part(container)::after {
   display: none;
 }`;

@@ -307,7 +307,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
   protected renderActiveState() {
     return html`<div part="active-state">
-      <div part="filter-row-inputs">${this.renderInputArea()}</div>
+      <div part="filter-row-input">${this.renderInputArea()}</div>
       <div part="filter-row-filters">${this.renderActiveChips()}</div>
       <div part="filter-row-actions">${this.renderFilterActions()}</div>
     </div> `;

@@ -13,10 +13,10 @@
     --header-border-width: #{rem(1px)};
     --header-border-style: solid;
     --header-border-color: #{color(null, gray, 400, .38)};
-    --filtering-header-background: #{color(null, gray, 50)};
+    --filtering-header-background: #{color(null, gray, 50, .6)};
 
     // Filtering row
-    --filtering-row-background: #{color(null, gray, 50)};
+    --filtering-row-background: #{color(null, gray, 50, .6)};
     --filtering-row-text-color: #{contrast-color(null, gray, 50)};
 
     // Header cell

@@ -20,7 +20,9 @@ export default css`/* stylelint-disable max-line-length */
   contain: content;
   -webkit-border-after: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
           border-block-end: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
-  z-index: -1;
+  z-index: var(--z-index-base);
+  -webkit-padding-end: var(--scrollbar-offset);
+          padding-inline-end: var(--scrollbar-offset);
 }
 
 :host(:focus) {

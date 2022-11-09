@@ -16,7 +16,8 @@ $header-border-color: var(--igx-header-border-color, var(--header-border-color))
     background: $header-background;
     color: $header-text-color;
     border-block-end: $header-border-width $header-border-style $header-border-color;
-    z-index: -1;
+    z-index: var(--z-index-base);
+    padding-inline-end: var(--scrollbar-offset);
 }
 
 [part='filter-row-preview'] {
@@ -24,26 +25,43 @@ $header-border-color: var(--igx-header-border-color, var(--header-border-color))
     align-items: center;
     overflow: hidden;
     padding: 0 $ig-cells-padding;
+    background: $filtering-row-background;
+    color: $filtering-row-text-color;
     border-inline-end: $header-border-width $header-border-style $header-border-color;
+}
+
+[part~='active-state'] {
+    background: $filtering-row-background;
+    color: $filtering-row-text-color;
+    min-height: $ig-cells-min-height;
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    gap: rem(8px);
+    position: relative;
+    inset-block-start: rem(-1px);
+}
+
+[part='filter-row-preview']:last-of-type {
+    border-inline-end: none;
+}
+
+[part~='filter-row-input'] {
+    padding-inline-start: $ig-cells-padding;
+}
+
+[part~='filter-row-actions'] {
+    padding-inline-end: $ig-cells-padding;
 }
 
 [part~='filter-row-input'],
 [part~='filter-row-filters'],
-[part~='filter-actions'] {
+[part~='filter-row-actions'] {
     display: flex;
     align-items: center;
-    gap: rem(8px);
 }
 
 [part~='filter-row-filters'] {
     flex: 1;
     overflow: hidden;
-}
-
-[part~='active-state'] {
-    display: flex;
-    align-items: center;
-    padding: 0 $ig-cells-padding;
-    width: 100%;
-    gap: rem(8px);
 }

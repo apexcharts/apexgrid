@@ -1,5 +1,6 @@
 @use '../common' as *;
 
+$filtering-header-background: var(--igx-filtering-header-background, var(--filtering-header-background));
 $header-border-width: var(--igx-header-border-width, var(--header-border-width));
 $header-border-style: var(--igx-header-border-style, var(--header-border-style));
 $header-border-color: var(--igx-header-border-color, var(--header-border-color));
@@ -85,6 +86,10 @@ $inactive-header-icon-color: var(--igx-icon-color, var(--icon-color));
     }
 }
 
+[part~='filtered'] {
+    background: $filtering-header-background;
+}
+
 [part~='action']:empty {
     display: none;
 }
@@ -94,7 +99,7 @@ $inactive-header-icon-color: var(--igx-icon-color, var(--icon-color));
     height: 100%;
     position: absolute;
     inset-inline-end: rem(-2px);
-    z-index: 1;
+    z-index: var(--z-index-base);
     cursor: col-resize;
 }
 
