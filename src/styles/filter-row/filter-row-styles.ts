@@ -87,4 +87,9 @@ export default css`/* stylelint-disable max-line-length */
       -ms-flex: 1;
           flex: 1;
   overflow: hidden;
+}
+
+igc-input::part(container), igc-input::part(input) {
+  background: inherit;
+  color: inherit;
 }`;

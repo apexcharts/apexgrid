@@ -23,8 +23,7 @@ export default css`/* stylelint-disable max-line-length */
   grid-template-rows: -webkit-max-content -webkit-max-content auto;
   grid-template-rows: max-content max-content auto;
   --scrollbar-offset: 0;
-  --z-index-base:
-      1 ;
+  --z-index-base: 1;
 }
 
 apx-grid-body {
@@ -63,8 +62,8 @@ apx-grid-body:focus {
   --header-border-width: 0.0625rem;
   --header-border-style: solid;
   --header-border-color: hsla(var(--ig-gray-400), 0.38);
-  --filtering-header-background: hsla(var(--ig-gray-50), 0.6);
-  --filtering-row-background: hsla(var(--ig-gray-50), 0.6);
+  --filtering-header-background: hsla(var(--ig-gray-50), var(--ig-gray-a));
+  --filtering-row-background: hsla(var(--ig-gray-50), var(--ig-gray-a));
   --filtering-row-text-color: var(--ig-gray-50-contrast);
   --sorted-header-icon-color: hsla(var(--ig-primary-500), var(--ig-primary-a));
   --icon-color: "currentColor";

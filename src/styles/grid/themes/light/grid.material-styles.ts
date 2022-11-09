@@ -23,8 +23,7 @@ export default css`/* stylelint-disable max-line-length */
   grid-template-rows: -webkit-max-content -webkit-max-content auto;
   grid-template-rows: max-content max-content auto;
   --scrollbar-offset: 0;
-  --z-index-base:
-      1 ;
+  --z-index-base: 1;
 }
 
 apx-grid-body {

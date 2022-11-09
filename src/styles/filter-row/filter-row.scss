@@ -65,3 +65,11 @@ $header-border-color: var(--igx-header-border-color, var(--header-border-color))
     flex: 1;
     overflow: hidden;
 }
+
+igc-input {
+    &::part(container),
+    &::part(input) {
+        background: inherit;
+        color: inherit;
+    }
+}
