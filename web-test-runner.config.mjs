@@ -5,11 +5,10 @@ import { defaultReporter } from '@web/test-runner';
 import { mochaStyleReporter } from '@blockquote/test-runner-mocha-style-reporter';
 
 const filteredLogs = ['in dev mode'];
-const outDir = process.env.OUTDIR.trim() || '.';
 
 export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
   /** Test files to run */
-  files: [`${outDir}/test/**/*.test.js`, `!${outDir}/test/utils/**/*`],
+  files: [`dist/test/**/*.test.js`, `!dist/test/utils/**/*`],
 
   /** Resolve bare module imports */
   nodeResolve: {
@@ -29,7 +28,7 @@ export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
 
   coverageConfig: {
     report: true,
-    reportDir: `${outDir}/test/coverage`,
+    reportDir: `dist/test/coverage`,
     threshold: {
       statements: 80,
       branches: 80,
