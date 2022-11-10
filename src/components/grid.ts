@@ -6,11 +6,12 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { GRID_TAG } from '../internal/tags.js';
 import { StateController, gridStateContext } from '../controllers/state.js';
 import { DataOperationsController } from '../controllers/data-operation.js';
+import { GridDOMController } from '../controllers/dom.js';
 import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { watch } from '../internal/watch.js';
 import { DEFAULT_COLUMN_CONFIG, PIPELINE } from '../internal/constants.js';
 import { registerGridIcons } from '../internal/icon-registry.js';
-import { applyColumnWidths, asArray, getFilterOperandsFor } from '../internal/utils.js';
+import { asArray, getFilterOperandsFor } from '../internal/utils.js';
 
 import type { ColumnConfig, GridRemoteConfig, GridSortingConfig, Keys } from '../internal/types';
 import type FilterExpressionTree from '../operations/filter/tree';
@@ -59,12 +60,17 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   public static override styles = bootstrap;
 
   protected stateController = new StateController<T>(this);
+  protected DOM = new GridDOMController<T>(this);
   protected dataController = new DataOperationsController<T>(this);
 
   protected rowRenderer = <T>(data: T, index: number): TemplateResult => {
+    const styles = { ...this.DOM.columnSizes };
+    if (this.stateController.active.row === index) {
+      Object.assign(styles, { zIndex: 3 });
+    }
     return html`<apx-grid-row
       part="row"
-      style=${styleMap(applyColumnWidths(this.columns))}
+      style=${styleMap(styles)}
       .index=${index}
       .activeNode=${this.stateController.active}
       .data=${data}
@@ -132,10 +138,20 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     this.columns = newConfig.map(config => ({ ...DEFAULT_COLUMN_CONFIG, ...config }));
   }
 
-  @watch(PIPELINE, { waitUntilFirstUpdate: true })
   @watch('data')
-  protected pipeline() {
-    this.dataState = this.dataController.apply(structuredClone(this.data), this.stateController);
+  protected dataChanged() {
+    this.dataState = structuredClone(this.data);
+    if (this.hasUpdated) {
+      this.pipeline();
+    }
+  }
+
+  @watch(PIPELINE, { waitUntilFirstUpdate: true })
+  protected async pipeline() {
+    this.dataState = await this.dataController.apply(
+      structuredClone(this.data),
+      this.stateController,
+    );
   }
 
   public override connectedCallback(): void {
@@ -167,6 +183,7 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
 
   public updateColumn(key: Keys<T>, config: Partial<ColumnConfig<T>>) {
     // Check and reset data operation states
+    // TODO: Run `pipeline` updates ?
     if (!config.sort) {
       this.stateController.sorting.reset(key);
     }
@@ -181,7 +198,7 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
       }
       return each;
     });
-    this.requestUpdate(PIPELINE);
+    this.requestUpdate();
   }
 
   @eventOptions({ capture: true })
@@ -204,7 +221,7 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
 
   protected renderHeaderRow() {
     return html`<apx-grid-header-row
-      style=${styleMap(applyColumnWidths(this.columns))}
+      style=${styleMap(this.DOM.columnSizes)}
       .columns=${this.columns}
     ></apx-grid-header-row>`;
   }
@@ -220,7 +237,7 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
 
   protected renderFilterRow() {
     return this.columns.some(column => column.filter)
-      ? html`<apx-filter-row style=${styleMap(applyColumnWidths(this.columns))}></apx-filter-row>`
+      ? html`<apx-filter-row style=${styleMap(this.DOM.columnSizes)}></apx-filter-row>`
       : nothing;
   }
 

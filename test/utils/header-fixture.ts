@@ -58,7 +58,7 @@ export default class HeaderTestFixture<T extends object> {
     this.resizePart.dispatchEvent(
       new PointerEvent('pointermove', {
         ...DEFAULT_ARGS,
-        clientX: this.element.offsetLeft + this.element.offsetWidth + x,
+        clientX: this.element.getBoundingClientRect().left + this.element.offsetWidth + x,
       }),
     );
   }

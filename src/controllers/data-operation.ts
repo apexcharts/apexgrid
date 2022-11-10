@@ -3,6 +3,7 @@ import SortDataOperation from '../operations/sort.js';
 import FilterDataOperation from '../operations/filter.js';
 import type { GridHost } from '../internal/types';
 import type { StateController } from './state';
+import { isDefined } from '../internal/utils.js';
 
 export class DataOperationsController<T extends object> implements ReactiveController {
   protected sorting = new SortDataOperation<T>();
@@ -14,8 +15,33 @@ export class DataOperationsController<T extends object> implements ReactiveContr
 
   public hostConnected() {}
 
-  public apply(data: T[], state: StateController<T>) {
+  protected get hasRemoteSort() {
+    return isDefined(this.host.remoteConfig?.sort);
+  }
+
+  protected get hasRemoteFilter() {
+    return isDefined(this.host.remoteConfig?.filter);
+  }
+
+  protected get remoteFilter() {
+    return this.host.remoteConfig!.filter!;
+  }
+
+  protected get remoteSort() {
+    return this.host.remoteConfig!.sort!;
+  }
+
+  public async apply(data: T[], state: StateController<T>) {
     const { filtering, sorting } = state;
-    return this.sorting.apply(this.filtering.apply(data, filtering.state), sorting.state);
+
+    data = this.hasRemoteFilter
+      ? await this.remoteFilter(data, filtering.state)
+      : this.filtering.apply(data, filtering.state);
+
+    data = this.hasRemoteSort
+      ? await this.remoteSort(data, sorting.state)
+      : this.sorting.apply(data, sorting.state);
+
+    return data;
   }
 }

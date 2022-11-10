@@ -5,6 +5,7 @@ import type ApexGridRow from '../components/row';
 import type ApexGridHeader from '../components/header';
 import type BaseOperands from '../operations/filter/operands/base';
 import type { SortState } from '../operations/sort/types';
+import type FilterState from '../operations/filter/state';
 
 export type Keys<T> = keyof T;
 export type Values<T> = T[keyof T];
@@ -70,7 +71,9 @@ export interface ApexCellContext<T extends object> {
 
 export type NavigationState = 'previous' | 'current';
 
-type RemoteSortHook<T extends object> = (state: SortState<T>) => T[];
-export interface GridRemoteConfig<T extends object> {
-  sort: RemoteSortHook<T>;
+type RemoteSortHook<T> = (data: T[], state: SortState<T>) => T[] | Promise<T[]>;
+type RemoteFilterHook<T> = (data: T[], state: FilterState<T>) => [] | Promise<T[]>;
+export interface GridRemoteConfig<T> {
+  sort?: RemoteSortHook<T>;
+  filter?: RemoteFilterHook<T>;
 }

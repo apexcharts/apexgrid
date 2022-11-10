@@ -61,9 +61,9 @@ export default class ApexGridHeader<T extends object> extends LitElement {
   }
 
   #handleResize = ({ clientX }: PointerEvent) => {
-    const left = this.offsetLeft;
+    const { left } = this.getBoundingClientRect();
     const width = Math.max(clientX - left, MIN_COL_RESIZE_WIDTH);
-    const x = Math.max(clientX, left + width);
+    const x = this.offsetLeft + width;
 
     this.resizeController.resize(this.column, width, x);
   };

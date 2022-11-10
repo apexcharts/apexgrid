@@ -71,7 +71,12 @@ export class SortController<T extends object> implements ReactiveController {
       this.reset();
     }
 
-    expression.direction === 'none' ? this.reset(expression.key) : this._sort(expression);
+    if (expression.direction == 'none') {
+      this.reset(expression.key);
+      this.host.requestUpdate(PIPELINE);
+    } else {
+      this._sort(expression);
+    }
 
     await this.host.updateComplete;
     this.#emitSortedEvent(expression);
@@ -93,7 +98,6 @@ export class SortController<T extends object> implements ReactiveController {
 
   public reset(key?: Keys<T>) {
     key ? this.state.delete(key) : this.state.clear();
-    this.host.requestUpdate(PIPELINE);
   }
 
   protected _sort(expressions: SortExpression<T> | SortExpression<T>[]) {
