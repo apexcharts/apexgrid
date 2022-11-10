@@ -4,3 +4,4 @@ export const GRID_HEADER_ROW_TAG = 'apx-grid-header-row' as const;
 export const GRID_HEADER_TAG = 'apx-grid-header' as const;
 export const GRID_ROW_TAG = 'apx-grid-row' as const;
 export const GRID_CELL_TAG = 'apx-grid-cell' as const;
+export const GRID_FILTER_ROW_TAG = 'apx-filter-row' as const;

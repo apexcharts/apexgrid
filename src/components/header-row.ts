@@ -1,11 +1,15 @@
-import { html, LitElement, nothing } from 'lit';
+import { html, LitElement, nothing, PropertyValueMap } from 'lit';
+import { contextProvided } from '@lit-labs/context';
 import { customElement, property, queryAll } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
+import { gridStateContext, StateController } from '../controllers/state.js';
+import { partNameMap } from '../internal/part-map.js';
 import { GRID_HEADER_ROW_TAG } from '../internal/tags.js';
-import type { StateController } from '../controllers/state';
-import type { ColumnConfig } from '../internal/types';
-import styles from '../styles/header-row/header-row.base-styles.js';
+
 import ApexGridHeader from './header.js';
+import styles from '../styles/header-row/header-row.base-styles.js';
+
+import type { ColumnConfig } from '../internal/types';
 
 @customElement(GRID_HEADER_ROW_TAG)
 export default class ApexGridHeaderRow<T extends object> extends LitElement {
@@ -17,14 +21,20 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
   @queryAll(ApexGridHeader.is)
   protected _headers!: NodeListOf<ApexGridHeader<T>>;
 
-  @property({ attribute: false })
-  public columns: Array<ColumnConfig<T>> = [];
-
+  @contextProvided({ context: gridStateContext, subscribe: true })
   @property({ attribute: false })
   public state!: StateController<T>;
 
+  @property({ attribute: false })
+  public columns: Array<ColumnConfig<T>> = [];
+
   public get headers() {
     return Array.from(this._headers);
+  }
+
+  constructor() {
+    super();
+    this.addEventListener('click', this.#activeFilterColumn);
   }
 
   public override connectedCallback() {
@@ -32,22 +42,31 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
     this.setAttribute('tabindex', '0');
   }
 
-  #getColumnSortState(column: ColumnConfig<T>) {
-    return this.state.sorting.state.get(column.key);
+  #activeFilterColumn(event: MouseEvent) {
+    const header = event
+      .composedPath()
+      .filter(target => target instanceof ApexGridHeader)
+      .at(0) as ApexGridHeader<T>;
+
+    this.state.filtering.setActiveColumn(header.column);
   }
 
-  #getSortIndex(column: ColumnConfig<T>) {
-    return Array.from(this.state.sorting.state.values()).indexOf(this.#getColumnSortState(column)!);
+  protected override shouldUpdate(props: PropertyValueMap<this> | Map<PropertyKey, this>): boolean {
+    this.headers.forEach(header => header.requestUpdate());
+    return super.shouldUpdate(props);
   }
 
   protected override render() {
+    const filterRow = this.state.filtering.filterRow;
+
     return html`${map(this.columns, column =>
       column.hidden
         ? nothing
         : html`<apx-grid-header
+            part=${partNameMap({
+              filtered: column === filterRow?.column,
+            })}
             .column=${column}
-            .sortState=${this.#getColumnSortState(column)}
-            .sortIndex=${this.#getSortIndex(column)}
           ></apx-grid-header>`,
     )}`;
   }

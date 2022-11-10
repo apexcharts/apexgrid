@@ -11,6 +11,22 @@ class SortFixture<T extends object> extends GridTestFixture<T> {
     this.columnConfig = this.columnConfig.map(config => ({ ...config, sort: true }));
   }
 
+  public sortDOMExists(key: Keys<T>) {
+    assert.exists(this.headers.get(key).sortPart);
+  }
+
+  public sortDOMDoesNotExist(key: Keys<T>) {
+    assert.notExists(this.headers.get(key).sortPart);
+  }
+
+  public columnIsSorted(key: Keys<T>) {
+    assert.isTrue(this.headers.get(key).isSorted);
+  }
+
+  public columnIsNotSorted(key: Keys<T>) {
+    assert.isFalse(this.headers.get(key).isSorted);
+  }
+
   public indicatorExists(key: Keys<T>) {
     assert.exists(this.headers.get(key).sortIcon);
   }
@@ -36,42 +52,49 @@ suite('Grid UI sort', () => {
 
   suite('Default UI', () => {
     test('Sort icons state', async () => {
-      await TDD.clickHeader('id');
-      TDD.indicatorIsAscending('id');
+      const key = 'id';
 
-      await TDD.clickHeader('id');
-      TDD.indicatorIsDescending('id');
+      // Default sort DOM state
+      TDD.sortDOMExists(key);
+      TDD.columnIsNotSorted(key);
+
+      // Ascending state
+      await TDD.sortHeader(key);
+      TDD.indicatorIsAscending(key);
+      TDD.columnIsSorted(key);
+
+      // Descending state
+      await TDD.sortHeader(key);
+      TDD.indicatorIsDescending(key);
+      TDD.columnIsSorted(key);
+    });
+
+    test('Non-sortable columns have no sort DOM', async () => {
+      await TDD.updateColumn('id', { sort: false });
+      TDD.sortDOMDoesNotExist('id');
     });
 
     test('Single sort by clicking', async () => {
       // Ascending
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('id');
       assert.strictEqual(TDD.rows.first.data.id, 1);
 
       // Descending
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('id');
       assert.strictEqual(TDD.rows.first.data.id, 8);
     });
 
     test('Multiple sort by clicking', async () => {
       // Ascending `active` & ascending `id`
-      await TDD.clickHeader('active');
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('active');
+      await TDD.sortHeader('id');
       assert.strictEqual(TDD.rows.first.data.active, false);
       assert.strictEqual(TDD.rows.first.data.id, 1);
 
       // Ascending `active` & descending `id`
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('id');
       assert.strictEqual(TDD.rows.first.data.active, false);
       assert.strictEqual(TDD.rows.first.data.id, 6);
-    });
-
-    test('Click on non-sortable columns', async () => {
-      await TDD.updateColumn('id', { sort: false });
-      await TDD.clickHeader('id');
-      await TDD.clickHeader('id');
-
-      assert.notStrictEqual(TDD.rows.first.data.id, 8);
     });
   });
 
@@ -80,82 +103,88 @@ suite('Grid UI sort', () => {
       await TDD.updateProperty('sortingConfig', { multiple: false, triState: true });
 
       // ASC
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('id');
       TDD.indicatorIsAscending('id');
+      TDD.columnIsSorted('id');
 
       // ASC by `active`, reset `id`
-      await TDD.clickHeader('active');
+      await TDD.sortHeader('active');
 
-      TDD.indicatorDoesNotExist('id');
+      TDD.columnIsNotSorted('id');
+      TDD.columnIsSorted('active');
       TDD.indicatorIsAscending('active');
 
       // ASC -> DESC
-      await TDD.clickHeader('active');
+      await TDD.sortHeader('active');
       TDD.indicatorIsDescending('active');
 
       // Reset
-      await TDD.clickHeader('active');
-      TDD.indicatorDoesNotExist('active');
+      await TDD.sortHeader('active');
+      TDD.columnIsNotSorted('active');
     });
 
     test('Single sort without tri-state', async () => {
       await TDD.updateProperty('sortingConfig', { multiple: false, triState: false });
 
       // ASC
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('id');
 
       TDD.indicatorExists('id');
       TDD.indicatorIsAscending('id');
+      TDD.columnIsSorted('id');
 
       // ASC by `active`, reset `id`
-      await TDD.clickHeader('active');
+      await TDD.sortHeader('active');
 
-      TDD.indicatorDoesNotExist('id');
+      TDD.columnIsNotSorted('id');
+      TDD.columnIsSorted('active');
       TDD.indicatorExists('active');
       TDD.indicatorIsAscending('active');
 
       // ASC -> DESC
-      await TDD.clickHeader('active');
+      await TDD.sortHeader('active');
       TDD.indicatorIsDescending('active');
 
       // DESC -> ASC
-      await TDD.clickHeader('active');
+      await TDD.sortHeader('active');
       TDD.indicatorIsAscending('active');
     });
 
     test('Multiple sort with tri-state', async () => {
       // ASC
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('id');
 
       // ASC -> DESC
-      await TDD.clickHeader('active');
-      await TDD.clickHeader('active');
+      await TDD.sortHeader('active');
+      await TDD.sortHeader('active');
 
       TDD.indicatorIsAscending('id');
       TDD.indicatorIsDescending('active');
+      TDD.columnIsSorted('id');
+      TDD.columnIsSorted('active');
 
       // Reset
-      await TDD.clickHeader('active');
+      await TDD.sortHeader('active');
 
       TDD.indicatorIsAscending('id');
-      TDD.indicatorDoesNotExist('active');
+      TDD.columnIsNotSorted('active');
     });
 
     test('Multiple sort without tri-state', async () => {
       await TDD.updateProperty('sortingConfig', { multiple: true, triState: false });
 
       // ASC
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('id');
 
       // ASC -> DESC
-      await TDD.clickHeader('active');
-      await TDD.clickHeader('active');
+      await TDD.sortHeader('active');
+      await TDD.sortHeader('active');
 
       TDD.indicatorIsAscending('id');
       TDD.indicatorIsDescending('active');
 
       // DESC -> ASC
-      await TDD.clickHeader('active');
+      await TDD.sortHeader('active');
 
       TDD.indicatorIsAscending('id');
       TDD.indicatorIsAscending('active');
@@ -166,7 +195,7 @@ suite('Grid UI sort', () => {
     test('Event sequence', async () => {
       const spy = sinon.spy(TDD.grid, 'emitEvent');
 
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('id');
       assert.strictEqual(spy.callCount, 2);
       assert.strictEqual(TDD.rows.first.data.id, 1);
 
@@ -203,7 +232,7 @@ suite('Grid UI sort', () => {
 
       spy.resetHistory();
 
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('id');
 
       assert.strictEqual(spy.callCount, 2);
       assert.strictEqual(TDD.rows.first.data.id, 8);
@@ -242,13 +271,13 @@ suite('Grid UI sort', () => {
 
     test('Cancellable sorting event', async () => {
       // ASC sort
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('id');
 
       TDD.grid.addEventListener('sorting', e => e.preventDefault());
       const spy = sinon.spy(TDD.grid, 'emitEvent');
 
       // DESC sort
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('id');
 
       assert.strictEqual(spy.callCount, 1);
       assert.strictEqual(TDD.rows.first.data.id, 1);
@@ -259,7 +288,7 @@ suite('Grid UI sort', () => {
       TDD.grid.addEventListener('sorting', e => (e.detail.direction = 'descending'));
 
       // Click for ASC sort, but modify to DESC in the handler
-      await TDD.clickHeader('id');
+      await TDD.sortHeader('id');
 
       assert.strictEqual(TDD.rows.first.data.id, 8);
       assert.strictEqual(spy.callCount, 2);
@@ -282,23 +311,39 @@ suite('Grid UI sort', () => {
 
   suite('API', () => {
     test('Default', async () => {
-      await TDD.sort('id', { direction: 'descending' });
+      await TDD.sort({ key: 'id', direction: 'descending' });
       assert.strictEqual(TDD.rows.first.data.id, 8);
     });
 
     test('Sort works on non-sortable columns', async () => {
       await TDD.updateColumn('id', { sort: false });
-      await TDD.sort('id', { direction: 'descending' });
+      await TDD.sort({ key: 'id', direction: 'descending' });
 
       assert.strictEqual(TDD.rows.first.data.id, 8);
     });
 
     test('Config object', async () => {
-      await TDD.sort('importance', { direction: 'descending', comparer: importanceComparer });
+      await TDD.sort({ key: 'importance', direction: 'descending', comparer: importanceComparer });
       assert.strictEqual(TDD.rows.first.data.importance, 'high');
 
-      await TDD.sort('importance', { direction: 'ascending', comparer: importanceComparer });
+      await TDD.sort({ key: 'importance', direction: 'ascending', comparer: importanceComparer });
       assert.strictEqual(TDD.rows.first.data.importance, 'low');
+    });
+
+    test('Multiple expressions', async () => {
+      await TDD.sort([
+        {
+          key: 'importance',
+          comparer: importanceComparer,
+        },
+        {
+          key: 'active',
+        },
+      ]);
+
+      assert.strictEqual(TDD.rows.first.data.importance, 'low');
+      TDD.columnIsSorted('importance');
+      TDD.columnIsSorted('active');
     });
   });
 });

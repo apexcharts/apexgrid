@@ -1,55 +1,16 @@
-import { ReactiveController } from 'lit';
-import type {
-  ColumnAutosizeEvent,
-  ColumnResizedEvent,
-  ColumnResizeStartEvent,
-} from '../components/header';
+import { html, nothing, ReactiveController } from 'lit';
+import { styleMap } from 'lit/directives/style-map.js';
+import ApexGridHeader from '../components/header.js';
 import { MIN_COL_RESIZE_WIDTH } from '../internal/constants.js';
-import type { GridHost, Keys } from '../internal/types';
+import type { ColumnConfig, GridHost, Keys } from '../internal/types';
 
 export class ResizeController<T extends object> implements ReactiveController {
   constructor(protected host: GridHost<T>) {
     this.host.addController(this);
   }
 
-  public active = false;
-  public x = 0;
-
-  protected resizeStart = (ev: CustomEvent<ColumnResizeStartEvent>) => {
-    ev.stopPropagation();
-
-    this.active = true;
-    this.x = ev.detail.anchor;
-    this.host.requestUpdate();
-  };
-
-  protected resizeStop = (ev: CustomEvent<void>) => {
-    ev.stopPropagation();
-
-    this.active = false;
-    this.host.requestUpdate();
-  };
-
-  protected resize = (ev: CustomEvent<ColumnResizedEvent<T>>) => {
-    ev.stopPropagation();
-
-    this.x = ev.detail.x;
-    ev.detail.column.width = `${ev.detail.newWidth}px`;
-    this.host.requestUpdate();
-  };
-
-  protected autosize = async (ev: CustomEvent<ColumnAutosizeEvent<T>>) => {
-    ev.stopPropagation();
-    const { column, header } = ev.detail;
-
-    column.width = `max-content`;
-
-    this.host.requestUpdate();
-    await this.host.updateComplete;
-
-    column.width = `${this.#maxSize(column.key, header.offsetWidth)}px`;
-    this.host.requestUpdate();
-  };
+  public indicatorActive = false;
+  public indicatorOffset = 0;
 
   #maxSize(key: Keys<T>, headerWidth: number) {
     const maxCellWidth = this.host.rows
@@ -61,17 +22,57 @@ export class ResizeController<T extends object> implements ReactiveController {
     return Math.max(...[MIN_COL_RESIZE_WIDTH, maxCellWidth, headerWidth]);
   }
 
-  public hostConnected() {
-    this.host.addEventListener('columnResizeStart', this.resizeStart);
-    this.host.addEventListener('columnResizeEnd', this.resizeStop);
-    this.host.addEventListener('columnResized', this.resize);
-    this.host.addEventListener('columnAutosize', this.autosize);
+  /**
+   * Begins resizing a column by showing and positioning the resize indicator in relation to the column.
+   *
+   * @param header the
+   */
+  public start(header: ApexGridHeader<T>) {
+    this.indicatorActive = true;
+    this.indicatorOffset = header.offsetLeft + header.offsetWidth;
+    this.host.requestUpdate();
   }
 
-  public hostDisconnected() {
-    this.host.removeEventListener('columnResizeStart', this.resizeStart);
-    this.host.removeEventListener('columnResizeEnd', this.resizeStop);
-    this.host.removeEventListener('columnResized', this.resize);
-    this.host.removeEventListener('columnAutosize', this.autosize);
+  /**
+   * Stops and resets the resizing state.
+   */
+  public stop() {
+    this.indicatorActive = false;
+    this.host.requestUpdate();
+  }
+
+  public resize(column: ColumnConfig<T>, width: number, sizerOffset?: number) {
+    if (sizerOffset) {
+      this.indicatorOffset = sizerOffset;
+    }
+
+    column.width = `${width}px`;
+    this.host.requestUpdate();
+  }
+
+  public async autosize(column: ColumnConfig<T>, header: ApexGridHeader<T>) {
+    column.width = `max-content`;
+
+    this.host.requestUpdate();
+    await this.host.updateComplete;
+
+    column.width = `${this.#maxSize(column.key, header.offsetWidth)}px`;
+    this.host.requestUpdate();
+  }
+
+  public hostConnected() {}
+
+  /**
+   * Renders the resize indicator in the grid.
+   */
+  public renderIndicator() {
+    return this.indicatorActive
+      ? html`<div
+          part="resize-indicator"
+          style=${styleMap({
+            transform: `translateX(${this.indicatorOffset}px)`,
+          })}
+        ></div>`
+      : nothing;
   }
 }

@@ -1,9 +1,11 @@
 @use '../common' as *;
 
+$filtering-header-background: var(--igx-filtering-header-background, var(--filtering-header-background));
 $header-border-width: var(--igx-header-border-width, var(--header-border-width));
 $header-border-style: var(--igx-header-border-style, var(--header-border-style));
 $header-border-color: var(--igx-header-border-color, var(--header-border-color));
-$sorted-header-icon-color: var(--igx-sorted-header-icon-color, var(--sorted-header-icon-color));
+$active-header-icon-color: var(--igx-sorted-header-icon-color, var(--sorted-header-icon-color));
+$inactive-header-icon-color: var(--igx-icon-color, var(--icon-color));
 
 :host {
     display: flex;
@@ -30,10 +32,6 @@ $sorted-header-icon-color: var(--igx-sorted-header-icon-color, var(--sorted-head
     user-select: none;
 }
 
-[part~='sortable'] {
-    cursor: pointer;
-}
-
 [part~='title'] {
     display: block;
     position: relative;
@@ -44,11 +42,26 @@ $sorted-header-icon-color: var(--igx-sorted-header-icon-color, var(--sorted-head
     min-width: 3ch;
 }
 
+[part~='actions'] {
+    display: flex;
+    gap: rem(4px);
+    align-items: center;
+}
+
 [part~='action'] {
+    cursor: pointer;
+    opacity: .7;
+    transition: opacity .25s ease-in-out;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+
     igc-icon {
         --size: #{rem(15px)};
 
-        color: $sorted-header-icon-color;
+        color: $inactive-header-icon-color;
     }
 
     igc-icon::after {
@@ -60,7 +73,25 @@ $sorted-header-icon-color: var(--igx-sorted-header-icon-color, var(--sorted-head
         text-align: end;
         font-family: sans-serif;
         line-height: rem(10px);
+        color: $active-header-icon-color;
     }
+}
+
+[part~='sorted'],
+[part~='filtered'] {
+    color: $active-header-icon-color;
+
+    igc-icon {
+        color: $active-header-icon-color;
+    }
+}
+
+[part~='filtered'] {
+    background: $filtering-header-background;
+}
+
+[part~='action']:empty {
+    display: none;
 }
 
 [part~='resizable'] {
@@ -68,6 +99,21 @@ $sorted-header-icon-color: var(--igx-sorted-header-icon-color, var(--sorted-head
     height: 100%;
     position: absolute;
     inset-inline-end: rem(-2px);
-    z-index: 1;
+    z-index: var(--z-index-base);
     cursor: col-resize;
+}
+
+[part~='filter'] {
+    position: relative;
+}
+
+[part~='filter-count'] {
+    position: absolute;
+    top: -5px;
+    inset-inline-end: -1px;
+    font-size: .625rem;
+    text-align: end;
+    font-family: sans-serif;
+    line-height: .625rem;
+    color: currentcolor;
 }

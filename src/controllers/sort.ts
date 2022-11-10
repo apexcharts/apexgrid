@@ -1,5 +1,6 @@
 import { ReactiveController } from 'lit';
 import { PIPELINE } from '../internal/constants.js';
+import { asArray } from '../internal/utils.js';
 import type { ColumnConfig, ColumnSortConfig, GridHost, Keys } from '../internal/types';
 import type { SortExpression, SortingDirection, SortState } from '../operations/sort/types';
 
@@ -9,6 +10,14 @@ export class SortController<T extends object> implements ReactiveController {
   }
 
   public state: SortState<T> = new Map();
+
+  get #isMultipleSort() {
+    return this.host.sortingConfig.multiple;
+  }
+
+  get #isTriStateSort() {
+    return this.host.sortingConfig.triState;
+  }
 
   #resolveSortOptions(
     options: boolean | undefined | ColumnSortConfig<T>,
@@ -31,12 +40,16 @@ export class SortController<T extends object> implements ReactiveController {
     };
   }
 
-  get #isMultipleSort() {
-    return this.host.sortingConfig.multiple;
-  }
-
-  get #isTriStateSort() {
-    return this.host.sortingConfig.triState;
+  #orderBy(dir?: SortingDirection): SortingDirection {
+    return this.#isTriStateSort
+      ? dir === 'ascending'
+        ? 'descending'
+        : dir === 'descending'
+        ? 'none'
+        : 'ascending'
+      : dir === 'ascending'
+      ? 'descending'
+      : 'ascending';
   }
 
   #emitSortingEvent(detail: SortExpression<T>) {
@@ -47,9 +60,8 @@ export class SortController<T extends object> implements ReactiveController {
     return this.host.emitEvent('sorted', { detail });
   }
 
-  #headerSortHandler = async (ev: CustomEvent<ColumnConfig<T>>) => {
-    ev.stopPropagation();
-    const expression = this.prepareExpression(ev.detail);
+  public async sortFromHeaderClick(column: ColumnConfig<T>) {
+    const expression = this.prepareExpression(column);
 
     if (!this.#emitSortingEvent(expression)) {
       return;
@@ -59,13 +71,16 @@ export class SortController<T extends object> implements ReactiveController {
       this.reset();
     }
 
-    expression.direction === 'none'
-      ? this.reset(expression.key)
-      : this._sort(expression.key, expression);
+    if (expression.direction == 'none') {
+      this.reset(expression.key);
+      this.host.requestUpdate(PIPELINE);
+    } else {
+      this._sort(expression);
+    }
 
     await this.host.updateComplete;
     this.#emitSortedEvent(expression);
-  };
+  }
 
   public prepareExpression({ key, sort: options }: ColumnConfig<T>): SortExpression<T> {
     if (this.state.has(key)) {
@@ -81,38 +96,22 @@ export class SortController<T extends object> implements ReactiveController {
     return this.#createDefaultExpression(key);
   }
 
-  #orderBy(dir?: SortingDirection): SortingDirection {
-    return this.#isTriStateSort
-      ? dir === 'ascending'
-        ? 'descending'
-        : dir === 'descending'
-        ? 'none'
-        : 'ascending'
-      : dir === 'ascending'
-      ? 'descending'
-      : 'ascending';
-  }
-
   public reset(key?: Keys<T>) {
     key ? this.state.delete(key) : this.state.clear();
+  }
+
+  protected _sort(expressions: SortExpression<T> | SortExpression<T>[]) {
+    asArray(expressions).forEach(expr => this.state.set(expr.key, { ...expr }));
     this.host.requestUpdate(PIPELINE);
   }
 
-  protected _sort(key: Keys<T>, expression: SortExpression<T>) {
-    this.state.set(key, { ...expression });
-    this.host.requestUpdate(PIPELINE);
+  public sort(expressions: SortExpression<T> | SortExpression<T>[]) {
+    this._sort(
+      asArray(expressions).map(expr =>
+        Object.assign(this.state.get(expr.key) ?? this.#createDefaultExpression(expr.key), expr),
+      ),
+    );
   }
 
-  public sort(key: Keys<T>, expression?: SortExpression<T>) {
-    const value = this.state.get(key) ?? this.#createDefaultExpression(key);
-    this._sort(key, Object.assign(value, expression));
-  }
-
-  public hostConnected() {
-    this.host.addEventListener('headerSortClicked', this.#headerSortHandler);
-  }
-
-  public hostDisconnected(): void {
-    this.host.removeEventListener('headerSortClicked', this.#headerSortHandler);
-  }
+  public hostConnected() {}
 }

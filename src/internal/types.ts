@@ -3,16 +3,18 @@ import type ApexGrid from '../components/grid';
 import type ApexGridCell from '../components/cell';
 import type ApexGridRow from '../components/row';
 import type ApexGridHeader from '../components/header';
+import type BaseOperands from '../operations/filter/operands/base';
 import type { SortState } from '../operations/sort/types';
+import type FilterState from '../operations/filter/state';
 
-export type Keys<T extends object> = keyof T;
-export type Values<T extends object> = T[keyof T];
+export type Keys<T> = keyof T;
+export type Values<T> = T[keyof T];
 export type PropertyType<T extends object, K extends keyof T> = T[K];
-// export type PickTypeKeys<Obj, Type, T extends keyof Obj = keyof Obj> = {
-//   [P in keyof Obj]: Obj[P] extends Type ? P : never;
-// }[T];
+export type PickTypeKeys<Obj, Type, T extends keyof Obj = keyof Obj> = {
+  [P in keyof Obj]: Obj[P] extends Type ? P : never;
+}[T];
 
-// export type PickType<T, Type> = Pick<T, PickTypeKeys<T, Type>>;
+export type PickType<T, Type> = Pick<T, PickTypeKeys<T, Type>>;
 
 export type DataType = 'number' | 'string' | 'boolean';
 
@@ -33,8 +35,9 @@ export interface ColumnSortConfig<T extends object> {
   comparer?: (a: Values<T>, b: Values<T>) => number;
 }
 
-export interface ColumnFilterConfig {
-  remote?: unknown;
+export interface ColumnFilterConfig<T> {
+  caseSensitive?: boolean;
+  strategy?: BaseOperands<T>;
 }
 
 export interface ColumnConfig<T extends object> {
@@ -45,7 +48,7 @@ export interface ColumnConfig<T extends object> {
   hidden?: boolean;
   resizable?: boolean;
   sort?: ColumnSortConfig<T> | boolean;
-  filter?: ColumnFilterConfig | boolean;
+  filter?: ColumnFilterConfig<T> | boolean;
   headerTemplate?: (props: ApexHeaderContext<T>) => Template;
   cellTemplate?: (props: ApexCellContext<T>) => Template;
 }
@@ -63,12 +66,14 @@ export interface ApexCellContext<T extends object> {
   parent: ApexGridCell<T>;
   row: ApexGridRow<T>;
   column: ColumnConfig<T>;
-  value: T[keyof T];
+  value: Values<T>;
 }
 
 export type NavigationState = 'previous' | 'current';
 
-type RemoteSortHook<T extends object> = (state: SortState<T>) => T[];
-export interface GridRemoteConfig<T extends object> {
-  sort: RemoteSortHook<T>;
+type RemoteSortHook<T> = (data: T[], state: SortState<T>) => T[] | Promise<T[]>;
+type RemoteFilterHook<T> = (data: T[], state: FilterState<T>) => [] | Promise<T[]>;
+export interface GridRemoteConfig<T> {
+  sort?: RemoteSortHook<T>;
+  filter?: RemoteFilterHook<T>;
 }

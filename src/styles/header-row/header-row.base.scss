@@ -5,6 +5,7 @@ $header-text-color: var(--igx-header-text-color, var(--header-text-color));
 $header-border-width: var(--igx-header-border-width, var(--header-border-width));
 $header-border-style: var(--igx-header-border-style, var(--header-border-style));
 $header-border-color: var(--igx-header-border-color, var(--header-border-color));
+$filtering-header-background: var(--igx-filtering-header-background, var(--filtering-header-background));
 
 :host {
     display: grid;
@@ -13,8 +14,14 @@ $header-border-color: var(--igx-header-border-color, var(--header-border-color))
     color: $header-text-color;
     contain: content;
     border-block-end: $header-border-width $header-border-style $header-border-color;
+    z-index: var(--z-index-base);
+    padding-inline-end: var(--scrollbar-offset);
 }
 
 :host(:focus) {
     outline: none;
+}
+
+[part='filtered'] {
+    background: $filtering-header-background;
 }

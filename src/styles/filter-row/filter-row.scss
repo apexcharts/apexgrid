@@ -1,0 +1,75 @@
+@use '../common' as *;
+
+$filtering-row-background: var(--igx-filtering-row-background, var(--filtering-row-background));
+$filtering-row-text-color: var(--igx-filtering-row-text-color, var(--filtering-row-text-color));
+$header-background: var(--igx-header-background, var(--header-background));
+$header-text-color: var(--igx-header-text-color, var(--header-text-color));
+$header-border-width: var(--igx-header-border-width, var(--header-border-width));
+$header-border-style: var(--igx-header-border-style, var(--header-border-style));
+$header-border-color: var(--igx-header-border-color, var(--header-border-color));
+
+:host {
+    --ig-size: 1;
+
+    display: grid;
+    min-height: $ig-cells-min-height;
+    background: $header-background;
+    color: $header-text-color;
+    border-block-end: $header-border-width $header-border-style $header-border-color;
+    z-index: var(--z-index-base);
+    padding-inline-end: var(--scrollbar-offset);
+}
+
+[part='filter-row-preview'] {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: 0 $ig-cells-padding;
+    background: $filtering-row-background;
+    color: $filtering-row-text-color;
+    border-inline-end: $header-border-width $header-border-style $header-border-color;
+}
+
+[part~='active-state'] {
+    background: $filtering-row-background;
+    color: $filtering-row-text-color;
+    min-height: $ig-cells-min-height;
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    gap: rem(8px);
+    position: relative;
+    inset-block-start: rem(-1px);
+}
+
+[part='filter-row-preview']:last-of-type {
+    border-inline-end: none;
+}
+
+[part~='filter-row-input'] {
+    padding-inline-start: $ig-cells-padding;
+}
+
+[part~='filter-row-actions'] {
+    padding-inline-end: $ig-cells-padding;
+}
+
+[part~='filter-row-input'],
+[part~='filter-row-filters'],
+[part~='filter-row-actions'] {
+    display: flex;
+    align-items: center;
+}
+
+[part~='filter-row-filters'] {
+    flex: 1;
+    overflow: hidden;
+}
+
+igc-input {
+    &::part(container),
+    &::part(input) {
+        background: inherit;
+        color: inherit;
+    }
+}

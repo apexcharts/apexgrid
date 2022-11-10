@@ -1,4 +1,4 @@
-import { css } from 'lit';
+import {css} from 'lit';
 
 export default css`/* stylelint-disable max-line-length */
 :host {
@@ -16,11 +16,11 @@ export default css`/* stylelint-disable max-line-length */
   display: grid;
   width: 100%;
   min-height: max(var(--is-large, 1) * 3.125rem, var(--is-medium, 1) * 2.125rem, var(--is-small, 1) * 1.5rem);
-  contain: content;
   -webkit-border-after: var(--igx-row-border-width, var(--header-border-width)) var(--igx-row-border-style, var(--header-border-style)) var(--igx-row-border-color, var(--header-border-color));
           border-block-end: var(--igx-row-border-width, var(--header-border-width)) var(--igx-row-border-style, var(--header-border-style)) var(--igx-row-border-color, var(--header-border-color));
   background: var(--igx-row-odd-background, var(--row-odd-background));
   color: var(--igx-row-odd-text-color, var(--row-odd-text-color));
+  z-index: var(--z-index-base);
 }
 
 :host(:last-of-type) {

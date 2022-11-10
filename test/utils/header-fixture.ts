@@ -5,24 +5,40 @@ const DEFAULT_ARGS: PointerEventInit = { pointerId: 1, bubbles: true, composed: 
 export default class HeaderTestFixture<T extends object> {
   constructor(public element: ApexGridHeader<T>) {}
 
-  protected get contentPart() {
-    return this.element.shadowRoot!.querySelector('[part~="content"]')!;
+  protected get(selector: string) {
+    return this.element.shadowRoot!.querySelector(selector) as HTMLElement;
   }
 
-  protected get actionPart() {
-    return this.element.shadowRoot!.querySelector('[part~="action"]')!;
+  protected get contentPart() {
+    return this.get('[part~="content"]');
+  }
+
+  protected get actionsPart() {
+    return this.get('[part~="actions"]');
+  }
+
+  public get sortPart() {
+    return this.actionsPart.querySelector('[part~="action"]')! as HTMLElement;
   }
 
   public get resizePart() {
-    return this.element.shadowRoot!.querySelector('[part~="resizable"]')!;
+    return this.get('[part~="resizable"]');
   }
 
   public get titlePart() {
-    return this.element.shadowRoot!.querySelector('[part~="title"]')!;
+    return this.get('[part~="title"]');
   }
 
   public get sortIcon() {
-    return this.actionPart.querySelector('igc-icon')!;
+    return this.sortPart.querySelector('igc-icon')!;
+  }
+
+  public get isSorted() {
+    return this.sortPart.part.contains('sorted');
+  }
+
+  public get hasFilterStyle() {
+    return this.element.part.contains('filtered');
   }
 
   public get text() {
@@ -42,7 +58,7 @@ export default class HeaderTestFixture<T extends object> {
     this.resizePart.dispatchEvent(
       new PointerEvent('pointermove', {
         ...DEFAULT_ARGS,
-        clientX: this.element.offsetLeft + this.element.offsetWidth + x,
+        clientX: this.element.getBoundingClientRect().left + this.element.offsetWidth + x,
       }),
     );
   }
@@ -51,7 +67,7 @@ export default class HeaderTestFixture<T extends object> {
     this.resizePart.dispatchEvent(new Event('dblclick', DEFAULT_ARGS));
   }
 
-  public click() {
-    this.contentPart.dispatchEvent(new Event('click', DEFAULT_ARGS));
+  public sort() {
+    this.sortPart.click();
   }
 }

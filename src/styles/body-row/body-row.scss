@@ -14,10 +14,10 @@ $row-hover-text-color: var(--igx-row-hover-text-color, var(--row-hover-text-colo
     display: grid;
     width: 100%;
     min-height: $ig-cells-min-height;
-    contain: content;
     border-block-end: $row-border-width $row-border-style $row-border-color;
     background: $row-odd-background;
     color: $row-odd-text-color;
+    z-index: var(--z-index-base);
 }
 
 :host(:last-of-type) {

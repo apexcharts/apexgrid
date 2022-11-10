@@ -1,4 +1,4 @@
-import { css } from 'lit';
+import {css} from 'lit';
 
 export default css`/* stylelint-disable max-line-length */
 :host {
@@ -52,10 +52,6 @@ export default css`/* stylelint-disable max-line-length */
           user-select: none;
 }
 
-[part~=sortable] {
-  cursor: pointer;
-}
-
 [part~=title] {
   display: block;
   position: relative;
@@ -67,9 +63,29 @@ export default css`/* stylelint-disable max-line-length */
   min-width: 3ch;
 }
 
+[part~=actions] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 0.25rem;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+[part~=action] {
+  cursor: pointer;
+  opacity: 0.7;
+  -webkit-transition: opacity 0.25s ease-in-out;
+  -o-transition: opacity 0.25s ease-in-out;
+  transition: opacity 0.25s ease-in-out;
+}
+[part~=action]:hover, [part~=action]:focus {
+  opacity: 1;
+}
 [part~=action] igc-icon {
   --size: 0.9375rem;
-  color: var(--igx-sorted-header-icon-color, var(--sorted-header-icon-color));
+  color: var(--igx-icon-color, var(--icon-color));
 }
 [part~=action] igc-icon::after {
   content: attr(data-sortIndex);
@@ -80,6 +96,24 @@ export default css`/* stylelint-disable max-line-length */
   text-align: end;
   font-family: sans-serif;
   line-height: 0.625rem;
+  color: var(--igx-sorted-header-icon-color, var(--sorted-header-icon-color));
+}
+
+[part~=sorted],
+[part~=filtered] {
+  color: var(--igx-sorted-header-icon-color, var(--sorted-header-icon-color));
+}
+[part~=sorted] igc-icon,
+[part~=filtered] igc-icon {
+  color: var(--igx-sorted-header-icon-color, var(--sorted-header-icon-color));
+}
+
+[part~=filtered] {
+  background: var(--igx-filtering-header-background, var(--filtering-header-background));
+}
+
+[part~=action]:empty {
+  display: none;
 }
 
 [part~=resizable] {
@@ -87,6 +121,21 @@ export default css`/* stylelint-disable max-line-length */
   height: 100%;
   position: absolute;
   inset-inline-end: -0.125rem;
-  z-index: 1;
+  z-index: var(--z-index-base);
   cursor: col-resize;
+}
+
+[part~=filter] {
+  position: relative;
+}
+
+[part~=filter-count] {
+  position: absolute;
+  top: -5px;
+  inset-inline-end: -1px;
+  font-size: 0.625rem;
+  text-align: end;
+  font-family: sans-serif;
+  line-height: 0.625rem;
+  color: currentcolor;
 }`;

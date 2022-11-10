@@ -5,9 +5,9 @@ $cell-active-border-color: var(--igx-cell-active-border-color, var(--cell-active
 $inset-shadow-width: #{rem(1px)};
 
 :host {
+    position: relative;
     display: inline-flex;
     flex: 1 0 0;
-    contain: content;
     align-items: center;
     padding: 0 $ig-cells-padding;
     color: inherit;
@@ -30,19 +30,24 @@ $inset-shadow-width: #{rem(1px)};
 
 igc-input {
     position: absolute;
-    top: $inset-shadow-width;
-    left: $inset-shadow-width;
-    width: calc(100% - ($inset-shadow-width * 2));
+    left: 0;
     height: calc(100% - ($inset-shadow-width * 2));
+    width: 100%;
 
     &::part(container),
     &::part(input) {
-        height: 100%;
-        border: none;
+        border-color: transparent;
         box-shadow: none;
+        height: 100%;
+    }
+}
+
+igc-input,
+igc-select {
+    &::part(container),
+    &::part(input) {
         background: inherit;
         color: inherit;
-        border-radius: 0;
         font-size: #{rem(13px)};
     }
 

@@ -1,4 +1,4 @@
-import { css } from 'lit';
+import {css} from 'lit';
 
 export default css`/* stylelint-disable max-line-length */
 :host {
@@ -15,13 +15,15 @@ export default css`/* stylelint-disable max-line-length */
 :host {
   display: grid;
   height: 100%;
-  contain: content;
+  position: relative;
   font-family: var(--ig-font-family);
   -webkit-box-shadow: var(--ig-elevation-2);
           box-shadow: var(--ig-elevation-2);
   overflow: auto hidden;
-  grid-template-rows: -webkit-max-content auto;
-  grid-template-rows: max-content auto;
+  grid-template-rows: -webkit-max-content -webkit-max-content auto;
+  grid-template-rows: max-content max-content auto;
+  --scrollbar-offset: 0;
+  --z-index-base: 1;
 }
 
 apx-grid-body {
@@ -49,7 +51,7 @@ apx-grid-body:focus {
   width: 0.125rem;
   inset-inline-start: 0;
   top: 0;
-  z-index: 1;
+  z-index: calc(var(--z-index-base) + 1);
 }
 
 :host {
@@ -60,7 +62,11 @@ apx-grid-body:focus {
   --header-border-width: 0.0625rem;
   --header-border-style: solid;
   --header-border-color: hsla(var(--ig-gray-100), var(--ig-gray-a));
+  --filtering-header-background: hsla(var(--ig-gray-50), var(--ig-gray-a));
+  --filtering-row-background: hsla(var(--ig-gray-50), var(--ig-gray-a));
+  --filtering-row-text-color: var(--ig-gray-50-contrast);
   --sorted-header-icon-color: hsla(var(--ig-secondary-500), var(--ig-secondary-a));
+  --icon-color: "currentColor";
   --row-hover-background: hsla(var(--ig-gray-200), var(--ig-gray-a));
   --row-hover-text-color: var(--ig-gray-200-contrast);
   --row-even-background: hsla(var(--ig-gray-50), var(--ig-gray-a));

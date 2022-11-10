@@ -13,9 +13,17 @@
     --header-border-width: #{rem(1px)};
     --header-border-style: solid;
     --header-border-color: #{color(null, gray, 400, .38)};
+    --filtering-header-background: #{color(null, gray, 50)};
+
+    // Filtering row
+    --filtering-row-background: #{color(null, gray, 50)};
+    --filtering-row-text-color: #{contrast-color(null, gray, 50)};
 
     // Header cell
     --sorted-header-icon-color: #{color(null, secondary, 500)};
+
+    // Icon color
+    --icon-color: 'currentColor';
 
     // Body Row
     --row-hover-background: #{color(null, gray, 200)};
