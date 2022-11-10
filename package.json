@@ -36,7 +36,7 @@
     "sass:watch": "sass-style-template -j ts",
     "start": "concurrently -k -r \"npm:sass:watch\" \"npm:vite\"",
     "start:wds": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"npm:sass:watch\" \"npm:wds\"",
-    "test": "tsc && OUTDIR=dist wtr --coverage",
+    "test": "tsc && set OUTDIR=dist && wtr --coverage",
     "test:watch": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"OUTDIR=dist wtr --watch\"",
     "vite": "vite",
     "wds": "web-dev-server",

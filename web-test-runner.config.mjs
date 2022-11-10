@@ -5,7 +5,7 @@ import { defaultReporter } from '@web/test-runner';
 import { mochaStyleReporter } from '@blockquote/test-runner-mocha-style-reporter';
 
 const filteredLogs = ['in dev mode'];
-const outDir = process.env.OUTDIR || '.';
+const outDir = process.env.OUTDIR.trim() || '.';
 
 export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
   /** Test files to run */
