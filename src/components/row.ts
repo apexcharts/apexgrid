@@ -4,7 +4,7 @@ import { map } from 'lit/directives/map.js';
 import { GRID_ROW_TAG } from '../internal/tags.js';
 import type { ActiveNode, ColumnConfig } from '../internal/types';
 import ApexGridCell from './cell.js';
-import styles from '../styles/body-row/body-row-styles';
+import styles from '../styles/body-row/body-row-styles.js';
 
 @customElement(GRID_ROW_TAG)
 export default class ApexGridRow<T extends object> extends LitElement {
@@ -27,7 +27,7 @@ export default class ApexGridRow<T extends object> extends LitElement {
   }
 
   @property({ attribute: false })
-  public activeNode!: ActiveNode;
+  public activeNode!: ActiveNode<T>;
 
   @property({ attribute: false, type: Number })
   public index = -1;

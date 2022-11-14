@@ -53,8 +53,8 @@ export interface ColumnConfig<T extends object> {
   cellTemplate?: (props: ApexCellContext<T>) => Template;
 }
 
-export interface ActiveNode {
-  column: string | number | symbol;
+export interface ActiveNode<T> {
+  column: Keys<T>;
   row: number;
 }
 
