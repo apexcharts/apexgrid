@@ -24,27 +24,98 @@ suite('Grid activation', () => {
     });
   });
 
-  suite('Keyboard navigation & activation [No previous selection]', () => {
+  suite('Keyboard navigation & activation', () => {
     test('ArrowRight', async () => {
+      await TDD.clickCell(TDD.rows.first.cells.first);
+
       for (const each of keys) {
+        assert.isTrue(TDD.rows.first.cells.get(each).active);
         await TDD.fireNavigationEvent({ key: 'ArrowRight' });
-        assert.strictEqual(TDD.rows.first.cells.get(each).active, true);
       }
+    });
+
+    test('ArrowRight @ boundary', async () => {
+      await TDD.clickCell(TDD.rows.first.cells.last);
+      await TDD.fireNavigationEvent({ key: 'ArrowRight' });
+
+      assert.isTrue(TDD.rows.first.cells.last.active);
     });
 
     test('ArrowLeft', async () => {
-      const reversed = [keys[0], ...keys.slice(1).reverse()];
+      const reversed = keys.reverse();
+      await TDD.clickCell(TDD.rows.first.cells.last);
+
       for (const each of reversed) {
+        assert.isTrue(TDD.rows.first.cells.get(each).active);
         await TDD.fireNavigationEvent({ key: 'ArrowLeft' });
-        assert.strictEqual(TDD.rows.first.cells.get(each).active, true);
       }
     });
 
+    test('ArrowLeft @ boundary', async () => {
+      await TDD.clickCell(TDD.rows.first.cells.first);
+      await TDD.fireNavigationEvent({ key: 'ArrowLeft' });
+
+      assert.isTrue(TDD.rows.first.cells.first.active);
+    });
+
     test('ArrowDown', async () => {
+      await TDD.clickCell(TDD.rows.first.cells.first);
+
       for (let i = 0; i < data.length; i++) {
+        assert.isTrue(TDD.rows.get(i).cells.first.active);
         await TDD.fireNavigationEvent({ key: 'ArrowDown' });
-        assert.strictEqual(TDD.rows.get(i).cells.first.active, true);
       }
+    });
+
+    test('ArrowDown @ boundary', async () => {
+      await TDD.clickCell(TDD.rows.last.cells.first);
+      await TDD.fireNavigationEvent({ key: 'ArrowDown' });
+
+      assert.isTrue(TDD.rows.last.cells.first.active);
+    });
+
+    test('ArrowUp', async () => {
+      await TDD.clickCell(TDD.rows.last.cells.first);
+
+      for (let i = data.length - 1; i > -1; i--) {
+        assert.isTrue(TDD.rows.get(i).cells.first.active);
+        await TDD.fireNavigationEvent({ key: 'ArrowUp' });
+      }
+    });
+
+    test('ArrowUp @ boundary', async () => {
+      await TDD.clickCell(TDD.rows.first.cells.first);
+      await TDD.fireNavigationEvent({ key: 'ArrowUp' });
+
+      assert.isTrue(TDD.rows.first.cells.first.active);
+    });
+
+    test('Home', async () => {
+      await TDD.clickCell(TDD.rows.last.cells.first);
+      await TDD.fireNavigationEvent({ key: 'Home' });
+
+      assert.isTrue(TDD.rows.first.cells.first.active);
+    });
+
+    test('Home @ boundary', async () => {
+      await TDD.clickCell(TDD.rows.first.cells.first);
+      await TDD.fireNavigationEvent({ key: 'Home' });
+
+      assert.isTrue(TDD.rows.first.cells.first.active);
+    });
+
+    test('End', async () => {
+      await TDD.clickCell(TDD.rows.first.cells.first);
+      await TDD.fireNavigationEvent({ key: 'End' });
+
+      assert.isTrue(TDD.rows.last.cells.first.active);
+    });
+
+    test('End (at edge)', async () => {
+      await TDD.clickCell(TDD.rows.last.cells.first);
+      await TDD.fireNavigationEvent({ key: 'End' });
+
+      assert.isTrue(TDD.rows.last.cells.first.active);
     });
   });
 });

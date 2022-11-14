@@ -33,21 +33,24 @@ export default class GridTestFixture<T extends object> {
 
   public updateConfig() {}
 
-  public async setUp() {
+  public setupParentNode(styles: Partial<CSSStyleDeclaration> = { height: '800px' }) {
     const parentNode = document.createElement('div');
     this.parentStyle
       ? Object.assign(parentNode.style, this.parentStyle)
-      : Object.assign(parentNode.style, { height: '800px' });
+      : Object.assign(parentNode.style, styles);
+    return parentNode;
+  }
 
+  public setupTemplate() {
+    return html`<apx-grid
+      .data=${this.data}
+      .columns=${this.columnConfig}
+    ></apx-grid>`;
+  }
+
+  public async setUp() {
     this.updateConfig();
-
-    this.grid = await fixture(
-      html`<apx-grid
-        .data=${this.data}
-        .columns=${this.columnConfig}
-      ></apx-grid>`,
-      { parentNode },
-    );
+    this.grid = await fixture(this.setupTemplate(), { parentNode: this.setupParentNode() });
 
     // TODO: Still not good but better than arbitrary condition
     await waitUntil(() => this.gridBody.querySelector(ApexGridRow.is));

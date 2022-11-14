@@ -8,7 +8,7 @@ export const SORT_ICON_DESCENDING = 'arrow-downward' as const;
 
 export const MIN_COL_RESIZE_WIDTH = 80;
 
-export const SENTINEL_NODE = Object.freeze<ActiveNode>({ column: '', row: -1 });
+export const SENTINEL_NODE: Readonly<ActiveNode<any>> = Object.freeze({ column: '', row: -1 });
 export const DEFAULT_COLUMN_CONFIG: ColumnConfig<any> = Object.freeze<ColumnConfig<any>>({
   key: columnKey,
   type: 'string',
@@ -17,7 +17,7 @@ export const DEFAULT_COLUMN_CONFIG: ColumnConfig<any> = Object.freeze<ColumnConf
   sort: false,
   filter: false,
 });
-export const NAVIGATION_STATE = new Map<NavigationState, ActiveNode>([
+export const NAVIGATION_STATE: Map<NavigationState, ActiveNode<any>> = new Map([
   ['previous', SENTINEL_NODE],
   ['current', SENTINEL_NODE],
 ]);

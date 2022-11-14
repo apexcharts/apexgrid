@@ -1,7 +1,7 @@
 import { ReactiveController } from 'lit';
-import type ApexGridBody from '../components/grid-body';
 import { NAVIGATION_STATE, SENTINEL_NODE } from '../internal/constants.js';
-import type { ActiveNode, GridHost } from '../internal/types';
+import type ApexGridBody from '../components/grid-body';
+import type { ActiveNode, GridHost, Keys } from '../internal/types';
 
 export class NavigationController<T extends object> implements ReactiveController {
   protected handlers = new Map(
@@ -18,11 +18,36 @@ export class NavigationController<T extends object> implements ReactiveControlle
   protected state = NAVIGATION_STATE;
   protected _active = SENTINEL_NODE;
 
-  public get active() {
-    return this._active;
+  protected get nextNode() {
+    const node = this.state.get('current')!;
+    return node === SENTINEL_NODE
+      ? { column: this.firstColumn, row: 0 }
+      : ({ ...node } as ActiveNode<T>);
   }
 
-  public set active(node: ActiveNode) {
+  protected get columns() {
+    return this.host.columns;
+  }
+
+  protected get firstColumn() {
+    return this.host.getColumn(0)!.key ?? '';
+  }
+
+  protected getPreviousColumn(key: Keys<T>) {
+    return this.columns[Math.max(this.columns.indexOf(this.host.getColumn(key)!) - 1, 0)].key;
+  }
+
+  protected getNextColumn(key: Keys<T>) {
+    return this.columns[
+      Math.min(this.columns.indexOf(this.host.getColumn(key)!) + 1, this.columns.length - 1)
+    ].key;
+  }
+
+  public get active() {
+    return this._active as ActiveNode<T>;
+  }
+
+  public set active(node: ActiveNode<T>) {
     this._active = node;
     this.state.set('previous', this._active);
     this.state.set('current', node);
@@ -33,97 +58,50 @@ export class NavigationController<T extends object> implements ReactiveControlle
     this.host.addController(this);
   }
 
-  protected getActiveNode() {
-    return this.state.get('current') ?? SENTINEL_NODE;
+  protected isNotSentinel(node: ActiveNode<T>) {
+    return node !== SENTINEL_NODE;
   }
 
   protected home(container: ApexGridBody) {
-    const current = this.state.get('current')!;
-    const next = { ...current };
-    if (current !== SENTINEL_NODE) {
-      next.row = 0;
-    } else {
-      next.column = this.host.columns.at(0)?.key ?? '';
-      next.row = 0;
-    }
-    this.active = next;
-    container.scrollToIndex(next.row, 'center');
+    this.active = Object.assign(this.nextNode, { row: 0 });
+    container.scrollToIndex(this.active.row, 'center');
   }
 
   protected end(container: ApexGridBody) {
-    const current = this.state.get('current')!;
-    const next = { ...current };
-    const last = this.host.totalItems - 1;
-    if (current !== SENTINEL_NODE) {
-      next.row = last;
-    } else {
-      next.column = this.host.columns.at(0)?.key ?? '';
-      next.row = last;
-    }
-    this.active = next;
-    container.scrollToIndex(next.row, 'center');
+    this.active = Object.assign(this.nextNode, { row: this.host.totalItems - 1 });
+    container.scrollToIndex(this.active.row, 'center');
   }
 
   protected arrowDown(container: ApexGridBody) {
-    const current = this.state.get('current')!;
-    const next = { ...current };
-    if (current !== SENTINEL_NODE) {
-      next.row = Math.min(next.row + 1, this.host.totalItems - 1);
-    } else {
-      next.column = this.host.columns.at(0)?.key ?? '';
-      next.row = 0;
-    }
-    this.active = next;
+    const next = this.nextNode;
+
+    this.active = Object.assign(this.nextNode, {
+      row: Math.min(next.row + 1, this.host.totalItems - 1),
+    });
     container.scrollToIndex(next.row, 'center');
   }
 
   protected arrowUp(container: ApexGridBody) {
-    const current = this.state.get('current')!;
-    const next = { ...current };
-    if (current !== SENTINEL_NODE) {
-      next.row = Math.max(0, next.row - 1);
-    } else {
-      next.column = this.host.columns.at(0)?.key ?? '';
-      next.row = 0;
-    }
-    this.active = next;
+    const next = this.nextNode;
+    this.active = Object.assign(next, { row: Math.max(0, next.row - 1) });
     container.scrollToIndex(next.row, 'center');
   }
 
   protected arrowLeft() {
-    const columns = this.host.columns;
-    const current = this.state.get('current')!;
-    const next = { ...current };
-    if (current !== SENTINEL_NODE) {
-      next.column = columns.at(columns.findIndex(column => column.key === current.column) - 1)!.key;
-    } else {
-      next.column = columns.at(0)?.key ?? '';
-      next.row = 0;
-    }
-    this.active = next;
+    const next = this.nextNode;
+    this.active = Object.assign(next, { column: this.getPreviousColumn(next.column) });
   }
 
   protected arrowRight() {
-    const columns = this.host.columns;
-    const current = this.state.get('current')!;
-    const next = { ...current };
-    if (current !== SENTINEL_NODE) {
-      next.column = columns.at(
-        (columns.findIndex(column => column.key === current.column) + 1) % columns.length,
-      )!.key;
-    } else {
-      next.column = columns.at(0)?.key ?? '';
-      next.row = 0;
-    }
-    this.active = next;
+    const next = this.nextNode;
+    this.active = Object.assign(next, { column: this.getNextColumn(next.column) });
   }
 
   public hostConnected() {}
 
   public hostDisconnected() {
-    // TODO: Revise
-    this.active = SENTINEL_NODE;
-    this.state = new Map();
+    this.active = SENTINEL_NODE as ActiveNode<T>;
+    this.state = NAVIGATION_STATE;
   }
 
   public navigate(event: KeyboardEvent, container: ApexGridBody) {

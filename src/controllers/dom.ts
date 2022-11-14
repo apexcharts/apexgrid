@@ -1,10 +1,11 @@
 import { ReactiveController } from 'lit';
-import { StyleInfo } from 'lit/directives/style-map';
+import { StyleInfo } from 'lit/directives/style-map.js';
+import { StateController } from './state.js';
+import { applyColumnWidths } from '../internal/utils.js';
 import type { GridHost } from '../internal/types';
-import { applyColumnWidths } from '../internal/utils';
 
 export class GridDOMController<T extends object> implements ReactiveController {
-  constructor(protected host: GridHost<T>) {
+  constructor(protected host: GridHost<T>, protected state: StateController<T>) {
     this.host.addController(this);
   }
 
@@ -31,5 +32,9 @@ export class GridDOMController<T extends object> implements ReactiveController {
 
   protected setGridColumnSizes() {
     this.columnSizes = applyColumnWidths(this.host.columns);
+  }
+
+  public getActiveRowStyles(index: number): StyleInfo {
+    return this.state.active.row === index ? { 'z-index': '3' } : {};
   }
 }

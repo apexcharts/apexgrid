@@ -60,17 +60,13 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   public static override styles = bootstrap;
 
   protected stateController = new StateController<T>(this);
-  protected DOM = new GridDOMController<T>(this);
+  protected DOM = new GridDOMController<T>(this, this.stateController);
   protected dataController = new DataOperationsController<T>(this);
 
   protected rowRenderer = <T>(data: T, index: number): TemplateResult => {
-    const styles = { ...this.DOM.columnSizes };
-    if (this.stateController.active.row === index) {
-      Object.assign(styles, { zIndex: 3 });
-    }
     return html`<apx-grid-row
       part="row"
-      style=${styleMap(styles)}
+      style=${styleMap({ ...this.DOM.columnSizes, ...this.DOM.getActiveRowStyles(index) })}
       .index=${index}
       .activeNode=${this.stateController.active}
       .data=${data}
@@ -110,6 +106,12 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   @property({ attribute: false })
   public remoteConfig?: GridRemoteConfig<T>;
 
+  @property({ attribute: false })
+  public sortExpressions: SortExpression<T>[] = [];
+
+  @property({ attribute: false })
+  public filterExpressions: FilterExpression<T>[] = [];
+
   public get rows() {
     return Array.from(this._rows);
   }
@@ -133,6 +135,20 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     super.requestUpdate(name, oldValue, options);
   }
 
+  @watch('sortExpressions')
+  protected watchSortExpressions() {
+    if (this.sortExpressions.length) {
+      this.sort(this.sortExpressions);
+    }
+  }
+
+  @watch('filterExpressions')
+  protected watchFilterExpressions() {
+    if (this.filterExpressions.length) {
+      this.filter(this.filterExpressions);
+    }
+  }
+
   @watch('columns')
   protected watchColumns(_: ColumnConfig<T>[], newConfig: ColumnConfig<T>[] = []) {
     this.columns = newConfig.map(config => ({ ...DEFAULT_COLUMN_CONFIG, ...config }));
@@ -146,17 +162,12 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     }
   }
 
-  @watch(PIPELINE, { waitUntilFirstUpdate: true })
+  @watch(PIPELINE)
   protected async pipeline() {
     this.dataState = await this.dataController.apply(
       structuredClone(this.data),
       this.stateController,
     );
-  }
-
-  public override connectedCallback(): void {
-    super.connectedCallback();
-    this.setAttribute('exportparts', 'row');
   }
 
   public filter(config: FilterExpression<T> | FilterExpression<T>[]) {
@@ -198,6 +209,7 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
       }
       return each;
     });
+
     this.requestUpdate();
   }
 

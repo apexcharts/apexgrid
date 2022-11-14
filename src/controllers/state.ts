@@ -16,7 +16,7 @@ export class StateController<T extends object> implements ReactiveController {
     return this.navigation.active;
   }
 
-  public set active(node: ActiveNode) {
+  public set active(node: ActiveNode<T>) {
     this.navigation.active = node;
   }
 
