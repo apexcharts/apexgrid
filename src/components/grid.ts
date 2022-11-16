@@ -14,7 +14,7 @@ import { registerGridIcons } from '../internal/icon-registry.js';
 import { asArray, getFilterOperandsFor } from '../internal/utils.js';
 
 import type { ColumnConfig, GridRemoteConfig, GridSortingConfig, Keys } from '../internal/types.js';
-import type FilterExpressionTree from '../operations/filter/tree.js';
+import type { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { FilterExpression } from '../operations/filter/types.js';
 import type { SortExpression } from '../operations/sort/types.js';
 

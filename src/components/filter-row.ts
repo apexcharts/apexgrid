@@ -11,7 +11,7 @@ import { watch } from '../internal/watch.js';
 
 import styles from '../styles/filter-row/filter-row-styles.js';
 
-import type FilterExpressionTree from '../operations/filter/tree.js';
+import type { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { FilterExpression, FilterOperation } from '../operations/filter/types.js';
 import type { ColumnConfig } from '../internal/types.js';
 import {

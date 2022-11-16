@@ -1,7 +1,7 @@
 import { assert, elementUpdated } from '@open-wc/testing';
 import sinon from 'sinon';
-import StringOperands from '../../src/operations/filter/operands/string.js';
-import NumberOperands from '../../src/operations/filter/operands/number.js';
+import { StringOperands } from '../../src/operations/filter/operands/string.js';
+import { NumberOperands } from '../../src/operations/filter/operands/number.js';
 import GridTestFixture from '../utils/grid-fixture.js';
 import data from '../utils/test-data.js';
 

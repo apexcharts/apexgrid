@@ -1,8 +1,8 @@
-import FilterExpressionTree from './tree.js';
+import { FilterExpressionTree } from './tree.js';
 import type { Keys } from '../../internal/types.js';
 import type { FilterExpression } from './types.js';
 
-export default class FilterState<T> {
+export class FilterState<T> {
   protected state: Map<Keys<T>, FilterExpressionTree<T>> = new Map();
 
   public get empty() {

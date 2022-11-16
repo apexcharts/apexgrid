@@ -1,23 +1,17 @@
 import { assert, fixtureCleanup } from '@open-wc/testing';
-import StringOperands from '../../src/operations/filter/operands/string.js';
-import NumberOperands from '../../src/operations/filter/operands/number.js';
-import BooleanOperands from '../../src/operations/filter/operands/boolean.js';
-import FilterState from '../../src/operations/filter/state.js';
+
+import { getFilterOperandsFor } from '../../src/internal/utils.js';
+import { FilterState } from '../../src/operations/filter/state.js';
 import FilterDataOperation from '../../src/operations/filter.js';
 import data from '../utils/test-data.js';
 
 import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types.js';
-import type { Keys } from '../../src/internal/types.js';
+import type { ColumnConfig, DataType, Keys } from '../../src/internal/types.js';
 
 class TDDFilterState<T extends object> {
   #result: T[] = [];
   #operation: FilterDataOperation<T> = new FilterDataOperation();
   #state: FilterState<T> = new FilterState();
-  #operands: Record<string, StringOperands<T> | NumberOperands<T> | BooleanOperands<T>> = {
-    string: new StringOperands<T>(),
-    number: new NumberOperands<T>(),
-    boolean: new BooleanOperands<T>(),
-  };
 
   constructor(protected data: T[]) {}
 
@@ -42,10 +36,11 @@ class TDDFilterState<T extends object> {
     operand: OperandKeys<T>,
     opts: Partial<FilterExpression<T>> = {},
   ) {
-    const type = this.#operands[typeof this.data[0][key]];
+    const config: ColumnConfig<T> = { key, type: typeof this.data[0][key] as DataType };
+
     this.#state.set({
       key,
-      condition: type.get(operand as any),
+      condition: getFilterOperandsFor(config).get(operand as any),
       ...opts,
     });
     return this;

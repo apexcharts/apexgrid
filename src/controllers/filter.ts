@@ -1,9 +1,9 @@
 import { ReactiveController } from 'lit';
 import { PIPELINE } from '../internal/constants.js';
 import { asArray, getFilterOperandsFor } from '../internal/utils.js';
-import FilterState from '../operations/filter/state.js';
+import { FilterState } from '../operations/filter/state.js';
 
-import type FilterExpressionTree from '../operations/filter/tree.js';
+import type { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { ColumnConfig, GridHost, Keys } from '../internal/types.js';
 import type { FilterExpression } from '../operations/filter/types.js';
 

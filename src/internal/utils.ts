@@ -1,6 +1,6 @@
-import BooleanOperands from '../operations/filter/operands/boolean.js';
-import NumberOperands from '../operations/filter/operands/number.js';
-import StringOperands from '../operations/filter/operands/string.js';
+import { BooleanOperands } from '../operations/filter/operands/boolean.js';
+import { NumberOperands } from '../operations/filter/operands/number.js';
+import { StringOperands } from '../operations/filter/operands/string.js';
 
 import type { StyleInfo } from 'lit/directives/style-map.js';
 import type { ColumnConfig } from './types.js';

@@ -1,8 +1,8 @@
-import BaseOperands from './base.js';
+import { BaseOperands } from './base.js';
 import { isDefined } from '../../../internal/utils.js';
 import type { FilterOperation } from '../types.js';
 
-export default class BooleanOperands<T> extends BaseOperands<T, boolean> {
+export class BooleanOperands<T> extends BaseOperands<T, boolean> {
   public override get default() {
     return this.all;
   }

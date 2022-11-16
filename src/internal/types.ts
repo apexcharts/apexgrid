@@ -3,9 +3,9 @@ import type ApexGrid from '../components/grid.js';
 import type ApexGridCell from '../components/cell.js';
 import type ApexGridRow from '../components/row.js';
 import type ApexGridHeader from '../components/header.js';
-import type BaseOperands from '../operations/filter/operands/base.js';
+import type { BaseOperands } from '../operations/filter/operands/base.js';
 import type { SortState } from '../operations/sort/types.js';
-import type FilterState from '../operations/filter/state.js';
+import type { FilterState } from '../operations/filter/state.js';
 
 export type Keys<T> = keyof T;
 export type Values<T> = T[keyof T];
@@ -71,8 +71,8 @@ export interface ApexCellContext<T extends object> {
 
 export type NavigationState = 'previous' | 'current';
 
-type RemoteSortHook<T> = (data: T[], state: SortState<T>) => T[] | Promise<T[]>;
-type RemoteFilterHook<T> = (data: T[], state: FilterState<T>) => [] | Promise<T[]>;
+export type RemoteSortHook<T> = (data: T[], state: SortState<T>) => T[] | Promise<T[]>;
+export type RemoteFilterHook<T> = (data: T[], state: FilterState<T>) => [] | Promise<T[]>;
 export interface GridRemoteConfig<T> {
   sort?: RemoteSortHook<T>;
   filter?: RemoteFilterHook<T>;

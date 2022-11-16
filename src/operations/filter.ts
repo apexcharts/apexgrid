@@ -1,5 +1,5 @@
 import DataOperation from './base.js';
-import type FilterState from './filter/state.js';
+import type { FilterState } from './filter/state.js';
 import type { FilterExpression, FilterOperation } from './filter/types.js';
 
 export default class FilterDataOperation<T extends object> extends DataOperation<T> {
