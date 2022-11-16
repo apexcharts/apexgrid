@@ -1,10 +1,10 @@
 import { elementUpdated, fixture, fixtureCleanup, html, waitUntil } from '@open-wc/testing';
 import ApexGridHeaderRow from '../../src/components/header-row.js';
 import ApexGridRow from '../../src/components/row.js';
-import type { ColumnConfig, Keys } from '../../src/internal/types';
-import type { SortExpression } from '../../src/operations/sort/types';
-import type { FilterExpression } from '../../src/operations/filter/types';
-import type ApexGrid from '../../src/components/grid';
+import type { ColumnConfig, Keys } from '../../src/internal/types.js';
+import type { SortExpression } from '../../src/operations/sort/types.js';
+import type { FilterExpression } from '../../src/operations/filter/types.js';
+import type ApexGrid from '../../src/components/grid.js';
 import '../../src/index.js';
 import HeaderTestFixture from './header-fixture.js';
 import RowTestFixture from './row-fixture.js';

@@ -128,13 +128,35 @@
             },
             {
               "kind": "field",
+              "name": "state",
+              "type": {
+                "text": "StateController<T>"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
               "name": "isNumeric",
               "privacy": "protected"
             },
             {
               "kind": "field",
-              "name": "isBoolean",
+              "name": "filterController",
               "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "condition",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "active",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false"
             },
             {
               "kind": "field",
@@ -146,11 +168,28 @@
             },
             {
               "kind": "field",
+              "name": "conditionElement",
+              "type": {
+                "text": "IgcIconComponent"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "dropdown",
+              "type": {
+                "text": "IgcDropdownComponent"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
               "name": "column",
               "type": {
                 "text": "ColumnConfig<T>"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "default": "DEFAULT_COLUMN_CONFIG"
             },
             {
               "kind": "field",
@@ -161,21 +200,33 @@
               "privacy": "public"
             },
             {
-              "kind": "field",
-              "name": "state",
-              "type": {
-                "text": "FilterState<T>"
-              },
-              "privacy": "public"
+              "kind": "method",
+              "name": "#setDefaultExpression"
             },
             {
               "kind": "method",
-              "name": "#handleConditionChange",
+              "name": "#removeExpression",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#show"
+            },
+            {
+              "kind": "method",
+              "name": "#handleConditionChanged",
               "parameters": [
                 {
                   "name": "event",
                   "type": {
-                    "text": "CustomEvent<IgcSelectItemComponent>"
+                    "text": "CustomEvent<IgcDropdownItemComponent>"
                   }
                 }
               ]
@@ -206,16 +257,23 @@
             },
             {
               "kind": "method",
-              "name": "renderPrefixIcon",
+              "name": "#handleResetClick"
+            },
+            {
+              "kind": "method",
+              "name": "#openDropdownList"
+            },
+            {
+              "kind": "method",
+              "name": "activeChanged",
               "privacy": "protected"
             },
             {
               "kind": "method",
-              "name": "renderChipPrefix",
-              "privacy": "protected",
+              "name": "#chipCriteriaFor",
               "parameters": [
                 {
-                  "name": "value",
+                  "name": "expression",
                   "type": {
                     "text": "FilterExpression<T>"
                   }
@@ -224,139 +282,133 @@
             },
             {
               "kind": "method",
-              "name": "renderOperands",
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "renderSelect",
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "renderInput",
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "renderExpressionChips",
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "addEventListener",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
+              "name": "#chipSelectFor",
               "parameters": [
                 {
-                  "name": "type",
+                  "name": "expression",
                   "type": {
-                    "text": "K"
-                  }
-                },
-                {
-                  "name": "listener",
-                  "type": {
-                    "text": "(this: HTMLElement, ev: M[K]) => any"
-                  }
-                },
-                {
-                  "name": "options",
-                  "optional": true,
-                  "type": {
-                    "text": "boolean | AddEventListenerOptions"
+                    "text": "FilterExpression<T>"
                   }
                 }
-              ],
-              "inheritedFrom": {
-                "name": "EventEmitterBase",
-                "module": "src/internal/mixins/event-emitter.ts"
-              }
+              ]
             },
             {
               "kind": "method",
-              "name": "removeEventListener",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
+              "name": "#chipRemoveFor",
               "parameters": [
                 {
-                  "name": "type",
+                  "name": "expression",
                   "type": {
-                    "text": "K"
-                  }
-                },
-                {
-                  "name": "listener",
-                  "type": {
-                    "text": "(this: HTMLElement, ev: M[K]) => any"
-                  }
-                },
-                {
-                  "name": "options",
-                  "optional": true,
-                  "type": {
-                    "text": "boolean | EventListenerOptions"
+                    "text": "FilterExpression<T>"
                   }
                 }
-              ],
-              "inheritedFrom": {
-                "name": "EventEmitterBase",
-                "module": "src/internal/mixins/event-emitter.ts"
-              }
+              ]
             },
             {
               "kind": "method",
-              "name": "emitEvent",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
+              "name": "renderCriteriaButton",
+              "privacy": "protected",
               "parameters": [
                 {
-                  "name": "type",
+                  "name": "expr",
                   "type": {
-                    "text": "K"
+                    "text": "FilterExpression<T>"
                   }
                 },
                 {
-                  "name": "eventInitDict",
-                  "optional": true,
+                  "name": "index",
                   "type": {
-                    "text": "CustomEventInit<D>"
+                    "text": "number"
                   }
                 }
-              ],
-              "inheritedFrom": {
-                "name": "EventEmitterBase",
-                "module": "src/internal/mixins/event-emitter.ts"
-              }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderExpressionChip",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "props",
+                  "type": {
+                    "text": "ExpressionChipProps<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderActiveChips",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "renderFilterActions",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "renderDropdown",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "renderDropdownTarget",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "renderInputArea",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "renderActiveState",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "renderInactiveChips",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ColumnConfig<T>"
+                  }
+                },
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FilterExpressionTree<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderFilterState",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ColumnConfig<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderInactiveState",
+              "privacy": "protected"
             }
           ],
           "superclass": {
-            "name": "EventEmitterBase",
-            "module": "/src/internal/mixins/event-emitter.js"
+            "name": "LitElement",
+            "package": "lit"
           },
-          "events": [
-            {
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "EventEmitterBase",
-                "module": "src/internal/mixins/event-emitter.ts"
-              }
-            }
-          ]
+          "customElement": true
         }
       ],
       "exports": [
@@ -443,15 +495,15 @@
             },
             {
               "kind": "field",
-              "name": "resizeController",
-              "privacy": "protected",
-              "default": "new ResizeController<T>(this)"
-            },
-            {
-              "kind": "field",
               "name": "stateController",
               "privacy": "protected",
               "default": "new StateController<T>(this)"
+            },
+            {
+              "kind": "field",
+              "name": "DOM",
+              "privacy": "protected",
+              "default": "new GridDOMController<T>(this, this.stateController)"
             },
             {
               "kind": "field",
@@ -463,6 +515,12 @@
               "kind": "field",
               "name": "rowRenderer",
               "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "stateProvider",
+              "privacy": "protected",
+              "default": "new ContextProvider(this, gridStateContext, this.stateController)"
             },
             {
               "kind": "field",
@@ -542,6 +600,24 @@
             },
             {
               "kind": "field",
+              "name": "sortExpressions",
+              "type": {
+                "text": "SortExpression<T>[]"
+              },
+              "privacy": "public",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "filterExpressions",
+              "type": {
+                "text": "FilterExpression<T>[]"
+              },
+              "privacy": "public",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
               "name": "rows",
               "privacy": "public"
             },
@@ -549,6 +625,16 @@
               "kind": "field",
               "name": "totalItems",
               "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "watchSortExpressions",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "watchFilterExpressions",
+              "privacy": "protected"
             },
             {
               "kind": "method",
@@ -572,20 +658,36 @@
             },
             {
               "kind": "method",
+              "name": "dataChanged",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "pipeline",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "filter",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "config",
+                  "type": {
+                    "text": "FilterExpression<T> | FilterExpression<T>[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "sort",
               "privacy": "public",
               "parameters": [
                 {
-                  "name": "key",
+                  "name": "expressions",
                   "type": {
-                    "text": "Keys<T>"
-                  }
-                },
-                {
-                  "name": "config",
-                  "optional": true,
-                  "type": {
-                    "text": "Partial<SortExpression<T>>"
+                    "text": "Partial<SortExpression<T>> | Partial<SortExpression<T>>[]"
                   }
                 }
               ]
@@ -624,11 +726,6 @@
             },
             {
               "kind": "method",
-              "name": "pipeline",
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
               "name": "bodyClickHandler",
               "privacy": "protected",
               "parameters": [
@@ -661,6 +758,11 @@
             {
               "kind": "method",
               "name": "renderBody",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "renderFilterRow",
               "privacy": "protected"
             },
             {
@@ -823,6 +925,14 @@
             },
             {
               "kind": "field",
+              "name": "state",
+              "type": {
+                "text": "StateController<T>"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
               "name": "columns",
               "type": {
                 "text": "Array<ColumnConfig<T>>"
@@ -832,49 +942,17 @@
             },
             {
               "kind": "field",
-              "name": "state",
-              "type": {
-                "text": "StateController<T>"
-              },
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
               "name": "headers",
               "privacy": "public"
             },
             {
               "kind": "method",
-              "name": "#getColumnSortState",
+              "name": "#activeFilterColumn",
               "parameters": [
                 {
-                  "name": "column",
+                  "name": "event",
                   "type": {
-                    "text": "ColumnConfig<T>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "#getFilterState",
-              "parameters": [
-                {
-                  "name": "column",
-                  "type": {
-                    "text": "ColumnConfig<T>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "#getSortIndex",
-              "parameters": [
-                {
-                  "name": "column",
-                  "type": {
-                    "text": "ColumnConfig<T>"
+                    "text": "MouseEvent"
                   }
                 }
               ]
@@ -922,12 +1000,29 @@
             },
             {
               "kind": "field",
-              "name": "isResizing",
+              "name": "context",
               "type": {
-                "text": "boolean"
+                "text": "ApexHeaderContext<T>"
               },
-              "privacy": "protected",
-              "default": "false"
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "isSortable",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "resizeController",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "state",
+              "type": {
+                "text": "StateController<T>"
+              },
+              "privacy": "public"
             },
             {
               "kind": "field",
@@ -938,55 +1033,29 @@
               "privacy": "public"
             },
             {
-              "kind": "field",
-              "name": "sortState",
-              "type": {
-                "text": "SortExpression<T> | undefined"
-              },
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "sortIndex",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "public",
-              "default": "-1"
-            },
-            {
-              "kind": "field",
-              "name": "filterCount",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "public",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "context",
-              "type": {
-                "text": "ApexHeaderContext<T>"
-              },
-              "privacy": "protected"
+              "kind": "method",
+              "name": "#addResizeEventHandlers"
             },
             {
               "kind": "method",
-              "name": "#initFilterRow"
-            },
-            {
-              "kind": "method",
-              "name": "#handleClick"
+              "name": "#handleClick",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
-              "name": "#resize",
+              "name": "#handleResize",
               "privacy": "private"
             },
             {
               "kind": "method",
-              "name": "#resizeStart",
+              "name": "#handleResizeStart",
               "parameters": [
                 {
                   "name": "ev",
@@ -998,159 +1067,35 @@
             },
             {
               "kind": "field",
-              "name": "#resizeStop",
+              "name": "#handlePointerLost",
               "privacy": "private"
             },
             {
               "kind": "field",
-              "name": "#pointerCaptured",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#pointerLost",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#autosize",
+              "name": "#handleAutosize",
               "privacy": "private"
             },
             {
               "kind": "method",
-              "name": "renderSortState",
+              "name": "renderSortPart",
               "privacy": "protected"
             },
             {
               "kind": "method",
-              "name": "renderContent",
+              "name": "renderContentPart",
               "privacy": "protected"
             },
             {
               "kind": "method",
-              "name": "renderFilterArea",
+              "name": "renderResizePart",
               "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "renderResizeArea",
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "addEventListener",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "type",
-                  "type": {
-                    "text": "K"
-                  }
-                },
-                {
-                  "name": "listener",
-                  "type": {
-                    "text": "(this: HTMLElement, ev: M[K]) => any"
-                  }
-                },
-                {
-                  "name": "options",
-                  "optional": true,
-                  "type": {
-                    "text": "boolean | AddEventListenerOptions"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "EventEmitterBase",
-                "module": "src/internal/mixins/event-emitter.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "removeEventListener",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "type",
-                  "type": {
-                    "text": "K"
-                  }
-                },
-                {
-                  "name": "listener",
-                  "type": {
-                    "text": "(this: HTMLElement, ev: M[K]) => any"
-                  }
-                },
-                {
-                  "name": "options",
-                  "optional": true,
-                  "type": {
-                    "text": "boolean | EventListenerOptions"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "EventEmitterBase",
-                "module": "src/internal/mixins/event-emitter.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "emitEvent",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "type",
-                  "type": {
-                    "text": "K"
-                  }
-                },
-                {
-                  "name": "eventInitDict",
-                  "optional": true,
-                  "type": {
-                    "text": "CustomEventInit<D>"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "EventEmitterBase",
-                "module": "src/internal/mixins/event-emitter.ts"
-              }
             }
           ],
           "superclass": {
-            "name": "EventEmitterBase",
-            "module": "/src/internal/mixins/event-emitter.js"
+            "name": "LitElement",
+            "package": "lit"
           },
-          "events": [
-            {
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "EventEmitterBase",
-                "module": "src/internal/mixins/event-emitter.ts"
-              }
-            }
-          ]
+          "customElement": true
         }
       ],
       "exports": [
@@ -1220,7 +1165,7 @@
               "kind": "field",
               "name": "activeNode",
               "type": {
-                "text": "ActiveNode"
+                "text": "ActiveNode<T>"
               },
               "privacy": "public"
             },
@@ -1272,18 +1217,38 @@
               "kind": "field",
               "name": "sorting",
               "privacy": "protected",
-              "default": "new SortOperation<T>()"
+              "default": "new SortDataOperation<T>()"
             },
             {
               "kind": "field",
               "name": "filtering",
               "privacy": "protected",
-              "default": "new FilterOperation<T>()"
+              "default": "new FilterDataOperation<T>()"
             },
             {
               "kind": "method",
               "name": "hostConnected",
               "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "hasRemoteSort",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "hasRemoteFilter",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "remoteFilter",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "remoteSort",
+              "privacy": "protected"
             },
             {
               "kind": "method",
@@ -1320,6 +1285,91 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/controllers/dom.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "GridDOMController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "virtualBody",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "columnSizes",
+              "type": {
+                "text": "StyleInfo"
+              },
+              "privacy": "public",
+              "default": "{}"
+            },
+            {
+              "kind": "method",
+              "name": "hostConnected",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hostUpdate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setScrollOffset",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "setGridColumnSizes",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "getActiveRowStyles",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "StyleInfo"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GridDOMController",
+          "declaration": {
+            "name": "GridDOMController",
+            "module": "src/controllers/dom.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/controllers/filter.ts",
       "declarations": [
         {
@@ -1327,97 +1377,6 @@
           "description": "",
           "name": "FilterController",
           "members": [
-            {
-              "kind": "field",
-              "name": "row",
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "getOperandsFor",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "column",
-                  "type": {
-                    "text": "ColumnConfig<T>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "activeExpression",
-              "type": {
-                "text": "Partial<FilterExpression<T>>"
-              },
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "activeColumn",
-              "type": {
-                "text": "ColumnConfig<T> | undefined"
-              },
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "getStateForActiveColumn",
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "#defaultExpression",
-              "privacy": "private",
-              "type": {
-                "text": "Partial<FilterExpression<T>>"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#focusInput"
-            },
-            {
-              "kind": "field",
-              "name": "#handleInputChanged",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#handleInputCleared",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#handleCommit",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#handleDiscard",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#handleConditionChanged",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#handleChipRemove",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#handleSelectionChanged",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#handleFilterIconClick",
-              "privacy": "private"
-            },
             {
               "kind": "field",
               "name": "state",
@@ -1428,15 +1387,30 @@
               "default": "new FilterState()"
             },
             {
+              "kind": "field",
+              "name": "filterRow",
+              "privacy": "public"
+            },
+            {
               "kind": "method",
-              "name": "renderFilterRow",
-              "privacy": "public",
+              "name": "#emitFilteringEvent",
               "parameters": [
                 {
-                  "name": "anchor",
-                  "optional": true,
+                  "name": "expression",
                   "type": {
-                    "text": "HTMLElement"
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#emitFilteredEvent",
+              "parameters": [
+                {
+                  "name": "detail",
+                  "type": {
+                    "text": "FilterExpressionTree<T>"
                   }
                 }
               ]
@@ -1449,7 +1423,7 @@
                 {
                   "name": "expression",
                   "type": {
-                    "text": "FilterExpression<T>"
+                    "text": "FilterExpression<T> | FilterExpression<T>[]"
                   }
                 }
               ]
@@ -1461,13 +1435,16 @@
             },
             {
               "kind": "method",
-              "name": "hostDisconnected",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "filter",
-              "privacy": "public"
+              "name": "get",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "Keys<T>"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -1479,6 +1456,76 @@
                   "optional": true,
                   "type": {
                     "text": "Keys<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setActiveColumn",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ColumnConfig<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getDefaultExpression",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "FilterExpression<T>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ColumnConfig<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeExpression",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "filterWithEvent",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "filter",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "FilterExpression<T> | FilterExpression<T>[]"
                   }
                 }
               ]
@@ -1526,13 +1573,62 @@
             },
             {
               "kind": "field",
+              "name": "nextNode",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
+              "name": "firstColumn",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "getPreviousColumn",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "Keys<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getNextColumn",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "Keys<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
               "name": "active",
               "privacy": "public"
             },
             {
               "kind": "method",
-              "name": "getActiveNode",
-              "privacy": "protected"
+              "name": "isNotSentinel",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "ActiveNode<T>"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -1650,7 +1746,7 @@
           "members": [
             {
               "kind": "field",
-              "name": "active",
+              "name": "indicatorActive",
               "type": {
                 "text": "boolean"
               },
@@ -1659,32 +1755,12 @@
             },
             {
               "kind": "field",
-              "name": "x",
+              "name": "indicatorOffset",
               "type": {
                 "text": "number"
               },
               "privacy": "public",
               "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "resizeStart",
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "resizeStop",
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "resize",
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
-              "name": "autosize",
-              "privacy": "protected"
             },
             {
               "kind": "method",
@@ -1706,18 +1782,80 @@
             },
             {
               "kind": "method",
+              "name": "start",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "header",
+                  "type": {
+                    "text": "ApexGridHeader<T>"
+                  },
+                  "description": "the"
+                }
+              ],
+              "description": "Begins resizing a column by showing and positioning the resize indicator in relation to the column."
+            },
+            {
+              "kind": "method",
+              "name": "stop",
+              "privacy": "public",
+              "description": "Stops and resets the resizing state."
+            },
+            {
+              "kind": "method",
+              "name": "resize",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ColumnConfig<T>"
+                  }
+                },
+                {
+                  "name": "width",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "sizerOffset",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "autosize",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ColumnConfig<T>"
+                  }
+                },
+                {
+                  "name": "header",
+                  "type": {
+                    "text": "ApexGridHeader<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "hostConnected",
               "privacy": "public"
             },
             {
               "kind": "method",
-              "name": "hostDisconnected",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
               "name": "renderIndicator",
-              "privacy": "public"
+              "privacy": "public",
+              "description": "Renders the resize indicator in the grid."
             }
           ]
         }
@@ -1750,6 +1888,16 @@
               },
               "privacy": "public",
               "default": "new Map()"
+            },
+            {
+              "kind": "field",
+              "name": "#isMultipleSort",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#isTriStateSort",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -1786,14 +1934,22 @@
               ]
             },
             {
-              "kind": "field",
-              "name": "#isMultipleSort",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "#isTriStateSort",
-              "privacy": "private"
+              "kind": "method",
+              "name": "#orderBy",
+              "return": {
+                "type": {
+                  "text": "SortingDirection"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "dir",
+                  "optional": true,
+                  "type": {
+                    "text": "SortingDirection"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -1820,9 +1976,17 @@
               ]
             },
             {
-              "kind": "field",
-              "name": "#headerSortHandler",
-              "privacy": "private"
+              "kind": "method",
+              "name": "sortFromHeaderClick",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ColumnConfig<T>"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -1838,24 +2002,6 @@
                   "name": "{ key, sort: options }",
                   "type": {
                     "text": "ColumnConfig<T>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "#orderBy",
-              "return": {
-                "type": {
-                  "text": "SortingDirection"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "dir",
-                  "optional": true,
-                  "type": {
-                    "text": "SortingDirection"
                   }
                 }
               ]
@@ -1880,15 +2026,9 @@
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "key",
+                  "name": "expressions",
                   "type": {
-                    "text": "Keys<T>"
-                  }
-                },
-                {
-                  "name": "expression",
-                  "type": {
-                    "text": "SortExpression<T>"
+                    "text": "SortExpression<T> | SortExpression<T>[]"
                   }
                 }
               ]
@@ -1899,16 +2039,9 @@
               "privacy": "public",
               "parameters": [
                 {
-                  "name": "key",
+                  "name": "expressions",
                   "type": {
-                    "text": "Keys<T>"
-                  }
-                },
-                {
-                  "name": "expression",
-                  "optional": true,
-                  "type": {
-                    "text": "SortExpression<T>"
+                    "text": "SortExpression<T> | SortExpression<T>[]"
                   }
                 }
               ]
@@ -1917,16 +2050,6 @@
               "kind": "method",
               "name": "hostConnected",
               "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "hostDisconnected",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
             }
           ]
         }
@@ -1977,6 +2100,14 @@
             },
             {
               "kind": "field",
+              "name": "resizing",
+              "type": {
+                "text": "ResizeController<T>"
+              },
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
               "name": "active",
               "privacy": "public"
             },
@@ -1991,6 +2122,10 @@
               "privacy": "public"
             }
           ]
+        },
+        {
+          "kind": "variable",
+          "name": "gridStateContext"
         }
       ],
       "exports": [
@@ -1999,6 +2134,14 @@
           "name": "StateController",
           "declaration": {
             "name": "StateController",
+            "module": "src/controllers/state.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "gridStateContext",
+          "declaration": {
+            "name": "gridStateContext",
             "module": "src/controllers/state.ts"
           }
         }
@@ -2042,20 +2185,25 @@
         },
         {
           "kind": "variable",
-          "name": "SENTINEL_NODE"
+          "name": "SENTINEL_NODE",
+          "type": {
+            "text": "Readonly<ActiveNode<any>>"
+          }
         },
         {
           "kind": "variable",
           "name": "DEFAULT_COLUMN_CONFIG",
           "type": {
-            "text": "Partial<ColumnConfig<any>>"
-          },
-          "default": "{\n  type: 'string',\n  resizable: false,\n  hidden: false,\n  sort: false,\n  filter: false,\n}"
+            "text": "ColumnConfig<any>"
+          }
         },
         {
           "kind": "variable",
           "name": "NAVIGATION_STATE",
-          "default": "new Map<NavigationState, ActiveNode>([\n  ['previous', SENTINEL_NODE],\n  ['current', SENTINEL_NODE],\n])"
+          "type": {
+            "text": "Map<NavigationState, ActiveNode<any>>"
+          },
+          "default": "new Map([\n  ['previous', SENTINEL_NODE],\n  ['current', SENTINEL_NODE],\n])"
         }
       ],
       "exports": [
@@ -2347,6 +2495,30 @@
               }
             }
           ]
+        },
+        {
+          "kind": "function",
+          "name": "asArray",
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "T | T[]"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getFilterOperandsFor",
+          "parameters": [
+            {
+              "name": "column",
+              "type": {
+                "text": "ColumnConfig<T>"
+              }
+            }
+          ]
         }
       ],
       "exports": [
@@ -2371,6 +2543,22 @@
           "name": "applyColumnWidths",
           "declaration": {
             "name": "applyColumnWidths",
+            "module": "src/internal/utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "asArray",
+          "declaration": {
+            "name": "asArray",
+            "module": "src/internal/utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getFilterOperandsFor",
+          "declaration": {
+            "name": "getFilterOperandsFor",
             "module": "src/internal/utils.ts"
           }
         }
@@ -2498,11 +2686,11 @@
         {
           "kind": "class",
           "description": "",
-          "name": "FilterOperation",
+          "name": "FilterDataOperation",
           "members": [
             {
               "kind": "method",
-              "name": "match",
+              "name": "resolveFilter",
               "privacy": "protected",
               "parameters": [
                 {
@@ -2512,9 +2700,39 @@
                   }
                 },
                 {
-                  "name": "state",
+                  "name": "expr",
                   "type": {
-                    "text": "FilterState<T>"
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "match",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "record",
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "ands",
+                  "type": {
+                    "text": "FilterExpression<T>[]"
+                  }
+                },
+                {
+                  "name": "ors",
+                  "type": {
+                    "text": "FilterExpression<T>[]"
                   }
                 }
               ]
@@ -2606,7 +2824,7 @@
           "kind": "js",
           "name": "default",
           "declaration": {
-            "name": "FilterOperation",
+            "name": "FilterDataOperation",
             "module": "src/operations/filter.ts"
           }
         }
@@ -2619,7 +2837,7 @@
         {
           "kind": "class",
           "description": "",
-          "name": "SortOperation",
+          "name": "SortDataOperation",
           "members": [
             {
               "kind": "field",
@@ -2758,17 +2976,11 @@
           "kind": "js",
           "name": "default",
           "declaration": {
-            "name": "SortOperation",
+            "name": "SortDataOperation",
             "module": "src/operations/sort.ts"
           }
         }
       ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/mixins/constructor.ts",
-      "declarations": [],
-      "exports": []
     },
     {
       "kind": "javascript-module",
@@ -2988,6 +3200,16 @@
               "privacy": "public"
             },
             {
+              "kind": "field",
+              "name": "ands",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "ors",
+              "privacy": "public"
+            },
+            {
               "kind": "method",
               "name": "has",
               "privacy": "public",
@@ -3179,20 +3401,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/styles/filter-row/filter-row-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/filter-row/filter-row-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/styles/body-row/body-row-styles.ts",
       "declarations": [],
       "exports": [
@@ -3201,6 +3409,20 @@
           "name": "default",
           "declaration": {
             "module": "src/styles/body-row/body-row-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/styles/filter-row/filter-row-styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/styles/filter-row/filter-row-styles.ts"
           }
         }
       ]
@@ -3255,7 +3477,7 @@
                 {
                   "name": "condition",
                   "type": {
-                    "text": "OmitKey<keyof this, IgnoredKeys>"
+                    "text": "keyof this"
                   }
                 }
               ]
@@ -3365,7 +3587,7 @@
                 {
                   "name": "condition",
                   "type": {
-                    "text": "OmitKey<keyof this, IgnoredKeys>"
+                    "text": "keyof this"
                   }
                 }
               ],
@@ -3513,7 +3735,7 @@
                 {
                   "name": "condition",
                   "type": {
-                    "text": "OmitKey<keyof this, IgnoredKeys>"
+                    "text": "keyof this"
                   }
                 }
               ],
@@ -3661,7 +3883,7 @@
                 {
                   "name": "condition",
                   "type": {
-                    "text": "OmitKey<keyof this, IgnoredKeys>"
+                    "text": "keyof this"
                   }
                 }
               ],

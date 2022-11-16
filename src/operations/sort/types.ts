@@ -1,4 +1,4 @@
-import type { Keys, Values } from '../../internal/types';
+import type { Keys, Values } from '../../internal/types.js';
 
 export type SortingDirection = 'ascending' | 'descending' | 'none';
 

@@ -13,10 +13,10 @@ import { DEFAULT_COLUMN_CONFIG, PIPELINE } from '../internal/constants.js';
 import { registerGridIcons } from '../internal/icon-registry.js';
 import { asArray, getFilterOperandsFor } from '../internal/utils.js';
 
-import type { ColumnConfig, GridRemoteConfig, GridSortingConfig, Keys } from '../internal/types';
-import type FilterExpressionTree from '../operations/filter/tree';
-import type { FilterExpression } from '../operations/filter/types';
-import type { SortExpression } from '../operations/sort/types';
+import type { ColumnConfig, GridRemoteConfig, GridSortingConfig, Keys } from '../internal/types.js';
+import type { FilterExpressionTree } from '../operations/filter/tree.js';
+import type { FilterExpression } from '../operations/filter/types.js';
+import type { SortExpression } from '../operations/sort/types.js';
 
 import { default as bootstrap } from '../styles/grid/themes/light/grid.bootstrap-styles.js';
 import { default as fluent } from '../styles/grid/themes/light/grid.fluent-styles.js';
@@ -30,8 +30,24 @@ import ApexGridCell from './cell.js';
 import ApexFilterRow from './filter-row.js';
 
 import { themes } from 'igniteui-webcomponents/theming/theming-decorator.js';
-import { defineComponents, IgcIconComponent } from 'igniteui-webcomponents';
-defineComponents(IgcIconComponent);
+import {
+  defineComponents,
+  IgcButtonComponent,
+  IgcChipComponent,
+  IgcDropdownComponent,
+  IgcInputComponent,
+  IgcIconComponent,
+  IgcDropdownItemComponent,
+} from 'igniteui-webcomponents';
+
+defineComponents(
+  IgcButtonComponent,
+  IgcChipComponent,
+  IgcInputComponent,
+  IgcDropdownComponent,
+  IgcIconComponent,
+  IgcDropdownItemComponent,
+);
 
 export interface ApexFilteringEvent<T extends object> {
   expression: FilterExpression<T>;

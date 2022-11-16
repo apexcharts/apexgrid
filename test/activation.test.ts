@@ -1,5 +1,5 @@
 import { assert } from '@open-wc/testing';
-import type { Keys } from '../src/internal/types';
+import type { Keys } from '../src/internal/types.js';
 import GridTestFixture from './utils/grid-fixture.js';
 import data, { type TestData } from './utils/test-data.js';
 

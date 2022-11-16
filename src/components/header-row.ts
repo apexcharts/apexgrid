@@ -9,7 +9,7 @@ import { GRID_HEADER_ROW_TAG } from '../internal/tags.js';
 import ApexGridHeader from './header.js';
 import styles from '../styles/header-row/header-row.base-styles.js';
 
-import type { ColumnConfig } from '../internal/types';
+import type { ColumnConfig } from '../internal/types.js';
 
 @customElement(GRID_HEADER_ROW_TAG)
 export default class ApexGridHeaderRow<T extends object> extends LitElement {

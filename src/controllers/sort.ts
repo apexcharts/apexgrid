@@ -1,8 +1,8 @@
 import { ReactiveController } from 'lit';
 import { PIPELINE } from '../internal/constants.js';
 import { asArray } from '../internal/utils.js';
-import type { ColumnConfig, ColumnSortConfig, GridHost, Keys } from '../internal/types';
-import type { SortExpression, SortingDirection, SortState } from '../operations/sort/types';
+import type { ColumnConfig, ColumnSortConfig, GridHost, Keys } from '../internal/types.js';
+import type { SortExpression, SortingDirection, SortState } from '../operations/sort/types.js';
 
 export class SortController<T extends object> implements ReactiveController {
   constructor(protected host: GridHost<T>) {

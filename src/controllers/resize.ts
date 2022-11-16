@@ -2,7 +2,7 @@ import { html, nothing, ReactiveController } from 'lit';
 import { styleMap } from 'lit/directives/style-map.js';
 import ApexGridHeader from '../components/header.js';
 import { MIN_COL_RESIZE_WIDTH } from '../internal/constants.js';
-import type { ColumnConfig, GridHost, Keys } from '../internal/types';
+import type { ColumnConfig, GridHost, Keys } from '../internal/types.js';
 
 export class ResizeController<T extends object> implements ReactiveController {
   constructor(protected host: GridHost<T>) {
@@ -13,13 +13,11 @@ export class ResizeController<T extends object> implements ReactiveController {
   public indicatorOffset = 0;
 
   #maxSize(key: Keys<T>, headerWidth: number) {
-    const maxCellWidth = this.host.rows
-      .map(each => each.cells)
-      .reduce((prev, current) => prev.concat(current), [])
-      .filter(cell => cell.column.key === key)
-      .reduce((prev, curr) => (curr.offsetWidth > prev ? curr.offsetWidth : prev), 0);
+    const max = this.host.rows
+      .map(row => row.cells.find(cell => cell.column.key === key)!)
+      .reduce((prev, current) => (current.offsetWidth > prev ? current.offsetWidth : prev), 0);
 
-    return Math.max(...[MIN_COL_RESIZE_WIDTH, maxCellWidth, headerWidth]);
+    return Math.max(...[MIN_COL_RESIZE_WIDTH, max, headerWidth]);
   }
 
   /**

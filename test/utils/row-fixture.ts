@@ -1,5 +1,5 @@
-import type { Keys } from '../../src/internal/types';
-import type ApexGridRow from '../../src/components/row';
+import type { Keys } from '../../src/internal/types.js';
+import type ApexGridRow from '../../src/components/row.js';
 import CellTestFixture from './cell-fixture.js';
 
 interface CellCollection<T extends object> {

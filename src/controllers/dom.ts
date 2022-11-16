@@ -2,7 +2,7 @@ import { ReactiveController } from 'lit';
 import { StyleInfo } from 'lit/directives/style-map.js';
 import { StateController } from './state.js';
 import { applyColumnWidths } from '../internal/utils.js';
-import type { GridHost } from '../internal/types';
+import type { GridHost } from '../internal/types.js';
 
 export class GridDOMController<T extends object> implements ReactiveController {
   constructor(protected host: GridHost<T>, protected state: StateController<T>) {

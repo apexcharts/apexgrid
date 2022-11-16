@@ -1,13 +1,11 @@
-import type { FilterOperation } from '../types';
+import type { FilterOperation } from '../types.js';
 
-export default class BaseOperands<T, Type = any> {
-  public get(condition: keyof this): FilterOperation<T, Type> {
+export abstract class BaseOperands<T, Type = any> {
+  public get(condition: keyof this) {
     return this[condition] as FilterOperation<T, Type>;
   }
 
-  public get default() {
-    return this.get(this.conditions().at(0) as keyof this);
-  }
+  public abstract get default(): FilterOperation<T, Type>;
 
   protected conditions() {
     return Object.keys(this).filter(key => key !== 'get' && key !== 'default');

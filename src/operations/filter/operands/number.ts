@@ -1,8 +1,8 @@
-import BaseOperands from './base.js';
+import { BaseOperands } from './base.js';
 import { isDefined } from '../../../internal/utils.js';
-import type { FilterOperation } from '../types';
+import type { FilterOperation } from '../types.js';
 
-export default class NumberOperands<T> extends BaseOperands<T, number> {
+export class NumberOperands<T> extends BaseOperands<T, number> {
   public override get default() {
     return this.equals;
   }

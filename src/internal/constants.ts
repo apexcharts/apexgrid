@@ -1,4 +1,4 @@
-import type { ActiveNode, ColumnConfig, NavigationState } from './types';
+import type { ActiveNode, ColumnConfig, NavigationState } from './types.js';
 
 const columnKey = Symbol();
 

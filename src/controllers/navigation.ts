@@ -1,7 +1,7 @@
 import { ReactiveController } from 'lit';
 import { NAVIGATION_STATE, SENTINEL_NODE } from '../internal/constants.js';
-import type ApexGridBody from '../components/grid-body';
-import type { ActiveNode, GridHost, Keys } from '../internal/types';
+import type ApexGridBody from '../components/grid-body.js';
+import type { ActiveNode, GridHost, Keys } from '../internal/types.js';
 
 export class NavigationController<T extends object> implements ReactiveController {
   protected handlers = new Map(
