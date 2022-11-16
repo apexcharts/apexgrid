@@ -4,7 +4,7 @@ import { FilterController } from './filter.js';
 import { NavigationController } from './navigation.js';
 import { SortController } from './sort.js';
 import { ResizeController } from './resize.js';
-import type { ActiveNode, GridHost } from '../internal/types';
+import type { ActiveNode, GridHost } from '../internal/types.js';
 
 export class StateController<T extends object> implements ReactiveController {
   public sorting!: SortController<T>;

@@ -1,4 +1,4 @@
-import type { FilterOperation } from '../types';
+import type { FilterOperation } from '../types.js';
 
 export default class BaseOperands<T, Type = any> {
   public get(condition: keyof this): FilterOperation<T, Type> {

@@ -11,20 +11,15 @@ import { watch } from '../internal/watch.js';
 
 import styles from '../styles/filter-row/filter-row-styles.js';
 
-import type FilterExpressionTree from '../operations/filter/tree';
-import type { FilterExpression, FilterOperation } from '../operations/filter/types';
-import type { ColumnConfig } from '../internal/types';
-
+import type FilterExpressionTree from '../operations/filter/tree.js';
+import type { FilterExpression, FilterOperation } from '../operations/filter/types.js';
+import type { ColumnConfig } from '../internal/types.js';
 import {
-  defineComponents,
-  IgcChipComponent,
-  IgcDropdownComponent,
   IgcInputComponent,
-  IgcIconComponent,
+  IgcDropdownComponent,
   IgcDropdownItemComponent,
+  IgcIconComponent,
 } from 'igniteui-webcomponents';
-
-defineComponents(IgcChipComponent, IgcInputComponent, IgcDropdownComponent);
 
 type ExpressionChipProps<T> = {
   expression: FilterExpression<T>;

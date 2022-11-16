@@ -1,5 +1,5 @@
 import { assert } from '@open-wc/testing';
-import type { Keys } from '../../src/internal/types';
+import type { Keys } from '../../src/internal/types.js';
 import sinon from 'sinon';
 
 import { SORT_ICON_ASCENDING, SORT_ICON_DESCENDING } from '../../src/internal/constants.js';

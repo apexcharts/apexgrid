@@ -1,9 +1,9 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { GRID_CELL_TAG } from '../internal/tags.js';
-import type { ApexCellContext, ColumnConfig } from '../internal/types';
+import type { ApexCellContext, ColumnConfig } from '../internal/types.js';
 import styles from '../styles/body-cell/body-cell-styles.js';
-import type ApexGridRow from './row';
+import type ApexGridRow from './row.js';
 
 @customElement(GRID_CELL_TAG)
 export default class ApexGridCell<T extends object> extends LitElement {

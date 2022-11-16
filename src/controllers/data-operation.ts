@@ -1,8 +1,8 @@
 import { ReactiveController } from 'lit';
 import SortDataOperation from '../operations/sort.js';
 import FilterDataOperation from '../operations/filter.js';
-import type { GridHost } from '../internal/types';
-import type { StateController } from './state';
+import type { GridHost } from '../internal/types.js';
+import type { StateController } from './state.js';
 import { isDefined } from '../internal/utils.js';
 
 export class DataOperationsController<T extends object> implements ReactiveController {

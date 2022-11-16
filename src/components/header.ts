@@ -8,7 +8,7 @@ import {
   SORT_ICON_ASCENDING,
   SORT_ICON_DESCENDING,
 } from '../internal/constants.js';
-import type { ColumnConfig, ApexHeaderContext } from '../internal/types';
+import type { ColumnConfig, ApexHeaderContext } from '../internal/types.js';
 import { StateController, gridStateContext } from '../controllers/state.js';
 import styles from '../styles/header-cell/header-cell-styles.js';
 

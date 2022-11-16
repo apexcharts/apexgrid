@@ -1,5 +1,5 @@
-import type { Keys } from '../../internal/types';
-import type { FilterExpression } from './types';
+import type { Keys } from '../../internal/types.js';
+import type { FilterExpression } from './types.js';
 
 export default class FilterExpressionTree<T> {
   protected operands: Array<FilterExpression<T>> = [];

@@ -1,6 +1,6 @@
 import BaseOperands from '../operands/base.js';
 import { isDefined, normalizeCase } from '../../../internal/utils.js';
-import type { FilterOperation } from '../types';
+import type { FilterOperation } from '../types.js';
 
 export default class StringOperands<T> extends BaseOperands<T, string> {
   public override get default() {

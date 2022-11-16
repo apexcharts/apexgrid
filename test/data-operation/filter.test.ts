@@ -6,8 +6,8 @@ import FilterState from '../../src/operations/filter/state.js';
 import FilterDataOperation from '../../src/operations/filter.js';
 import data from '../utils/test-data.js';
 
-import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types';
-import type { Keys } from '../../src/internal/types';
+import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types.js';
+import type { Keys } from '../../src/internal/types.js';
 
 class TDDFilterState<T extends object> {
   #result: T[] = [];

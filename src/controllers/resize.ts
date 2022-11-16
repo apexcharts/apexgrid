@@ -2,7 +2,7 @@ import { html, nothing, ReactiveController } from 'lit';
 import { styleMap } from 'lit/directives/style-map.js';
 import ApexGridHeader from '../components/header.js';
 import { MIN_COL_RESIZE_WIDTH } from '../internal/constants.js';
-import type { ColumnConfig, GridHost, Keys } from '../internal/types';
+import type { ColumnConfig, GridHost, Keys } from '../internal/types.js';
 
 export class ResizeController<T extends object> implements ReactiveController {
   constructor(protected host: GridHost<T>) {

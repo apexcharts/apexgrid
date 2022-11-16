@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "target": "es2019",
-    "module": "es2020",
+    "module": "NodeNext",
     "lib": ["es2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -17,7 +18,6 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,

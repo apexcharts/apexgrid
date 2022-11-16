@@ -1,4 +1,4 @@
-import type ApexGridHeader from '../../src/components/header';
+import type ApexGridHeader from '../../src/components/header.js';
 
 const DEFAULT_ARGS: PointerEventInit = { pointerId: 1, bubbles: true, composed: true };
 

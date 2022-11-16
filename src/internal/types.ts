@@ -1,11 +1,11 @@
 import { ReactiveControllerHost } from 'lit';
-import type ApexGrid from '../components/grid';
-import type ApexGridCell from '../components/cell';
-import type ApexGridRow from '../components/row';
-import type ApexGridHeader from '../components/header';
-import type BaseOperands from '../operations/filter/operands/base';
-import type { SortState } from '../operations/sort/types';
-import type FilterState from '../operations/filter/state';
+import type ApexGrid from '../components/grid.js';
+import type ApexGridCell from '../components/cell.js';
+import type ApexGridRow from '../components/row.js';
+import type ApexGridHeader from '../components/header.js';
+import type BaseOperands from '../operations/filter/operands/base.js';
+import type { SortState } from '../operations/sort/types.js';
+import type FilterState from '../operations/filter/state.js';
 
 export type Keys<T> = keyof T;
 export type Values<T> = T[keyof T];

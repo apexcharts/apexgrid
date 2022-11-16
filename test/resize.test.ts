@@ -1,6 +1,6 @@
 import { assert, html } from '@open-wc/testing';
 import { MIN_COL_RESIZE_WIDTH } from '../src/internal/constants.js';
-import type { Keys } from '../src/internal/types';
+import type { Keys } from '../src/internal/types.js';
 import GridTestFixture from './utils/grid-fixture.js';
 import data from './utils/test-data.js';
 

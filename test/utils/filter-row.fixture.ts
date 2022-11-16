@@ -1,6 +1,6 @@
-import type ApexFilterRow from '../../src/components/filter-row';
-import type { OperandKeys } from '../../src/operations/filter/types';
-import type { Keys } from '../../src/internal/types';
+import type ApexFilterRow from '../../src/components/filter-row.js';
+import type { OperandKeys } from '../../src/operations/filter/types.js';
+import type { Keys } from '../../src/internal/types.js';
 
 export default class FilterRowFixture<T extends object> {
   constructor(public element: ApexFilterRow<T>) {}

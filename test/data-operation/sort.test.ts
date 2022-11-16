@@ -1,7 +1,7 @@
 import { assert, fixtureCleanup } from '@open-wc/testing';
 import SortDataOperation from '../../src/operations/sort.js';
-import type { Keys } from '../../src/internal/types';
-import type { SortExpression, SortState } from '../../src/operations/sort/types';
+import type { Keys } from '../../src/internal/types.js';
+import type { SortExpression, SortState } from '../../src/operations/sort/types.js';
 import data, { importanceComparer } from '../utils/test-data.js';
 
 class TDDSortState<T extends object> {

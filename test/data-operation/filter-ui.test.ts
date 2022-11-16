@@ -5,8 +5,8 @@ import NumberOperands from '../../src/operations/filter/operands/number.js';
 import GridTestFixture from '../utils/grid-fixture.js';
 import data from '../utils/test-data.js';
 
-import type { Keys } from '../../src/internal/types';
-import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types';
+import type { Keys } from '../../src/internal/types.js';
+import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types.js';
 import type { TestData } from '../utils/test-data.js';
 
 class FilterFixture<T extends object> extends GridTestFixture<T> {

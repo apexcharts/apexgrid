@@ -1,7 +1,7 @@
-import type { Keys } from '../../internal/types';
-import type BooleanOperands from './operands/boolean';
-import type NumberOperands from './operands/number';
-import type StringOperands from './operands/string';
+import type { Keys } from '../../internal/types.js';
+import type BooleanOperands from './operands/boolean.js';
+import type NumberOperands from './operands/number.js';
+import type StringOperands from './operands/string.js';
 
 export type FilterCriteria = 'and' | 'or';
 

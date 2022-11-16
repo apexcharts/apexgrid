@@ -2,7 +2,7 @@ import { html, LitElement, nothing } from 'lit';
 import { customElement, property, queryAll } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { GRID_ROW_TAG } from '../internal/tags.js';
-import type { ActiveNode, ColumnConfig } from '../internal/types';
+import type { ActiveNode, ColumnConfig } from '../internal/types.js';
 import ApexGridCell from './cell.js';
 import styles from '../styles/body-row/body-row-styles.js';
 
