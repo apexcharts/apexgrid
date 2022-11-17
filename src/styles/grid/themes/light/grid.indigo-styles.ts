@@ -26,7 +26,7 @@ export default css`/* stylelint-disable max-line-length */ /* stylelint-disable 
   --z-index-base: 1;
 }
 
-apx-grid-body {
+apex-grid-body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -40,7 +40,7 @@ apx-grid-body {
   background: var(--igx-content-background, var(--content-background));
   color: var(--igx-content-text-color, var(--content-text-color));
 }
-apx-grid-body:focus {
+apex-grid-body:focus {
   outline: none;
 }
 

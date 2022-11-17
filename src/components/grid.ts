@@ -80,14 +80,14 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   protected dataController = new DataOperationsController<T>(this);
 
   protected rowRenderer = <T>(data: T, index: number): TemplateResult => {
-    return html`<apx-grid-row
+    return html`<apex-grid-row
       part="row"
       style=${styleMap({ ...this.DOM.columnSizes, ...this.DOM.getActiveRowStyles(index) })}
       .index=${index}
       .activeNode=${this.stateController.active}
       .data=${data}
       .columns=${this.columns}
-    ></apx-grid-row>`;
+    ></apex-grid-row>`;
   };
 
   protected stateProvider = new ContextProvider(this, gridStateContext, this.stateController);
@@ -248,24 +248,24 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   }
 
   protected renderHeaderRow() {
-    return html`<apx-grid-header-row
+    return html`<apex-grid-header-row
       style=${styleMap(this.DOM.columnSizes)}
       .columns=${this.columns}
-    ></apx-grid-header-row>`;
+    ></apex-grid-header-row>`;
   }
 
   protected renderBody() {
-    return html`<apx-grid-body
+    return html`<apex-grid-body
       @keydown=${this.bodyKeydownHandler}
       @click=${this.bodyClickHandler}
       .items=${this.dataState}
       .renderItem=${this.rowRenderer}
-    ></apx-grid-body>`;
+    ></apex-grid-body>`;
   }
 
   protected renderFilterRow() {
     return this.columns.some(column => column.filter)
-      ? html`<apx-filter-row style=${styleMap(this.DOM.columnSizes)}></apx-filter-row>`
+      ? html`<apex-filter-row style=${styleMap(this.DOM.columnSizes)}></apex-filter-row>`
       : nothing;
   }
 

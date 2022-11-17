@@ -18,12 +18,12 @@ class InitialDataStateFixture<T extends TestData> extends GridTestFixture<T> {
   ];
 
   public override setupTemplate() {
-    return html`<apx-grid
+    return html`<apex-grid
       .data=${this.data}
       .columns=${this.columnConfig}
       .sortExpressions=${this.sortState}
       .filterExpressions=${this.filterState}
-    ></apx-grid>`;
+    ></apex-grid>`;
   }
 }
 

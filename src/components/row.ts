@@ -44,13 +44,13 @@ export default class ApexGridRow<T extends object> extends LitElement {
       ${map(this.columns, column =>
         column.hidden
           ? nothing
-          : html`<apx-grid-cell
+          : html`<apex-grid-cell
               part="cell"
               .active=${key === column.key && index === this.index}
               .column=${column}
               .row=${this as ApexGridRow<T>}
               .value=${this.data[column.key]}
-            ></apx-grid-cell>`,
+            ></apex-grid-cell>`,
       )}
     `;
   }

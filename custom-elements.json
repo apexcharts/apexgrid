@@ -14,6 +14,206 @@
             "name": "default",
             "module": "./components/grid.js"
           }
+        },
+        {
+          "kind": "js",
+          "name": "BaseOperands",
+          "declaration": {
+            "name": "BaseOperands",
+            "module": "./operations/filter/operands/base.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "BooleanOperands",
+          "declaration": {
+            "name": "BooleanOperands",
+            "module": "./operations/filter/operands/boolean.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NumberOperands",
+          "declaration": {
+            "name": "NumberOperands",
+            "module": "./operations/filter/operands/number.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "StringOperands",
+          "declaration": {
+            "name": "StringOperands",
+            "module": "./operations/filter/operands/string.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FilterState",
+          "declaration": {
+            "name": "FilterState",
+            "module": "./operations/filter/state.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FilterExpressionTree",
+          "declaration": {
+            "name": "FilterExpressionTree",
+            "module": "./operations/filter/tree.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SortExpression",
+          "declaration": {
+            "name": "SortExpression",
+            "module": "./operations/sort/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SortingDirection",
+          "declaration": {
+            "name": "SortingDirection",
+            "module": "./operations/sort/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SortState",
+          "declaration": {
+            "name": "SortState",
+            "module": "./operations/sort/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FilterCriteria",
+          "declaration": {
+            "name": "FilterCriteria",
+            "module": "./operations/filter/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FilterExpression",
+          "declaration": {
+            "name": "FilterExpression",
+            "module": "./operations/filter/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "OperandKeys",
+          "declaration": {
+            "name": "OperandKeys",
+            "module": "./operations/filter/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FilterOperation",
+          "declaration": {
+            "name": "FilterOperation",
+            "module": "./operations/filter/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FilterOperationLogic",
+          "declaration": {
+            "name": "FilterOperationLogic",
+            "module": "./operations/filter/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApexCellContext",
+          "declaration": {
+            "name": "ApexCellContext",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ApexHeaderContext",
+          "declaration": {
+            "name": "ApexHeaderContext",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ColumnConfig",
+          "declaration": {
+            "name": "ColumnConfig",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ColumnFilterConfig",
+          "declaration": {
+            "name": "ColumnFilterConfig",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GridSortingConfig",
+          "declaration": {
+            "name": "GridSortingConfig",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ColumnSortConfig",
+          "declaration": {
+            "name": "ColumnSortConfig",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DataType",
+          "declaration": {
+            "name": "DataType",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "Keys",
+          "declaration": {
+            "name": "Keys",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GridRemoteConfig",
+          "declaration": {
+            "name": "GridRemoteConfig",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "RemoteFilterHook",
+          "declaration": {
+            "name": "RemoteFilterHook",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "RemoteSortHook",
+          "declaration": {
+            "name": "RemoteSortHook",
+            "module": "./internal/types.js"
+          }
         }
       ]
     },
@@ -2321,57 +2521,57 @@
           "kind": "variable",
           "name": "GRID_TAG",
           "type": {
-            "text": "'apx-grid'"
+            "text": "'apex-grid'"
           },
-          "default": "'apx-grid'"
+          "default": "'apex-grid'"
         },
         {
           "kind": "variable",
           "name": "GRID_BODY_TAG",
           "type": {
-            "text": "'apx-grid-body'"
+            "text": "'apex-grid-body'"
           },
-          "default": "'apx-grid-body'"
+          "default": "'apex-grid-body'"
         },
         {
           "kind": "variable",
           "name": "GRID_HEADER_ROW_TAG",
           "type": {
-            "text": "'apx-grid-header-row'"
+            "text": "'apex-grid-header-row'"
           },
-          "default": "'apx-grid-header-row'"
+          "default": "'apex-grid-header-row'"
         },
         {
           "kind": "variable",
           "name": "GRID_HEADER_TAG",
           "type": {
-            "text": "'apx-grid-header'"
+            "text": "'apex-grid-header'"
           },
-          "default": "'apx-grid-header'"
+          "default": "'apex-grid-header'"
         },
         {
           "kind": "variable",
           "name": "GRID_ROW_TAG",
           "type": {
-            "text": "'apx-grid-row'"
+            "text": "'apex-grid-row'"
           },
-          "default": "'apx-grid-row'"
+          "default": "'apex-grid-row'"
         },
         {
           "kind": "variable",
           "name": "GRID_CELL_TAG",
           "type": {
-            "text": "'apx-grid-cell'"
+            "text": "'apex-grid-cell'"
           },
-          "default": "'apx-grid-cell'"
+          "default": "'apex-grid-cell'"
         },
         {
           "kind": "variable",
           "name": "GRID_FILTER_ROW_TAG",
           "type": {
-            "text": "'apx-filter-row'"
+            "text": "'apex-filter-row'"
           },
-          "default": "'apx-filter-row'"
+          "default": "'apex-filter-row'"
         }
       ],
       "exports": [
@@ -3168,6 +3368,76 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/styles/body-cell/body-cell-styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/styles/body-cell/body-cell-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/styles/body-row/body-row-styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/styles/body-row/body-row-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/styles/filter-row/filter-row-styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/styles/filter-row/filter-row-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/styles/header-cell/header-cell-styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/styles/header-cell/header-cell-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/styles/header-row/header-row.base-styles.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "src/styles/header-row/header-row.base-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/operations/filter/state.ts",
       "declarations": [
         {
@@ -3272,7 +3542,7 @@
       "exports": [
         {
           "kind": "js",
-          "name": "default",
+          "name": "FilterState",
           "declaration": {
             "name": "FilterState",
             "module": "src/operations/filter/state.ts"
@@ -3365,7 +3635,7 @@
       "exports": [
         {
           "kind": "js",
-          "name": "default",
+          "name": "FilterExpressionTree",
           "declaration": {
             "name": "FilterExpressionTree",
             "module": "src/operations/filter/tree.ts"
@@ -3387,76 +3657,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/styles/body-cell/body-cell-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/body-cell/body-cell-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/body-row/body-row-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/body-row/body-row-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/filter-row/filter-row-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/filter-row/filter-row-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/header-cell/header-cell-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/header-cell/header-cell-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/header-row/header-row.base-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/header-row/header-row.base-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/operations/filter/operands/base.ts",
       "declarations": [
         {
@@ -3468,11 +3668,6 @@
               "kind": "method",
               "name": "get",
               "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "FilterOperation<T, Type>"
-                }
-              },
               "parameters": [
                 {
                   "name": "condition",
@@ -3485,6 +3680,9 @@
             {
               "kind": "field",
               "name": "default",
+              "type": {
+                "text": "FilterOperation<T, Type>"
+              },
               "privacy": "public"
             },
             {
@@ -3503,7 +3701,7 @@
       "exports": [
         {
           "kind": "js",
-          "name": "default",
+          "name": "BaseOperands",
           "declaration": {
             "name": "BaseOperands",
             "module": "src/operations/filter/operands/base.ts"
@@ -3523,6 +3721,9 @@
             {
               "kind": "field",
               "name": "default",
+              "type": {
+                "text": "FilterOperation<T, Type>"
+              },
               "privacy": "public",
               "inheritedFrom": {
                 "name": "BaseOperands",
@@ -3578,11 +3779,6 @@
               "kind": "method",
               "name": "get",
               "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "FilterOperation<T, Type>"
-                }
-              },
               "parameters": [
                 {
                   "name": "condition",
@@ -3624,7 +3820,7 @@
       "exports": [
         {
           "kind": "js",
-          "name": "default",
+          "name": "BooleanOperands",
           "declaration": {
             "name": "BooleanOperands",
             "module": "src/operations/filter/operands/boolean.ts"
@@ -3644,6 +3840,9 @@
             {
               "kind": "field",
               "name": "default",
+              "type": {
+                "text": "FilterOperation<T, Type>"
+              },
               "privacy": "public",
               "inheritedFrom": {
                 "name": "BaseOperands",
@@ -3726,11 +3925,6 @@
               "kind": "method",
               "name": "get",
               "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "FilterOperation<T, Type>"
-                }
-              },
               "parameters": [
                 {
                   "name": "condition",
@@ -3772,7 +3966,7 @@
       "exports": [
         {
           "kind": "js",
-          "name": "default",
+          "name": "NumberOperands",
           "declaration": {
             "name": "NumberOperands",
             "module": "src/operations/filter/operands/number.ts"
@@ -3792,6 +3986,9 @@
             {
               "kind": "field",
               "name": "default",
+              "type": {
+                "text": "FilterOperation<T, Type>"
+              },
               "privacy": "public",
               "inheritedFrom": {
                 "name": "BaseOperands",
@@ -3874,11 +4071,6 @@
               "kind": "method",
               "name": "get",
               "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "FilterOperation<T, Type>"
-                }
-              },
               "parameters": [
                 {
                   "name": "condition",
@@ -3920,7 +4112,7 @@
       "exports": [
         {
           "kind": "js",
-          "name": "default",
+          "name": "StringOperands",
           "declaration": {
             "name": "StringOperands",
             "module": "src/operations/filter/operands/string.ts"

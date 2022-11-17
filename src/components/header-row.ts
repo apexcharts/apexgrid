@@ -62,12 +62,12 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
     return html`${map(this.columns, column =>
       column.hidden
         ? nothing
-        : html`<apx-grid-header
+        : html`<apex-grid-header
             part=${partNameMap({
               filtered: column === filterRow?.column,
             })}
             .column=${column}
-          ></apx-grid-header>`,
+          ></apex-grid-header>`,
     )}`;
   }
 }

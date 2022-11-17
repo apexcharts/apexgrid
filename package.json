@@ -1,14 +1,14 @@
 {
-  "name": "apx-grid",
+  "name": "apex-grid",
   "version": "1.0.0-rc.1",
-  "description": "Webcomponent data grid following open-wc recommendations",
+  "description": "Web component data grid following open-wc recommendations",
   "keywords": [
     "lit",
     "web-component",
     "lit-element"
   ],
   "license": "SEE LICENSE IN LICENSE.mds",
-  "author": "apx-grid",
+  "author": "apex-grid",
   "exports": {
     ".": "./dist/src/index.js"
   },
@@ -58,7 +58,7 @@
     "lit": "^2.4.1",
     "@lit-labs/virtualizer": "^0.7.2",
     "@lit-labs/context": "^0.1.3",
-    "igniteui-theming": "1.1.2",
+    "igniteui-theming": "^1.1.2",
     "igniteui-webcomponents": "^4.0.0"
   },
   "devDependencies": {
@@ -85,7 +85,7 @@
     "stylelint-config-standard-scss": "^6.1.0",
     "tslib": "^2.4.1",
     "typescript": "^4.9.3",
-    "vite": "^3.2.3"
+    "vite": "^3.2.4"
   },
   "customElements": "custom-elements.json"
 }
