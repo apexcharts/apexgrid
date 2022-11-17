@@ -22,7 +22,7 @@
         overflow: hidden;
       }
 
-      apx-grid {
+      apex-grid {
         flex: 1;
       }
 
@@ -132,7 +132,7 @@
         },
         { key: 'name', cellTemplate: standard, filter: true, sort: true, resizable: true },
         { key: 'avatar', cellTemplate: avatarTemplate, resizable: true },
-        { key: 'satisfaction', sort: true, resizable: true, cellTemplate: undefined },
+        { key: 'satisfaction', sort: true, resizable: true, cellTemplate: satisfactionTemplate },
         {
           key: 'priority',
           sort: {
@@ -148,6 +148,7 @@
           cellTemplate: booleanTemplate,
           sort: true,
           filter: true,
+          resizable: true,
         },
       ];
 
@@ -209,15 +210,12 @@
         `;
       };
 
-      const f = e => console.log(e.detail);
-
       render(
         html`${themeChooser()}
-          <apx-grid
+          <apex-grid
             .columns=${columns}
-            @filtering=${f}
             .data=${data}
-          ></apx-grid>`,
+          ></apex-grid>`,
         document.querySelector('#demo'),
       );
       await setTheme('bootstrap');

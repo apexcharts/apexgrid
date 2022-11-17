@@ -42,10 +42,10 @@ export default class GridTestFixture<T extends object> {
   }
 
   public setupTemplate() {
-    return html`<apx-grid
+    return html`<apex-grid
       .data=${this.data}
       .columns=${this.columnConfig}
-    ></apx-grid>`;
+    ></apex-grid>`;
   }
 
   public async setUp() {
