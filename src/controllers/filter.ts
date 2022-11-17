@@ -4,7 +4,7 @@ import { asArray, getFilterOperandsFor } from '../internal/utils.js';
 import { FilterState } from '../operations/filter/state.js';
 
 import type { FilterExpressionTree } from '../operations/filter/tree.js';
-import type { ColumnConfig, GridHost, Keys } from '../internal/types.js';
+import type { ColumnConfiguration, GridHost, Keys } from '../internal/types.js';
 import type { FilterExpression } from '../operations/filter/types.js';
 
 export class FilterController<T extends object> implements ReactiveController {
@@ -48,7 +48,7 @@ export class FilterController<T extends object> implements ReactiveController {
     key ? this.state.delete(key) : this.state.clear();
   }
 
-  public setActiveColumn(column: ColumnConfig<T>) {
+  public setActiveColumn(column: ColumnConfiguration<T>) {
     if (column.filter && this.filterRow?.active) {
       this.filterRow.column = column;
       this.filterRow.expression = this.getDefaultExpression(column);
@@ -56,7 +56,7 @@ export class FilterController<T extends object> implements ReactiveController {
     }
   }
 
-  public getDefaultExpression(column: ColumnConfig<T>): FilterExpression<T> {
+  public getDefaultExpression(column: ColumnConfiguration<T>): FilterExpression<T> {
     const caseSensitive =
       typeof column.filter === 'boolean' ? false : Boolean(column.filter?.caseSensitive);
     return {

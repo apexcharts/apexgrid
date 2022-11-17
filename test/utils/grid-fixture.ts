@@ -1,7 +1,7 @@
 import { elementUpdated, fixture, fixtureCleanup, html, waitUntil } from '@open-wc/testing';
 import ApexGridHeaderRow from '../../src/components/header-row.js';
 import ApexGridRow from '../../src/components/row.js';
-import type { ColumnConfig, Keys } from '../../src/internal/types.js';
+import type { ColumnConfiguration, Keys } from '../../src/internal/types.js';
 import type { SortExpression } from '../../src/operations/sort/types.js';
 import type { FilterExpression } from '../../src/operations/filter/types.js';
 import type ApexGrid from '../../src/components/grid.js';
@@ -25,10 +25,10 @@ interface HeaderCollection<T extends object> {
 
 export default class GridTestFixture<T extends object> {
   public grid!: ApexGrid<T>;
-  public columnConfig: ColumnConfig<T>[];
+  public columnConfig: ColumnConfiguration<T>[];
 
   constructor(protected data: T[], protected parentStyle?: Partial<CSSStyleDeclaration>) {
-    this.columnConfig = Object.keys(data.at(0)!).map(key => ({ key } as ColumnConfig<T>));
+    this.columnConfig = Object.keys(data.at(0)!).map(key => ({ key } as ColumnConfiguration<T>));
   }
 
   public updateConfig() {}
@@ -160,7 +160,7 @@ export default class GridTestFixture<T extends object> {
     await elementUpdated(this.grid);
   }
 
-  public async updateColumn(key: Keys<T>, config: Partial<ColumnConfig<T>>) {
+  public async updateColumn(key: Keys<T>, config: Partial<ColumnConfiguration<T>>) {
     this.grid.updateColumn(key, config);
     await elementUpdated(this.grid);
     return this;

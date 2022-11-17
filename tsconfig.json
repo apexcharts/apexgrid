@@ -31,5 +31,15 @@
     ]
   },
   "include": ["src/**/*.ts", "test/**/*.ts", "types/**/*.d.ts"],
-  "exclude": ["node_modules/**"]
+  "exclude": ["node_modules/**"],
+  "typedocOptions": {
+    "entryPoints": ["src/index.ts"],
+    "out": "dist/docs",
+    "exclude": "**/*+(.test|-fixture|-styles).ts",
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "excludeExternals": true,
+    "excludeNotDocumented": true,
+    "disableSources": true
+  }
 }

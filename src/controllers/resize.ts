@@ -2,7 +2,7 @@ import { html, nothing, ReactiveController } from 'lit';
 import { styleMap } from 'lit/directives/style-map.js';
 import ApexGridHeader from '../components/header.js';
 import { MIN_COL_RESIZE_WIDTH } from '../internal/constants.js';
-import type { ColumnConfig, GridHost, Keys } from '../internal/types.js';
+import type { ColumnConfiguration, GridHost, Keys } from '../internal/types.js';
 
 export class ResizeController<T extends object> implements ReactiveController {
   constructor(protected host: GridHost<T>) {
@@ -39,7 +39,7 @@ export class ResizeController<T extends object> implements ReactiveController {
     this.host.requestUpdate();
   }
 
-  public resize(column: ColumnConfig<T>, width: number, sizerOffset?: number) {
+  public resize(column: ColumnConfiguration<T>, width: number, sizerOffset?: number) {
     if (sizerOffset) {
       this.indicatorOffset = sizerOffset;
     }
@@ -48,7 +48,7 @@ export class ResizeController<T extends object> implements ReactiveController {
     this.host.requestUpdate();
   }
 
-  public async autosize(column: ColumnConfig<T>, header: ApexGridHeader<T>) {
+  public async autosize(column: ColumnConfiguration<T>, header: ApexGridHeader<T>) {
     column.width = `max-content`;
 
     this.host.requestUpdate();

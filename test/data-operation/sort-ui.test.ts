@@ -100,7 +100,7 @@ suite('Grid UI sort', () => {
 
   suite('Grid sorting configuration', () => {
     test('Single sort with tri-state', async () => {
-      await TDD.updateProperty('sortingConfig', { multiple: false, triState: true });
+      await TDD.updateProperty('sortConfiguration', { multiple: false, triState: true });
 
       // ASC
       await TDD.sortHeader('id');
@@ -124,7 +124,7 @@ suite('Grid UI sort', () => {
     });
 
     test('Single sort without tri-state', async () => {
-      await TDD.updateProperty('sortingConfig', { multiple: false, triState: false });
+      await TDD.updateProperty('sortConfiguration', { multiple: false, triState: false });
 
       // ASC
       await TDD.sortHeader('id');
@@ -171,7 +171,7 @@ suite('Grid UI sort', () => {
     });
 
     test('Multiple sort without tri-state', async () => {
-      await TDD.updateProperty('sortingConfig', { multiple: true, triState: false });
+      await TDD.updateProperty('sortConfiguration', { multiple: true, triState: false });
 
       // ASC
       await TDD.sortHeader('id');

@@ -13,7 +13,7 @@ import styles from '../styles/filter-row/filter-row-styles.js';
 
 import type { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { FilterExpression, FilterOperation } from '../operations/filter/types.js';
-import type { ColumnConfig } from '../internal/types.js';
+import type { ColumnConfiguration } from '../internal/types.js';
 import {
   IgcInputComponent,
   IgcDropdownComponent,
@@ -73,7 +73,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   public dropdown!: IgcDropdownComponent;
 
   @property({ attribute: false })
-  public column: ColumnConfig<T> = DEFAULT_COLUMN_CONFIG;
+  public column: ColumnConfiguration<T> = DEFAULT_COLUMN_CONFIG;
 
   @property({ attribute: false })
   public expression!: FilterExpression<T>;
@@ -308,7 +308,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     </div> `;
   }
 
-  protected renderInactiveChips(column: ColumnConfig<T>, state: FilterExpressionTree<T>) {
+  protected renderInactiveChips(column: ColumnConfiguration<T>, state: FilterExpressionTree<T>) {
     return Array.from(state).map((expression, idx) => {
       const props: ExpressionChipProps<T> = {
         expression,
@@ -326,7 +326,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     });
   }
 
-  protected renderFilterState(column: ColumnConfig<T>) {
+  protected renderFilterState(column: ColumnConfiguration<T>) {
     const state = this.filterController.get(column.key);
 
     const partial = state && state.length < 3;
