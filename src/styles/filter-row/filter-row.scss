@@ -12,6 +12,7 @@ $header-border-color: var(--igx-header-border-color, var(--header-border-color))
     --ig-size: 1;
 
     display: grid;
+    grid-row: filter-row;
     min-height: $ig-cells-min-height;
     background: $header-background;
     color: $header-text-color;

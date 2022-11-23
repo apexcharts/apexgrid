@@ -20,13 +20,14 @@ export default css`/* stylelint-disable max-line-length */ /* stylelint-disable 
   -webkit-box-shadow: var(--ig-elevation-2);
           box-shadow: var(--ig-elevation-2);
   overflow: auto hidden;
-  grid-template-rows: -webkit-max-content -webkit-max-content auto;
-  grid-template-rows: max-content max-content auto;
+  grid-template-rows: [header-row] -webkit-max-content [filter-row] -webkit-max-content [virtualized-container] auto;
+  grid-template-rows: [header-row] max-content [filter-row] max-content [virtualized-container] auto;
   --scrollbar-offset: 0;
   --z-index-base: 1;
 }
 
 apex-grid-body {
+  grid-row: virtualized-container;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

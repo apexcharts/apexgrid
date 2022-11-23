@@ -26,6 +26,7 @@ export type {
   ColumnSortConfiguration,
   DataType,
   Keys,
+  Values,
   GridRemoteConfig,
   RemoteFilterHook,
   RemoteSortHook,

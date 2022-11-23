@@ -334,10 +334,12 @@ suite('Grid UI sort', () => {
       await TDD.sort([
         {
           key: 'importance',
+          direction: 'ascending',
           comparer: importanceComparer,
         },
         {
           key: 'active',
+          direction: 'ascending',
         },
       ]);
 

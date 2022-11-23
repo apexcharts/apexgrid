@@ -48,8 +48,8 @@ export class FilterController<T extends object> implements ReactiveController {
     key ? this.state.delete(key) : this.state.clear();
   }
 
-  public setActiveColumn(column: ColumnConfiguration<T>) {
-    if (column.filter && this.filterRow?.active) {
+  public setActiveColumn(column?: ColumnConfiguration<T>) {
+    if (column?.filter && this.filterRow?.active) {
       this.filterRow.column = column;
       this.filterRow.expression = this.getDefaultExpression(column);
       this.host.requestUpdate();

@@ -1,6 +1,6 @@
 {
   "name": "apex-grid",
-  "version": "1.0.0-rc.1",
+  "version": "0.0.0",
   "description": "Web component data grid following open-wc recommendations",
   "keywords": [
     "lit",
@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "analyze": "cem analyze --litelement --globs \"src/**/*.{js,ts}\"",
-    "build": "npm run build:tsc && npm run dev:vite",
+    "build": "npm run build:tsc && npm run dev:vite && npm run typedoc",
     "build:tsc": "tsc",
     "dev:vite": "vite build",
     "format": "npm run format:eslint && npm run format:prettier && npm run format:stylelint",
@@ -58,7 +58,7 @@
   "dependencies": {
     "@lit-labs/context": "^0.1.3",
     "@lit-labs/virtualizer": "^0.7.2",
-    "igniteui-theming": "^1.1.2",
+    "igniteui-theming": "^1.1.4",
     "igniteui-webcomponents": "^4.0.0",
     "lit": "^2.4.1"
   },
@@ -67,15 +67,15 @@
     "@blockquote/sass-style-template": "^2.1.2",
     "@blockquote/test-runner-mocha-style-reporter": "^1.4.1",
     "@custom-elements-manifest/analyzer": "^0.6.6",
-    "@open-wc/eslint-config": "^8.0.2",
+    "@open-wc/eslint-config": "^9.0.0",
     "@open-wc/testing": "^3.1.7",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
     "@web/dev-server": "^0.1.35",
     "@web/test-runner": "^0.15.0",
     "@web/test-runner-playwright": "^0.9.0",
-    "concurrently": "^7.5.0",
-    "eslint": "^8.27.0",
+    "concurrently": "^7.6.0",
+    "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-log-filenames": "^1.0.6",
     "husky": "^8.0.2",

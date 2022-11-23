@@ -11,7 +11,7 @@ import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { watch } from '../internal/watch.js';
 import { DEFAULT_COLUMN_CONFIG, PIPELINE } from '../internal/constants.js';
 import { registerGridIcons } from '../internal/icon-registry.js';
-import { asArray, getFilterOperandsFor } from '../internal/utils.js';
+import { asArray, autoGenerateColumns, getFilterOperandsFor } from '../internal/utils.js';
 
 import type {
   ColumnConfiguration,
@@ -74,10 +74,10 @@ export interface ApexFilteringEvent<T extends object> {
  */
 export interface ApexGridEventMap<T extends object> {
   /**
-   * Fired when sorting is initiated through the UI.
+   * Emitted when sorting is initiated through the UI.
    * Returns the sort expression which will be used for the operation.
    *
-   * @remark
+   * @remarks
    * The event is cancellable which prevents the operation from being applied.
    * The expression can be modified prior to the operation running.
    *
@@ -85,16 +85,16 @@ export interface ApexGridEventMap<T extends object> {
    */
   sorting: CustomEvent<SortExpression<T>>;
   /**
-   * Fired when a sort operation initiated through the UI has completed.
+   * Emitted when a sort operation initiated through the UI has completed.
    * Returns the sort expression used for the operation.
    *
    * @event
    */
   sorted: CustomEvent<SortExpression<T>>;
   /**
-   * Fired when filtering is initiated through the UI.
+   * Emitted when filtering is initiated through the UI.
    *
-   * @remark
+   * @remarks
    * The event is cancellable which prevents the operation from being applied.
    * The expression can be modified prior to the operation running.
    *
@@ -102,7 +102,7 @@ export interface ApexGridEventMap<T extends object> {
    */
   filtering: CustomEvent<ApexFilteringEvent<T>>;
   /**
-   * Fired when a filter operation initiated through the UI has completed.
+   * Emitted when a filter operation initiated through the UI has completed.
    * Returns the filter state for the affected column.
    *
    * @event
@@ -111,7 +111,17 @@ export interface ApexGridEventMap<T extends object> {
 }
 
 /**
+ * Apex grid is a web component for displaying data in a tabular format quick and easy.
  *
+ * Out of the box it provides row virtualization, sort and filter operations (client and server side),
+ * the ability to template cells and headers and column hiding.
+ *
+ * @element apex-grid
+ *
+ * @fires sorting - Emitted when sorting is initiated through the UI.
+ * @fires sorted - Emitted when a sort operation initiated through the UI has completed.
+ * @fires filtering - Emitted when filtering is initiated through the UI.
+ * @fires filtered - Emitted when a filter operation initiated through the UI has completed.
  *
  */
 @themes({
@@ -168,24 +178,61 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   @property({ attribute: false })
   public data: Array<T> = [];
 
-  /** Sort configuration for the grid. */
+  /**
+   * Whether the grid will try to "resolve" its column configuration based on the passed
+   * data source.
+   *
+   * @remarks
+   * This is a one-time operation which is executed when the grid is initially added to the DOM.
+   * Passing an empty data source or having a late bound data source (such as a HTTP request) will usually
+   * result in empty column configuration for the grid.
+   *
+   * This property is ignored if any existing column configuration already exists in the grid.
+   */
+  @property({ type: Boolean, attribute: 'auto-generate' })
+  public autoGenerate = false;
+
+  /** Sort configuration property for the grid. */
   @property({ attribute: false })
   public sortConfiguration: GridSortConfiguration = {
     multiple: true,
     triState: true,
   };
 
+  /**
+   * Configuration object which controls remote data operations for the grid.
+   */
   @property({ attribute: false })
   public remoteConfiguration?: GridRemoteConfig<T>;
 
+  /**
+   * Set sort state for the apex grid.
+   *
+   * @remarks
+   *
+   */
   @property({ attribute: false })
   public sortExpressions: SortExpression<T>[] = [];
 
+  /**
+   *
+   */
   @property({ attribute: false })
   public filterExpressions: FilterExpression<T>[] = [];
 
+  /**
+   * Returns the collection of rendered row elements in the grid.
+   *
+   * @remarks
+   * Since the grid has virtualization, this property returns only the currently rendered
+   * chunk of elements in the DOM.
+   */
   public get rows() {
     return Array.from(this._rows);
+  }
+
+  public get dataView() {
+    return this.dataState;
   }
 
   public get totalItems() {
@@ -195,6 +242,11 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   constructor() {
     super();
     registerGridIcons();
+  }
+
+  public override connectedCallback() {
+    super.connectedCallback();
+    autoGenerateColumns(this);
   }
 
   public override requestUpdate(
@@ -242,6 +294,9 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     );
   }
 
+  /**
+   * Performs a filter operation in the grid based on the passed expression(s).
+   */
   public filter(config: FilterExpression<T> | FilterExpression<T>[]) {
     this.stateController.filtering.filter(
       asArray(config).map(each =>
@@ -257,16 +312,22 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   /**
    * Performs a sort operation in the grid based on the passed expression(s).
    */
-  public sort(expressions: Partial<SortExpression<T>> | Partial<SortExpression<T>>[]) {
-    this.stateController.sorting.sort(expressions as SortExpression<T>[]);
+  public sort(expressions: SortExpression<T> | SortExpression<T>[]) {
+    this.stateController.sorting.sort(expressions);
   }
 
+  /**
+   * Returns a {@link ColumnConfiguration} for a given column.
+   */
   public getColumn(id: Keys<T> | number) {
     return typeof id === 'number'
       ? this.columns.at(id)
       : this.columns.find(({ key }) => key === id);
   }
 
+  /**
+   * Updates the column configuration of the grid.
+   */
   public updateColumn(key: Keys<T>, config: Partial<ColumnConfiguration<T>>) {
     // Check and reset data operation states
     // TODO: Run `pipeline` updates ?

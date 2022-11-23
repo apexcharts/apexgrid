@@ -3,7 +3,7 @@ import type { Keys, Values } from '../../internal/types.js';
 /**
  * Sort direction for a given sort expression.
  *
- * @remark
+ * @remarks
  * `none` is
  */
 export type SortingDirection = 'ascending' | 'descending' | 'none';
@@ -13,7 +13,7 @@ export type SortingDirection = 'ascending' | 'descending' | 'none';
  */
 export interface SortExpression<T> {
   /**
-   *
+   * The target column.
    */
   key: Keys<T>;
   /**
@@ -23,15 +23,15 @@ export interface SortExpression<T> {
   /**
    * Whether the sort operation should be case sensitive.
    *
-   * @remark
-   * If not passed, the value is resolved based on the column sort configuration (if any).
+   * @remarks
+   * If not provided, the value is resolved based on the column sort configuration (if any).
    */
   caseSensitive?: boolean;
   /**
    * Custom comparer function for this operation.
    *
-   * @remark
-   * If not passed, the value is resolved based on the column sort configuration (if any).
+   * @remarks
+   * If not provided, the value is resolved based on the column sort configuration (if any).
    */
   comparer?: (a: Values<T>, b: Values<T>) => number;
 }

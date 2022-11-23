@@ -3,7 +3,7 @@ import SortDataOperation from '../operations/sort.js';
 import FilterDataOperation from '../operations/filter.js';
 import type { GridHost } from '../internal/types.js';
 import type { StateController } from './state.js';
-import { isDefined } from '../internal/utils.js';
+import { isDefined } from '../internal/is-defined.js';
 
 export class DataOperationsController<T extends object> implements ReactiveController {
   protected sorting = new SortDataOperation<T>();

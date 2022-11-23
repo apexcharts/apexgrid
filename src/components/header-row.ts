@@ -48,7 +48,7 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
       .filter(target => target instanceof ApexGridHeader)
       .at(0) as ApexGridHeader<T>;
 
-    this.state.filtering.setActiveColumn(header.column);
+    this.state.filtering.setActiveColumn(header?.column);
   }
 
   protected override shouldUpdate(props: PropertyValueMap<this> | Map<PropertyKey, this>): boolean {

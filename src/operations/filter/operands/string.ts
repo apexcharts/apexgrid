@@ -1,5 +1,6 @@
+import { isDefined } from '../../../internal/is-defined.js';
+import { normalizeCase } from '../../../internal/normalize-case.js';
 import { BaseOperands } from '../operands/base.js';
-import { isDefined, normalizeCase } from '../../../internal/utils.js';
 import type { FilterOperation } from '../types.js';
 
 export class StringOperands<T> extends BaseOperands<T, string> {

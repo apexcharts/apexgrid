@@ -166,7 +166,7 @@ export default class GridTestFixture<T extends object> {
     return this;
   }
 
-  public async sort(config: Partial<SortExpression<T>> | Partial<SortExpression<T>>[]) {
+  public async sort(config: SortExpression<T> | SortExpression<T>[]) {
     this.grid.sort(config);
     await elementUpdated(this.grid);
     return this;

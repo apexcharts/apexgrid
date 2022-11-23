@@ -6,6 +6,7 @@ import data, { TestData } from './utils/test-data.js';
 
 import type { SortExpression } from '../src/operations/sort/types.js';
 import type { FilterExpression } from '../src/operations/filter/types.js';
+import testData from './utils/test-data.js';
 
 class InitialDataStateFixture<T extends TestData> extends GridTestFixture<T> {
   public sortState: SortExpression<TestData>[] = [
@@ -27,8 +28,29 @@ class InitialDataStateFixture<T extends TestData> extends GridTestFixture<T> {
   }
 }
 
+class AutoGenerateFixture<T extends TestData> extends GridTestFixture<T> {
+  public override setupTemplate() {
+    return html`<apex-grid
+      auto-generate
+      .data=${this.data}
+    ></apex-grid>`;
+  }
+}
+
 const TDD = new GridTestFixture(data);
 const dataStateTDD = new InitialDataStateFixture(data);
+const autoGenerateTDD = new AutoGenerateFixture(data);
+
+suite('Grid auto-generate column configuration', () => {
+  const keys = new Set(Object.keys(testData[0]));
+  setup(async () => await autoGenerateTDD.setUp());
+  teardown(() => autoGenerateTDD.tearDown());
+
+  test('Default', async () => {
+    autoGenerateTDD.grid.columns.forEach(({ key }) => assert.isTrue(keys.has(key)));
+    assert.strictEqual(autoGenerateTDD.grid.rows.length, testData.length);
+  });
+});
 
 suite('Grid properties (initial bindings)', () => {
   setup(async () => await dataStateTDD.setUp());
