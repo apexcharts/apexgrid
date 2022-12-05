@@ -15,6 +15,7 @@ export default css`/* stylelint-disable max-line-length */ /* stylelint-disable 
 :host {
   --ig-size: 1;
   display: grid;
+  grid-row: filter-row;
   min-height: max(var(--is-large, 1) * 3.125rem, var(--is-medium, 1) * 2.125rem, var(--is-small, 1) * 1.5rem);
   background: var(--igx-header-background, var(--header-background));
   color: var(--igx-header-text-color, var(--header-text-color));

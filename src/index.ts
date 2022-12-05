@@ -1,4 +1,5 @@
 export { default as ApexGrid } from './components/grid.js';
+export type { ApexGridEventMap, ApexFilteringEvent } from './components/grid.js';
 
 export { BaseOperands } from './operations/filter/operands/base.js';
 export { BooleanOperands } from './operations/filter/operands/boolean.js';
@@ -19,12 +20,13 @@ export type {
 export type {
   ApexCellContext,
   ApexHeaderContext,
-  ColumnConfig,
-  ColumnFilterConfig,
-  GridSortingConfig,
-  ColumnSortConfig,
+  ColumnConfiguration,
+  ColumnFilterConfiguration,
+  GridSortConfiguration,
+  ColumnSortConfiguration,
   DataType,
   Keys,
+  Values,
   GridRemoteConfig,
   RemoteFilterHook,
   RemoteSortHook,

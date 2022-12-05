@@ -9,6 +9,7 @@ $filtering-header-background: var(--igx-filtering-header-background, var(--filte
 
 :host {
     display: grid;
+    grid-row: header-row;
     min-height: $ig-cells-min-height;
     background: $header-background;
     color: $header-text-color;

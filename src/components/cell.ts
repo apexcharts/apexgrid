@@ -1,7 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { GRID_CELL_TAG } from '../internal/tags.js';
-import type { ApexCellContext, ColumnConfig } from '../internal/types.js';
+import type { ApexCellContext, ColumnConfiguration } from '../internal/types.js';
 import styles from '../styles/body-cell/body-cell-styles.js';
 import type ApexGridRow from './row.js';
 
@@ -17,7 +17,7 @@ export default class ApexGridCell<T extends object> extends LitElement {
   public value!: T[keyof T];
 
   @property({ attribute: false })
-  public column!: ColumnConfig<T>;
+  public column!: ColumnConfiguration<T>;
 
   @property({ type: Boolean, reflect: true })
   public active = false;

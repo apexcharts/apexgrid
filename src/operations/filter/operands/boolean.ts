@@ -1,5 +1,5 @@
 import { BaseOperands } from './base.js';
-import { isDefined } from '../../../internal/utils.js';
+import { isDefined } from '../../../internal/is-defined.js';
 import type { FilterOperation } from '../types.js';
 
 export class BooleanOperands<T> extends BaseOperands<T, boolean> {

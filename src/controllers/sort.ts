@@ -1,7 +1,12 @@
 import { ReactiveController } from 'lit';
 import { PIPELINE } from '../internal/constants.js';
 import { asArray } from '../internal/utils.js';
-import type { ColumnConfig, ColumnSortConfig, GridHost, Keys } from '../internal/types.js';
+import type {
+  ColumnConfiguration,
+  ColumnSortConfiguration,
+  GridHost,
+  Keys,
+} from '../internal/types.js';
 import type { SortExpression, SortingDirection, SortState } from '../operations/sort/types.js';
 
 export class SortController<T extends object> implements ReactiveController {
@@ -12,18 +17,19 @@ export class SortController<T extends object> implements ReactiveController {
   public state: SortState<T> = new Map();
 
   get #isMultipleSort() {
-    return this.host.sortingConfig.multiple;
+    return this.host.sortConfiguration.multiple;
   }
 
   get #isTriStateSort() {
-    return this.host.sortingConfig.triState;
+    return this.host.sortConfiguration.triState;
   }
 
   #resolveSortOptions(
-    options: boolean | undefined | ColumnSortConfig<T>,
+    options: boolean | undefined | ColumnSortConfiguration<T>,
   ): Partial<SortExpression<T>> {
-    const guard = (obj: boolean | undefined | ColumnSortConfig<T>): obj is ColumnSortConfig<T> =>
-      obj !== undefined && typeof obj !== 'boolean';
+    const guard = (
+      obj: boolean | undefined | ColumnSortConfiguration<T>,
+    ): obj is ColumnSortConfiguration<T> => obj !== undefined && typeof obj !== 'boolean';
     return {
       caseSensitive: guard(options) ? options.caseSensitive : false,
       comparer: guard(options) ? options.comparer : undefined,
@@ -60,7 +66,7 @@ export class SortController<T extends object> implements ReactiveController {
     return this.host.emitEvent('sorted', { detail });
   }
 
-  public async sortFromHeaderClick(column: ColumnConfig<T>) {
+  public async sortFromHeaderClick(column: ColumnConfiguration<T>) {
     const expression = this.prepareExpression(column);
 
     if (!this.#emitSortingEvent(expression)) {
@@ -82,7 +88,7 @@ export class SortController<T extends object> implements ReactiveController {
     this.#emitSortedEvent(expression);
   }
 
-  public prepareExpression({ key, sort: options }: ColumnConfig<T>): SortExpression<T> {
+  public prepareExpression({ key, sort: options }: ColumnConfiguration<T>): SortExpression<T> {
     if (this.state.has(key)) {
       const expr = this.state.get(key)!;
 

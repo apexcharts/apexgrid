@@ -6,7 +6,7 @@ import FilterDataOperation from '../../src/operations/filter.js';
 import data from '../utils/test-data.js';
 
 import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types.js';
-import type { ColumnConfig, DataType, Keys } from '../../src/internal/types.js';
+import type { ColumnConfiguration, DataType, Keys } from '../../src/internal/types.js';
 
 class TDDFilterState<T extends object> {
   #result: T[] = [];
@@ -36,7 +36,7 @@ class TDDFilterState<T extends object> {
     operand: OperandKeys<T>,
     opts: Partial<FilterExpression<T>> = {},
   ) {
-    const config: ColumnConfig<T> = { key, type: typeof this.data[0][key] as DataType };
+    const config: ColumnConfiguration<T> = { key, type: typeof this.data[0][key] as DataType };
 
     this.#state.set({
       key,

@@ -8,7 +8,7 @@ import {
   SORT_ICON_ASCENDING,
   SORT_ICON_DESCENDING,
 } from '../internal/constants.js';
-import type { ColumnConfig, ApexHeaderContext } from '../internal/types.js';
+import type { ColumnConfiguration, ApexHeaderContext } from '../internal/types.js';
 import { StateController, gridStateContext } from '../controllers/state.js';
 import styles from '../styles/header-cell/header-cell-styles.js';
 
@@ -40,7 +40,7 @@ export default class ApexGridHeader<T extends object> extends LitElement {
   public state!: StateController<T>;
 
   @property({ attribute: false })
-  public column!: ColumnConfig<T>;
+  public column!: ColumnConfiguration<T>;
 
   #addResizeEventHandlers() {
     const config: AddEventListenerOptions = { once: true };
@@ -90,7 +90,11 @@ export default class ApexGridHeader<T extends object> extends LitElement {
   protected renderSortPart() {
     const state = this.state.sorting.state.get(this.column.key);
     const idx = Array.from(this.state.sorting.state.values()).indexOf(state!);
-    const attr = this.state.host.sortingConfig.multiple ? (idx > -1 ? idx + 1 : nothing) : nothing;
+    const attr = this.state.host.sortConfiguration.multiple
+      ? idx > -1
+        ? idx + 1
+        : nothing
+      : nothing;
     const icon = state
       ? state.direction === 'ascending'
         ? SORT_ICON_ASCENDING
