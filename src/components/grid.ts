@@ -215,7 +215,7 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   public sortExpressions: SortExpression<T>[] = [];
 
   /**
-   *
+   * Set filter state for the apex grid.
    */
   @property({ attribute: false })
   public filterExpressions: FilterExpression<T>[] = [];
@@ -231,10 +231,17 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     return Array.from(this._rows);
   }
 
-  public get dataView() {
+  /**
+   * Returns the state of the data source after sort/filter operations
+   * have been applied.
+   */
+  public get dataView(): ReadonlyArray<T> {
     return this.dataState;
   }
 
+  /**
+   * The total number of items in the {@link ApexGrid.dataView} collection.
+   */
   public get totalItems() {
     return this.dataState.length;
   }
