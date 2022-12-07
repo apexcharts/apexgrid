@@ -9,7 +9,7 @@ import { GRID_FILTER_ROW_TAG } from '../internal/tags.js';
 import { getFilterOperandsFor } from '../internal/utils.js';
 import { watch } from '../internal/watch.js';
 
-import styles from '../styles/filter-row/filter-row-styles.js';
+import { styles } from '../styles/filter-row/filter-row-styles.css.js';
 
 import type { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { FilterExpression, FilterOperation } from '../operations/filter/types.js';

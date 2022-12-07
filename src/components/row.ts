@@ -4,7 +4,7 @@ import { map } from 'lit/directives/map.js';
 import { GRID_ROW_TAG } from '../internal/tags.js';
 import type { ActiveNode, ColumnConfiguration } from '../internal/types.js';
 import ApexGridCell from './cell.js';
-import styles from '../styles/body-row/body-row-styles.js';
+import { styles } from '../styles/body-row/body-row-styles.css.js';
 
 @customElement(GRID_ROW_TAG)
 export default class ApexGridRow<T extends object> extends LitElement {

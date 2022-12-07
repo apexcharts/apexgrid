@@ -2,7 +2,7 @@ import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { GRID_CELL_TAG } from '../internal/tags.js';
 import type { ApexCellContext, ColumnConfiguration } from '../internal/types.js';
-import styles from '../styles/body-cell/body-cell-styles.js';
+import { styles } from '../styles/body-cell/body-cell-styles.css.js';
 import type ApexGridRow from './row.js';
 
 @customElement(GRID_CELL_TAG)

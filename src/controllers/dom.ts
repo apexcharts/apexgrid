@@ -18,6 +18,13 @@ export class GridDOMController<T extends object> implements ReactiveController {
 
   public hostConnected(): void {
     this.setGridColumnSizes();
+
+    // Wait until the virtualizer updates the DOM. Then measure the scroll width again on the next tick.
+    setTimeout(async () => {
+      const ref = (this.virtualBody as any)._virtualizer;
+      await ref._mutationPromise;
+      this.host.requestUpdate();
+    });
   }
 
   public hostUpdate(): void {
