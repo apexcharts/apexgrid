@@ -7,7 +7,7 @@ import { partNameMap } from '../internal/part-map.js';
 import { GRID_HEADER_ROW_TAG } from '../internal/tags.js';
 
 import ApexGridHeader from './header.js';
-import styles from '../styles/header-row/header-row.base-styles.js';
+import { styles } from '../styles/header-row/header-row.base-styles.css.js';
 
 import type { ColumnConfiguration } from '../internal/types.js';
 

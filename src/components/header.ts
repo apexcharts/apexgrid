@@ -10,7 +10,7 @@ import {
 } from '../internal/constants.js';
 import type { ColumnConfiguration, ApexHeaderContext } from '../internal/types.js';
 import { StateController, gridStateContext } from '../controllers/state.js';
-import styles from '../styles/header-cell/header-cell-styles.js';
+import { styles } from '../styles/header-cell/header-cell-styles.css.js';
 
 @customElement(GRID_HEADER_TAG)
 export default class ApexGridHeader<T extends object> extends LitElement {

@@ -23,10 +23,10 @@ import type { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { FilterExpression } from '../operations/filter/types.js';
 import type { SortExpression } from '../operations/sort/types.js';
 
-import { default as bootstrap } from '../styles/grid/themes/light/grid.bootstrap-styles.js';
-import { default as fluent } from '../styles/grid/themes/light/grid.fluent-styles.js';
-import { default as indigo } from '../styles/grid/themes/light/grid.indigo-styles.js';
-import { default as material } from '../styles/grid/themes/light/grid.material-styles.js';
+import { styles as bootstrap } from '../styles/grid/themes/light/grid.bootstrap-styles.css.js';
+import { styles as fluent } from '../styles/grid/themes/light/grid.fluent-styles.css.js';
+import { styles as indigo } from '../styles/grid/themes/light/grid.indigo-styles.css.js';
+import { styles as material } from '../styles/grid/themes/light/grid.material-styles.css.js';
 
 import ApexGridBody from './grid-body.js';
 import ApexGridHeaderRow from './header-row.js';
