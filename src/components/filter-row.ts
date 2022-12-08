@@ -73,7 +73,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   public dropdown!: IgcDropdownComponent;
 
   @property({ attribute: false })
-  public column: ColumnConfiguration<T> = DEFAULT_COLUMN_CONFIG;
+  public column: ColumnConfiguration<T> = DEFAULT_COLUMN_CONFIG as ColumnConfiguration<T>;
 
   @property({ attribute: false })
   public expression!: FilterExpression<T>;
@@ -152,7 +152,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     this.style.display = this.active ? 'flex' : '';
 
     if (!this.active) {
-      this.column = DEFAULT_COLUMN_CONFIG;
+      this.column = DEFAULT_COLUMN_CONFIG as ColumnConfiguration<T>;
     }
 
     this.state.host.requestUpdate();

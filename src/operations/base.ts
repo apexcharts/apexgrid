@@ -1,14 +1,12 @@
-import type { Keys, Values } from '../internal/types.js';
+import type { Keys } from '../internal/types.js';
 
-export default abstract class DataOperation<T> {
-  protected resolveValue(record: T, key: Keys<T>) {
+export default abstract class DataOperation<T, K extends Keys<T> = Keys<T>> {
+  protected resolveValue(record: T, key: K) {
     return record[key];
   }
 
-  protected resolveCase(value: Values<T>, caseSensitive?: boolean) {
-    return typeof value === 'string' && !caseSensitive
-      ? (value.toLowerCase() as unknown as Values<T>)
-      : value;
+  protected resolveCase<U = T[K]>(value: U, caseSensitive?: boolean) {
+    return typeof value === 'string' && !caseSensitive ? (value.toLowerCase() as U) : value;
   }
 
   public abstract apply(...args: unknown[]): T[];

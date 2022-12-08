@@ -4,7 +4,7 @@ import type ApexGridCell from '../components/cell.js';
 import type ApexGridRow from '../components/row.js';
 import type ApexGridHeader from '../components/header.js';
 import type { BaseOperands } from '../operations/filter/operands/base.js';
-import type { SortState } from '../operations/sort/types.js';
+import type { SortComparer, SortState } from '../operations/sort/types.js';
 import type { FilterState } from '../operations/filter/state.js';
 
 export type NavigationState = 'previous' | 'current';
@@ -19,7 +19,11 @@ export type Keys<T> = keyof T;
  */
 export type Values<T> = T[keyof T];
 
-export type PropertyType<T extends object, K extends keyof T> = T[K];
+type BasePropertyType<T, K extends Keys<T> = Keys<T>> = T[K];
+
+export type PropertyType<T, K extends Keys<T> = Keys<T>> = K extends Keys<T>
+  ? BasePropertyType<T, K>
+  : never;
 
 /** The data for the current column. */
 export type DataType = 'number' | 'string' | 'boolean';
@@ -41,7 +45,7 @@ export interface GridSortConfiguration {
 /**
  * Extended sort configuration for a column.
  */
-export interface ColumnSortConfiguration<T extends object> {
+export interface BaseColumnSortConfiguration<T, K extends Keys<T> = Keys<T>> {
   /**
    * Whether the sort operations will be case sensitive.
    */
@@ -49,8 +53,15 @@ export interface ColumnSortConfiguration<T extends object> {
   /**
    * Custom comparer function for sort operations for this column.
    */
-  comparer?: (a: Values<T>, b: Values<T>) => number;
+  comparer?: SortComparer<T, K>;
 }
+
+/**
+ * See {@link BaseColumnSortConfiguration} for the full documentation.
+ */
+export type ColumnSortConfiguration<T, K extends Keys<T> = Keys<T>> = K extends Keys<T>
+  ? BaseColumnSortConfiguration<T, K>
+  : never;
 
 /**
  * Extended filter configuration for a column.
@@ -68,11 +79,11 @@ export interface ColumnFilterConfiguration<T> {
 }
 
 /** Configuration object for grid columns. */
-export interface ColumnConfiguration<T extends object> {
+export interface BaseColumnConfiguration<T extends object, K extends Keys<T> = Keys<T>> {
   /**
    * The field for from the data the this column will reference.
    */
-  key: Keys<T>;
+  key: K;
   /**
    * The type of data this column will reference.
    *
@@ -110,7 +121,7 @@ export interface ColumnConfiguration<T extends object> {
   /**
    * Whether the column can be sorted or not.
    */
-  sort?: ColumnSortConfiguration<T> | boolean;
+  sort?: ColumnSortConfiguration<T, K> | boolean;
   /**
    * Whether filter operation can be applied on the column or not.
    */
@@ -122,8 +133,15 @@ export interface ColumnConfiguration<T extends object> {
   /**
    * Cell template callback.
    */
-  cellTemplate?: (params: ApexCellContext<T>) => TemplateResult;
+  cellTemplate?: (params: ApexCellContext<T, K>) => TemplateResult;
 }
+
+/**
+ * See {@link BaseColumnConfiguration} for the full documentation.
+ */
+export type ColumnConfiguration<T extends object, K extends Keys<T> = Keys<T>> = K extends Keys<T>
+  ? BaseColumnConfiguration<T, K>
+  : never;
 
 export interface ActiveNode<T> {
   column: Keys<T>;
@@ -147,7 +165,7 @@ export interface ApexHeaderContext<T extends object> {
 /**
  * Context object for the row cell template callback.
  */
-export interface ApexCellContext<T extends object> {
+export interface BaseApexCellContext<T extends object, K extends Keys<T> = Keys<T>> {
   /**
    * The cell element parent of the template.
    */
@@ -159,12 +177,19 @@ export interface ApexCellContext<T extends object> {
   /**
    * The current configuration for the column.
    */
-  column: ColumnConfiguration<T>;
+  column: ColumnConfiguration<T, K>;
   /**
    * The value from the data source for this cell.
    */
-  value: Values<T>;
+  value: PropertyType<T, K>;
 }
+
+/**
+ * See {@link BaseApexCellContext} for the full documentation.
+ */
+export type ApexCellContext<T extends object, K extends Keys<T> = Keys<T>> = K extends Keys<T>
+  ? BaseApexCellContext<T, K>
+  : never;
 
 /**
  * Remote sort callback function.

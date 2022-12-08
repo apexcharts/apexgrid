@@ -1,5 +1,5 @@
 import { assert, elementUpdated, html } from '@open-wc/testing';
-import type { Keys } from '../src/internal/types.js';
+import type { ApexCellContext, Keys } from '../src/internal/types.js';
 import GridTestFixture from './utils/grid-fixture.js';
 import data, { TestData } from './utils/test-data.js';
 
@@ -67,7 +67,8 @@ suite('Column configuration', () => {
 
     test('Cell template', async () => {
       await TDD.updateColumn('name', {
-        cellTemplate: props => html`<input value=${props.value} />`,
+        cellTemplate: (props: ApexCellContext<TestData, 'name'>) =>
+          html`<input value=${props.value} />`,
       });
       assert.shadowDom.equal(
         TDD.rows.first.cells.get('name').element,

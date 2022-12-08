@@ -9,7 +9,15 @@ export { StringOperands } from './operations/filter/operands/string.js';
 export { FilterState } from './operations/filter/state.js';
 export { FilterExpressionTree } from './operations/filter/tree.js';
 
-export type { SortExpression, SortingDirection, SortState } from './operations/sort/types.js';
+export type {
+  BaseSortComparer,
+  BaseSortExpression,
+  SortExpression,
+  SortingDirection,
+  SortState,
+  SortComparer,
+} from './operations/sort/types.js';
+
 export type {
   FilterCriteria,
   FilterExpression,
@@ -20,6 +28,9 @@ export type {
 export type {
   ApexCellContext,
   ApexHeaderContext,
+  BaseApexCellContext,
+  BaseColumnConfiguration,
+  BaseColumnSortConfiguration,
   ColumnConfiguration,
   ColumnFilterConfiguration,
   GridSortConfiguration,

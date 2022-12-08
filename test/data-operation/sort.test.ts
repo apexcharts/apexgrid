@@ -31,9 +31,11 @@ class TDDSortState<T extends object> {
     this.#result = this.#operation.apply(structuredClone(this.data), this.#state);
   }
 
-  public setState(key: Keys<T>, config?: Partial<SortExpression<T>>) {
-    const expr: SortExpression<T> = { key, direction: 'ascending', caseSensitive: false };
-    this.#state.set(key, Object.assign(expr, config));
+  public setState(state: Partial<SortExpression<T>>) {
+    this.#state.set(state.key!, {
+      ...{ direction: 'ascending', caseSensitive: false },
+      ...state,
+    } as SortExpression<T>);
     return this;
   }
 
@@ -52,48 +54,48 @@ suite('Sort operations', () => {
     teardown(() => TDD.clearState());
 
     test('type: number', () => {
-      TDD.setState('id', { direction: 'descending' }).run();
+      TDD.setState({ key: 'id', direction: 'descending' }).run();
 
       assert.strictEqual(TDD.first.id, 8);
       assert.strictEqual(TDD.last.id, 1);
 
-      TDD.setState('id').run();
+      TDD.setState({ key: 'id' }).run();
 
       assert.strictEqual(TDD.first.id, 1);
       assert.strictEqual(TDD.last.id, 8);
     });
 
     test('type: string [case insensitive]', () => {
-      TDD.setState('name', { direction: 'descending' }).run();
+      TDD.setState({ key: 'name', direction: 'descending' }).run();
 
       assert.strictEqual(TDD.first.name, 'D');
       assert.strictEqual(TDD.last.name, 'a');
 
-      TDD.setState('name').run();
+      TDD.setState({ key: 'name' }).run();
 
       assert.strictEqual(TDD.first.name, 'A');
       assert.strictEqual(TDD.last.name, 'd');
     });
 
     test('type: string [case sensitive]', () => {
-      TDD.setState('name', { direction: 'descending', caseSensitive: true }).run();
+      TDD.setState({ key: 'name', direction: 'descending', caseSensitive: true }).run();
 
       assert.strictEqual(TDD.first.name, 'D');
       assert.strictEqual(TDD.last.name, 'a');
 
-      TDD.setState('name', { caseSensitive: true }).run();
+      TDD.setState({ key: 'name', caseSensitive: true }).run();
 
       assert.strictEqual(TDD.first.name, 'a');
       assert.strictEqual(TDD.last.name, 'D');
     });
 
     test('type: boolean', () => {
-      TDD.setState('active', { direction: 'descending' }).run();
+      TDD.setState({ key: 'active', direction: 'descending' }).run();
 
       assert.strictEqual(TDD.first.active, true);
       assert.strictEqual(TDD.last.active, false);
 
-      TDD.setState('active').run();
+      TDD.setState({ key: 'active' }).run();
 
       assert.strictEqual(TDD.first.active, false);
       assert.strictEqual(TDD.last.active, true);
@@ -111,7 +113,7 @@ suite('Sort operations', () => {
       //   { id: 6, name: 'b', active: false },
       //   ....
       // ]
-      TDD.setState('active').setState('id').run();
+      TDD.setState({ key: 'active' }).setState({ key: 'id' }).run();
       assert.strictEqual(TDD.first.active, false);
       assert.strictEqual(TDD.first.id, 1);
 
@@ -122,7 +124,7 @@ suite('Sort operations', () => {
       //   { id: 1, name: 'A', active: false },
       //   ...
       // ]
-      TDD.setState('id', { direction: 'descending' }).run();
+      TDD.setState({ key: 'id', direction: 'descending' }).run();
       assert.strictEqual(TDD.first.active, false);
       assert.strictEqual(TDD.first.id, 6);
 
@@ -133,7 +135,7 @@ suite('Sort operations', () => {
       //   { id: 3, name: 'C', active: true },
       //   ...
       // ]
-      TDD.setState('active', { direction: 'descending' }).run();
+      TDD.setState({ key: 'active', direction: 'descending' }).run();
       assert.strictEqual(TDD.first.active, true);
       assert.strictEqual(TDD.first.id, 8);
 
@@ -144,7 +146,7 @@ suite('Sort operations', () => {
       //   { id: 8, name: 'd', active: true },
       //   ...
       // ]
-      TDD.setState('id').run();
+      TDD.setState({ key: 'id' }).run();
       assert.strictEqual(TDD.first.active, true);
       assert.strictEqual(TDD.first.id, 3);
     });
@@ -164,7 +166,11 @@ suite('Sort operations', () => {
       //   { id: 3, name: 'C', active: true, importance: 'medium' },
       //   ...
       // ]
-      TDD.setState('importance', { comparer: importanceComparer, direction: 'descending' }).run();
+      TDD.setState({
+        key: 'importance',
+        comparer: importanceComparer,
+        direction: 'descending',
+      }).run();
       assert.strictEqual(TDD.first.importance, 'high');
       assert.strictEqual(TDD.last.importance, 'low');
 
@@ -175,7 +181,7 @@ suite('Sort operations', () => {
       //   { id: 1, name: 'A', active: false, importance: 'medium' },
       //   ...
       // ]
-      TDD.setState('importance', { comparer: importanceComparer }).run();
+      TDD.setState({ key: 'importance', comparer: importanceComparer }).run();
       assert.strictEqual(TDD.first.importance, 'low');
       assert.strictEqual(TDD.last.importance, 'high');
     });

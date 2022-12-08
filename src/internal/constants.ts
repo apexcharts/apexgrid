@@ -9,9 +9,7 @@ export const SORT_ICON_DESCENDING = 'arrow-downward' as const;
 export const MIN_COL_RESIZE_WIDTH = 80;
 
 export const SENTINEL_NODE: Readonly<ActiveNode<any>> = Object.freeze({ column: '', row: -1 });
-export const DEFAULT_COLUMN_CONFIG: ColumnConfiguration<any> = Object.freeze<
-  ColumnConfiguration<any>
->({
+export const DEFAULT_COLUMN_CONFIG = Object.freeze<ColumnConfiguration<any>>({
   key: columnKey,
   type: 'string',
   resizable: false,

@@ -24,26 +24,30 @@ export class SortController<T extends object> implements ReactiveController {
     return this.host.sortConfiguration.triState;
   }
 
-  #resolveSortOptions(
-    options: boolean | undefined | ColumnSortConfiguration<T>,
-  ): Partial<SortExpression<T>> {
-    const guard = (
-      obj: boolean | undefined | ColumnSortConfiguration<T>,
-    ): obj is ColumnSortConfiguration<T> => obj !== undefined && typeof obj !== 'boolean';
-    return {
-      caseSensitive: guard(options) ? options.caseSensitive : false,
-      comparer: guard(options) ? options.comparer : undefined,
+  #resolveSortOptions(options?: boolean | ColumnSortConfiguration<T>) {
+    const expr: Pick<SortExpression<T>, 'caseSensitive' | 'comparer'> = {
+      caseSensitive: false,
+      comparer: undefined,
     };
+
+    if (!options || typeof options === 'boolean') {
+      return expr as Partial<SortExpression<T>>;
+    }
+
+    return Object.assign(expr, {
+      caseSensitive: options.caseSensitive,
+      comparer: options.comparer,
+    }) as Partial<SortExpression<T>>;
   }
 
-  #createDefaultExpression(key: Keys<T>): SortExpression<T> {
+  #createDefaultExpression(key: Keys<T>) {
     const options = this.host.getColumn(key)?.sort;
 
     return {
       key,
       direction: 'ascending',
       ...this.#resolveSortOptions(options),
-    };
+    } as SortExpression<T>;
   }
 
   #orderBy(dir?: SortingDirection): SortingDirection {
