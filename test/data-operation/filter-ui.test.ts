@@ -55,7 +55,7 @@ class FilterFixture<T extends object> extends GridTestFixture<T> {
     await elementUpdated(this.grid);
   }
 
-  public async changeFilterCondition(name: OperandKeys<T>) {
+  public async changeFilterCondition(name: OperandKeys) {
     this.filterRow.openDropdown();
     await elementUpdated(this.grid);
     this.filterRow.selectDropdownCondition(name);
@@ -350,9 +350,9 @@ suite('Grid UI filter', () => {
     test('Modify event arguments mid-flight', async () => {
       const spy = sinon.spy(TDD.grid, 'emitEvent');
 
-      const expression: FilterExpression<TestData, number> = {
+      const expression: FilterExpression<TestData> = {
         key: 'id',
-        condition: new NumberOperands<TestData>().greaterThan,
+        condition: new NumberOperands().greaterThan,
         searchTerm: 7,
       };
 
@@ -392,7 +392,7 @@ suite('Grid UI filter', () => {
     });
 
     test('Use of an operand param', async () => {
-      const operands = new StringOperands<TestData>();
+      const operands = new StringOperands();
 
       await TDD.filter({ key: 'name', condition: operands.contains, searchTerm: 'b' });
 
@@ -408,7 +408,7 @@ suite('Grid UI filter', () => {
     test('Single expression (multiple columns)', async () => {
       await TDD.updateColumn('id', { type: 'number' });
       await TDD.filter([
-        { key: 'id', condition: 'greaterThan', searchTerm: '4' },
+        { key: 'id', condition: 'greaterThan', searchTerm: 4 },
         { key: 'importance', condition: 'startsWith', searchTerm: 'medium' },
       ]);
 
@@ -427,7 +427,7 @@ suite('Grid UI filter', () => {
 
     test('Multiple expressions (multiple columns)', async () => {
       await TDD.updateColumn('id', { type: 'number' });
-      const operands = new StringOperands<TestData>();
+      const operands = new StringOperands();
 
       await TDD.filter([
         { key: 'id', condition: 'greaterThan', searchTerm: 1 },

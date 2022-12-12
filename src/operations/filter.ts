@@ -4,7 +4,7 @@ import type { FilterExpression, FilterOperation } from './filter/types.js';
 
 export default class FilterDataOperation<T extends object> extends DataOperation<T> {
   protected resolveFilter(record: T, expr: FilterExpression<T>) {
-    const condition = expr.condition as FilterOperation<T, any>;
+    const condition = expr.condition as FilterOperation<T>;
     return condition.logic(
       this.resolveValue(record, expr.key),
       expr.searchTerm,

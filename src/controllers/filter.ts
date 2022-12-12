@@ -59,11 +59,13 @@ export class FilterController<T extends object> implements ReactiveController {
   public getDefaultExpression(column: ColumnConfiguration<T>): FilterExpression<T> {
     const caseSensitive =
       typeof column.filter === 'boolean' ? false : Boolean(column.filter?.caseSensitive);
+
+    // TODO: Type it
     return {
       key: column.key,
       condition: getFilterOperandsFor(column).default,
       caseSensitive,
-    };
+    } as unknown as FilterExpression<T>;
   }
 
   public removeExpression(expression: FilterExpression<T>) {

@@ -47,6 +47,6 @@ export class FilterState<T> {
       return;
     }
 
-    this.state.set(expression.key, new FilterExpressionTree(expression.key).add(expression));
+    this.state.set(expression.key, new FilterExpressionTree<T>(expression.key).add(expression));
   }
 }

@@ -14,29 +14,29 @@ export type FilterOperationLogic<T> = (
   caseSensitive?: boolean,
 ) => boolean;
 
-export interface FilterOperation<_, Type> {
+export interface FilterOperation<T> {
   name: string;
   unary: boolean;
-  logic: FilterOperationLogic<Type>;
+  logic: FilterOperationLogic<T>;
 }
 
 /**
  * Represents a filter operation for a given column.
  */
-export interface FilterExpression<T, Type = any> {
+export interface BaseFilterExpression<T, K extends Keys<T> = Keys<T>> {
   /**
    * The target column.
    */
-  key: Keys<T>;
+  key: K;
   /**
    *
    */
-  condition: FilterOperation<T, Type> | OperandKeys<T>;
+  condition: FilterOperation<T[K]> | OperandKeys;
 
   /**
    *
    */
-  searchTerm?: Type;
+  searchTerm?: T[K];
   /**
    *
    */
@@ -50,7 +50,8 @@ export interface FilterExpression<T, Type = any> {
   caseSensitive?: boolean;
 }
 
-export type OperandKeys<T> =
-  | Keys<NumberOperands<T>>
-  | Keys<StringOperands<T>>
-  | Keys<BooleanOperands<T>>;
+export type FilterExpression<T, K extends Keys<T> = Keys<T>> = K extends Keys<T>
+  ? BaseFilterExpression<T, K>
+  : never;
+
+export type OperandKeys = Keys<NumberOperands> | Keys<StringOperands> | Keys<BooleanOperands>;

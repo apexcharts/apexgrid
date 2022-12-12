@@ -9,22 +9,15 @@ export class GridDOMController<T extends object> implements ReactiveController {
     this.host.addController(this);
   }
 
-  public get virtualBody() {
+  public get container() {
     // @ts-expect-error: protected member access
-    return this.host.bodyElement;
+    return this.host.scrollContainer;
   }
 
   public columnSizes: StyleInfo = {};
 
-  public hostConnected(): void {
+  public async hostConnected() {
     this.setGridColumnSizes();
-
-    // Wait until the virtualizer updates the DOM. Then measure the scroll width again on the next tick.
-    setTimeout(async () => {
-      const ref = (this.virtualBody as any)._virtualizer;
-      await ref._mutationPromise;
-      this.host.requestUpdate();
-    });
   }
 
   public hostUpdate(): void {
@@ -33,7 +26,7 @@ export class GridDOMController<T extends object> implements ReactiveController {
   }
 
   public setScrollOffset() {
-    const size = this.virtualBody ? this.virtualBody.offsetWidth - this.virtualBody.clientWidth : 0;
+    const size = this.container ? this.container.offsetWidth - this.container.clientWidth : 0;
     this.host.style.setProperty('--scrollbar-offset', `${size}px`);
   }
 

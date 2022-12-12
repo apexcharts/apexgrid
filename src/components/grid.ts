@@ -1,5 +1,10 @@
 import { html, nothing, PropertyDeclaration, TemplateResult } from 'lit';
 import { ContextProvider } from '@lit-labs/context';
+import {
+  virtualize,
+  VirtualizerHostElement,
+  virtualizerRef,
+} from '@lit-labs/virtualizer/virtualize.js';
 import { customElement, eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
@@ -18,6 +23,7 @@ import type {
   GridRemoteConfig,
   GridSortConfiguration,
   Keys,
+  Virtual,
 } from '../internal/types.js';
 import type { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { FilterExpression } from '../operations/filter/types.js';
@@ -28,7 +34,6 @@ import { styles as fluent } from '../styles/grid/themes/light/grid.fluent-styles
 import { styles as indigo } from '../styles/grid/themes/light/grid.indigo-styles.css.js';
 import { styles as material } from '../styles/grid/themes/light/grid.material-styles.css.js';
 
-import ApexGridBody from './grid-body.js';
 import ApexGridHeaderRow from './header-row.js';
 import ApexGridRow from './row.js';
 import ApexGridCell from './cell.js';
@@ -155,8 +160,12 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
 
   protected stateProvider = new ContextProvider(this, gridStateContext, this.stateController);
 
-  @query(ApexGridBody.is)
-  protected bodyElement!: ApexGridBody;
+  @query('[part="virtualized"]')
+  protected scrollContainer!: VirtualizerHostElement;
+
+  protected get virtualizer(): Virtual {
+    return this.scrollContainer[virtualizerRef] as Virtual;
+  }
 
   @query(ApexGridHeaderRow.is)
   protected headerRow!: ApexGridHeaderRow<T>;
@@ -368,9 +377,8 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   }
 
   protected bodyKeydownHandler(event: KeyboardEvent) {
-    const target = event.target as HTMLElement & ApexGridBody;
-    if (this.bodyElement.isSameNode(target)) {
-      this.stateController.navigation.navigate(event, this.bodyElement);
+    if (this.scrollContainer.isSameNode(event.target as HTMLElement)) {
+      this.stateController.navigation.navigate(event, this.virtualizer);
     }
   }
 
@@ -382,12 +390,18 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   }
 
   protected renderBody() {
-    return html`<apex-grid-body
-      @keydown=${this.bodyKeydownHandler}
+    return html`<div
+      part="virtualized"
+      tabindex="0"
       @click=${this.bodyClickHandler}
-      .items=${this.dataState}
-      .renderItem=${this.rowRenderer}
-    ></apex-grid-body>`;
+      @keydown=${this.bodyKeydownHandler}
+    >
+      ${virtualize({
+        items: this.dataState,
+        scroller: true,
+        renderItem: this.rowRenderer,
+      })}
+    </div>`;
   }
 
   protected renderFilterRow() {

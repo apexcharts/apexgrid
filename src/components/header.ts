@@ -1,6 +1,6 @@
 import { html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { contextProvided } from '@lit-labs/context';
+import { consume } from '@lit-labs/context';
 import { partNameMap } from '../internal/part-map.js';
 import { GRID_HEADER_TAG } from '../internal/tags.js';
 import {
@@ -35,7 +35,7 @@ export default class ApexGridHeader<T extends object> extends LitElement {
     return this.state.resizing;
   }
 
-  @contextProvided({ context: gridStateContext, subscribe: true })
+  @consume({ context: gridStateContext, subscribe: true })
   @property({ attribute: false })
   public state!: StateController<T>;
 

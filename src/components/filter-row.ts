@@ -1,5 +1,5 @@
 import { html, LitElement, nothing } from 'lit';
-import { contextProvided } from '@lit-labs/context';
+import { consume } from '@lit-labs/context';
 import { customElement, property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
@@ -44,7 +44,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
   public static override styles = styles;
 
-  @contextProvided({ context: gridStateContext, subscribe: true })
+  @consume({ context: gridStateContext, subscribe: true })
   @property({ attribute: false })
   public state!: StateController<T>;
 
@@ -57,7 +57,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   }
 
   protected get condition() {
-    return this.expression.condition as FilterOperation<T, any>;
+    return this.expression.condition as FilterOperation<T>;
   }
 
   @property({ attribute: false })
@@ -205,7 +205,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   }
 
   protected renderExpressionChip(props: ExpressionChipProps<T>) {
-    const { name, unary } = props.expression.condition as FilterOperation<T, any>;
+    const { name, unary } = props.expression.condition as FilterOperation<T>;
     const { searchTerm: term } = props.expression;
 
     const prefix = html`<span slot="select"></span>${prefixedIcon(name)}`;

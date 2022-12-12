@@ -1,4 +1,5 @@
 import { ReactiveControllerHost, TemplateResult } from 'lit';
+import { VirtualizerHostElement, virtualizerRef } from '@lit-labs/virtualizer/virtualize.js';
 import type ApexGrid from '../components/grid.js';
 import type ApexGridCell from '../components/cell.js';
 import type ApexGridRow from '../components/row.js';
@@ -9,6 +10,7 @@ import type { FilterState } from '../operations/filter/state.js';
 
 export type NavigationState = 'previous' | 'current';
 export type GridHost<T extends object> = ReactiveControllerHost & ApexGrid<T>;
+export type Virtual = NonNullable<VirtualizerHostElement[typeof virtualizerRef]>;
 
 /**
  * Helper type for resolving keys of type T.

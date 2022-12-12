@@ -37,10 +37,10 @@ export function getFilterOperandsFor<T extends object>(column: ColumnConfigurati
   // Check for custom class in the filter config
   switch (column.type) {
     case 'boolean':
-      return new BooleanOperands<T>();
+      return new BooleanOperands();
     case 'number':
-      return new NumberOperands<T>();
+      return new NumberOperands();
     default:
-      return new StringOperands<T>();
+      return new StringOperands();
   }
 }

@@ -1,5 +1,5 @@
 import { html, LitElement, nothing, PropertyValueMap } from 'lit';
-import { contextProvided } from '@lit-labs/context';
+import { consume } from '@lit-labs/context';
 import { customElement, property, queryAll } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { gridStateContext, StateController } from '../controllers/state.js';
@@ -21,7 +21,7 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
   @queryAll(ApexGridHeader.is)
   protected _headers!: NodeListOf<ApexGridHeader<T>>;
 
-  @contextProvided({ context: gridStateContext, subscribe: true })
+  @consume({ context: gridStateContext, subscribe: true })
   @property({ attribute: false })
   public state!: StateController<T>;
 
