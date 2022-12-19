@@ -6,6 +6,8 @@ export default class FilterDataOperation<T extends object> extends DataOperation
   protected resolveFilter(record: T, expr: FilterExpression<T>) {
     const condition = expr.condition as FilterOperation<T>;
     return condition.logic(
+      // XXX: Types
+      // @ts-expect-error - resolve
       this.resolveValue(record, expr.key),
       expr.searchTerm,
       expr.caseSensitive,

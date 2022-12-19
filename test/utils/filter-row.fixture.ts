@@ -73,7 +73,7 @@ export default class FilterRowFixture<T extends object> {
     this.dropdownTarget.click();
   }
 
-  public selectDropdownCondition(name: OperandKeys) {
+  public selectDropdownCondition(name: OperandKeys<T[keyof T]>) {
     this.dropdownItems.find(item => item.value === name)?.click();
   }
 

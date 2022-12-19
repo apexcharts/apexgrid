@@ -20,6 +20,10 @@ export interface FilterOperation<T> {
   logic: FilterOperationLogic<T>;
 }
 
+export type FilterOperands<DataType, Operands extends string> = {
+  [key in Operands]: FilterOperation<DataType>;
+};
+
 /**
  * Represents a filter operation for a given column.
  */
@@ -31,7 +35,7 @@ export interface BaseFilterExpression<T, K extends Keys<T> = Keys<T>> {
   /**
    *
    */
-  condition: FilterOperation<T[K]> | OperandKeys;
+  condition: FilterOperation<T[K]> | OperandKeys<T[K]>;
 
   /**
    *
@@ -54,4 +58,10 @@ export type FilterExpression<T, K extends Keys<T> = Keys<T>> = K extends Keys<T>
   ? BaseFilterExpression<T, K>
   : never;
 
-export type OperandKeys = Keys<NumberOperands> | Keys<StringOperands> | Keys<BooleanOperands>;
+export type OperandKeys<Type> = Type extends number
+  ? keyof typeof NumberOperands
+  : Type extends string
+  ? keyof typeof StringOperands
+  : Type extends boolean
+  ? keyof typeof BooleanOperands
+  : Type;

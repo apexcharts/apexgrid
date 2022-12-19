@@ -12,7 +12,7 @@ import { watch } from '../internal/watch.js';
 import { styles } from '../styles/filter-row/filter-row-styles.css.js';
 
 import type { FilterExpressionTree } from '../operations/filter/tree.js';
-import type { FilterExpression, FilterOperation } from '../operations/filter/types.js';
+import type { FilterExpression, FilterOperation, OperandKeys } from '../operations/filter/types.js';
 import type { ColumnConfiguration } from '../internal/types.js';
 import {
   IgcInputComponent,
@@ -95,8 +95,12 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
   #handleConditionChanged(event: CustomEvent<IgcDropdownItemComponent>) {
     event.stopPropagation();
+    const key = event.detail.value as OperandKeys<T[typeof this.column.key]>;
 
-    this.expression.condition = getFilterOperandsFor(this.column).get(event.detail.value as any);
+    // XXX: Types
+    this.expression.condition = (getFilterOperandsFor(this.column) as any)[key] as FilterOperation<
+      T[keyof T]
+    >;
 
     if (this.input.value || this.expression.condition.unary) {
       this.filterController.filterWithEvent(this.expression);
@@ -112,7 +116,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     const shouldUpdate = this.isNumeric ? !isNaN(value as number) : !!value;
 
     if (shouldUpdate) {
-      this.expression.searchTerm = value;
+      this.expression.searchTerm = value as any;
       this.filterController.filterWithEvent(this.expression);
     } else {
       this.#removeExpression(this.expression);
@@ -264,13 +268,16 @@ export default class ApexFilterRow<T extends object> extends LitElement {
       flip
       same-width
       @igcChange=${this.#handleConditionChanged}
-      >${Array.from(getFilterOperandsFor(this.column)).map(
-        each => html`<igc-dropdown-item
-          .value=${each}
-          ?selected=${this.condition?.name === each}
-        >
-          ${prefixedIcon(each)}${each}
-        </igc-dropdown-item>`,
+    >
+      ${Object.keys(getFilterOperandsFor(this.column)).map(
+        key => html`
+          <igc-dropdown-item
+            .value=${key}
+            ?selected=${this.condition.name === key}
+          >
+            ${prefixedIcon(key)}${key}
+          </igc-dropdown-item>
+        `,
       )}
     </igc-dropdown>`;
   }

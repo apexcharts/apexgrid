@@ -1,28 +1,24 @@
 import { ReactiveControllerHost, TemplateResult } from 'lit';
-import { VirtualizerHostElement, virtualizerRef } from '@lit-labs/virtualizer/virtualize.js';
 import type ApexGrid from '../components/grid.js';
 import type ApexGridCell from '../components/cell.js';
 import type ApexGridRow from '../components/row.js';
 import type ApexGridHeader from '../components/header.js';
-import type { BaseOperands } from '../operations/filter/operands/base.js';
 import type { SortComparer, SortState } from '../operations/sort/types.js';
 import type { FilterState } from '../operations/filter/state.js';
 
 export type NavigationState = 'previous' | 'current';
 export type GridHost<T extends object> = ReactiveControllerHost & ApexGrid<T>;
-export type Virtual = NonNullable<VirtualizerHostElement[typeof virtualizerRef]>;
 
 /**
  * Helper type for resolving keys of type T.
  */
 export type Keys<T> = keyof T;
-/**
- * Helper type for resolving types of type T.
- */
-export type Values<T> = T[keyof T];
 
 type BasePropertyType<T, K extends Keys<T> = Keys<T>> = T[K];
 
+/**
+ * Helper type for resolving types of type T.
+ */
 export type PropertyType<T, K extends Keys<T> = Keys<T>> = K extends Keys<T>
   ? BasePropertyType<T, K>
   : never;
@@ -68,16 +64,11 @@ export type ColumnSortConfiguration<T, K extends Keys<T> = Keys<T>> = K extends 
 /**
  * Extended filter configuration for a column.
  */
-export interface ColumnFilterConfiguration<T> {
+export interface ColumnFilterConfiguration {
   /**
    * Whether the filter operations will be case sensitive.
    */
   caseSensitive?: boolean;
-  /**
-   *
-   *
-   */
-  strategy?: BaseOperands<T>;
 }
 
 /** Configuration object for grid columns. */
@@ -127,7 +118,7 @@ export interface BaseColumnConfiguration<T extends object, K extends Keys<T> = K
   /**
    * Whether filter operation can be applied on the column or not.
    */
-  filter?: ColumnFilterConfiguration<T> | boolean;
+  filter?: ColumnFilterConfiguration | boolean;
   /**
    * Header template callback.
    */

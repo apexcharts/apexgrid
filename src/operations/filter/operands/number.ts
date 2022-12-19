@@ -1,57 +1,61 @@
-import { BaseOperands } from './base.js';
 import { isDefined } from '../../../internal/is-defined.js';
-import type { FilterOperation } from '../types.js';
+import type { FilterOperands } from '../types.js';
 
-export class NumberOperands extends BaseOperands<number> {
-  public override get default() {
-    return this.equals;
-  }
+export type NumberKeys =
+  | 'default'
+  | 'equals'
+  | 'doesNotEqual'
+  | 'greaterThan'
+  | 'lessThan'
+  | 'greaterThanOrEqual'
+  | 'lessThanOrEqual'
+  | 'empty'
+  | 'notEmpty';
 
-  public equals: FilterOperation<number> = {
+export const NumberOperands = Object.freeze<FilterOperands<number, NumberKeys>>({
+  default: {
     name: 'equals',
     unary: false,
-    logic: (target, searchTerm) => target === searchTerm,
-  };
-
-  public doesNotEqual: FilterOperation<number> = {
+    logic: (target, term) => target === term,
+  },
+  equals: {
+    name: 'equals',
+    unary: false,
+    logic: (target, term) => target === term,
+  },
+  doesNotEqual: {
     name: 'doesNotEqual',
     unary: false,
-    logic: (target, searchTerm) => target !== searchTerm,
-  };
-
-  public greaterThan: FilterOperation<number> = {
+    logic: (target, term) => target !== term,
+  },
+  greaterThan: {
     name: 'greaterThan',
     unary: false,
-    logic: (target, searchTerm) => target > searchTerm,
-  };
-
-  public lessThan: FilterOperation<number> = {
+    logic: (target, term) => target > term,
+  },
+  lessThan: {
     name: 'lessThan',
     unary: false,
-    logic: (target, searchTerm) => target < searchTerm,
-  };
-
-  public greaterThanOrEqual: FilterOperation<number> = {
+    logic: (target, term) => target < term,
+  },
+  greaterThanOrEqual: {
     name: 'greaterThanOrEqual',
     unary: false,
-    logic: (target, searchTerm) => target >= searchTerm,
-  };
-
-  public lessThanOrEqual: FilterOperation<number> = {
+    logic: (target, term) => target >= term,
+  },
+  lessThanOrEqual: {
     name: 'lessThanOrEqual',
     unary: false,
-    logic: (target, searchTerm) => target <= searchTerm,
-  };
-
-  public empty: FilterOperation<number> = {
+    logic: (target, term) => target <= term,
+  },
+  empty: {
     name: 'empty',
     unary: true,
     logic: target => !isDefined(target) || isNaN(target),
-  };
-
-  public notEmpty: FilterOperation<number> = {
+  },
+  notEmpty: {
     name: 'notEmpty',
     unary: true,
     logic: target => isDefined(target) && !isNaN(target),
-  };
-}
+  },
+});

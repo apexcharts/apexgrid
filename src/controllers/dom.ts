@@ -1,7 +1,9 @@
-import { ReactiveController } from 'lit';
-import { StyleInfo } from 'lit/directives/style-map.js';
+import { html, ReactiveController } from 'lit';
+import { StyleInfo, styleMap } from 'lit/directives/style-map.js';
+import { RenderItemFunction } from '@lit-labs/virtualizer/virtualize.js';
 import { StateController } from './state.js';
 import { applyColumnWidths } from '../internal/utils.js';
+import { registerGridIcons } from '../internal/icon-registry.js';
 import type { GridHost } from '../internal/types.js';
 
 export class GridDOMController<T extends object> implements ReactiveController {
@@ -16,7 +18,19 @@ export class GridDOMController<T extends object> implements ReactiveController {
 
   public columnSizes: StyleInfo = {};
 
-  public async hostConnected() {
+  public rowRenderer: RenderItemFunction<T> = (data: T, index: number) => {
+    return html`<apex-grid-row
+      part="row"
+      style=${styleMap({ ...this.columnSizes, ...this.getActiveRowStyles(index) })}
+      .index=${index}
+      .activeNode=${this.state.active}
+      .data=${data}
+      .columns=${this.host.columns}
+    ></apex-grid-row>`;
+  };
+
+  public hostConnected() {
+    registerGridIcons();
     this.setGridColumnSizes();
   }
 

@@ -1,6 +1,6 @@
 import { ReactiveController } from 'lit';
 import { NAVIGATION_STATE, SENTINEL_NODE } from '../internal/constants.js';
-import type { ActiveNode, GridHost, Keys, Virtual } from '../internal/types.js';
+import type { ActiveNode, GridHost, Keys } from '../internal/types.js';
 
 export class NavigationController<T extends object> implements ReactiveController {
   protected handlers = new Map(
@@ -13,6 +13,11 @@ export class NavigationController<T extends object> implements ReactiveControlle
       End: this.end,
     }),
   );
+
+  protected get virtualizer() {
+    // @ts-expect-error - Protected member access
+    return this.host.scrollContainer;
+  }
 
   protected state = NAVIGATION_STATE;
   protected _active = SENTINEL_NODE;
@@ -57,29 +62,29 @@ export class NavigationController<T extends object> implements ReactiveControlle
     this.host.addController(this);
   }
 
-  protected home(container: Virtual) {
+  protected home() {
     this.active = Object.assign(this.nextNode, { row: 0 });
-    container.element(this.active.row)?.scrollIntoView({ block: 'center' });
+    this.virtualizer.scrollToIndex(this.active.row);
   }
 
-  protected end(container: Virtual) {
+  protected end() {
     this.active = Object.assign(this.nextNode, { row: this.host.totalItems - 1 });
-    container.element(this.active.row)?.scrollIntoView({ block: 'center' });
+    this.virtualizer.scrollToIndex(this.active.row);
   }
 
-  protected arrowDown(container: Virtual) {
+  protected arrowDown() {
     const next = this.nextNode;
 
     this.active = Object.assign(this.nextNode, {
       row: Math.min(next.row + 1, this.host.totalItems - 1),
     });
-    container.element(next.row)?.scrollIntoView({ block: 'center' });
+    this.virtualizer.scrollToIndex(next.row);
   }
 
-  protected arrowUp(container: Virtual) {
+  protected arrowUp() {
     const next = this.nextNode;
     this.active = Object.assign(next, { row: Math.max(0, next.row - 1) });
-    container.element(next.row)?.scrollIntoView({ block: 'center' });
+    this.virtualizer.scrollToIndex(next.row);
   }
 
   protected arrowLeft() {
@@ -99,10 +104,10 @@ export class NavigationController<T extends object> implements ReactiveControlle
     this.state = NAVIGATION_STATE;
   }
 
-  public navigate(event: KeyboardEvent, container: Virtual) {
+  public navigate(event: KeyboardEvent) {
     if (this.handlers.has(event.key)) {
       event.preventDefault();
-      this.handlers.get(event.key)!.call(this, container);
+      this.handlers.get(event.key)!.call(this);
     }
   }
 }

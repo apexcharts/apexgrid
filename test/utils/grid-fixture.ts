@@ -1,10 +1,10 @@
 import { elementUpdated, fixture, fixtureCleanup, html, waitUntil } from '@open-wc/testing';
 import ApexGridHeaderRow from '../../src/components/header-row.js';
-import ApexGridRow from '../../src/components/row.js';
 import type { ColumnConfiguration, Keys } from '../../src/internal/types.js';
 import type { SortExpression } from '../../src/operations/sort/types.js';
 import type { FilterExpression } from '../../src/operations/filter/types.js';
 import type ApexGrid from '../../src/components/grid.js';
+import ApexGridRow from '../../src/components/row.js';
 import '../../src/index.js';
 import HeaderTestFixture from './header-fixture.js';
 import RowTestFixture from './row-fixture.js';
@@ -72,7 +72,7 @@ export default class GridTestFixture<T extends object> {
 
   public get gridBody() {
     // @ts-expect-error - Protected member access
-    return this.grid.bodyElement;
+    return this.grid.scrollContainer;
   }
 
   public get dataState() {
@@ -160,8 +160,10 @@ export default class GridTestFixture<T extends object> {
     await elementUpdated(this.grid);
   }
 
-  public async updateColumn(key: Keys<T>, config: Partial<ColumnConfiguration<T>>) {
-    this.grid.updateColumn(key, config);
+  public async updateColumns(columns: ColumnConfiguration<T> | ColumnConfiguration<T>[]) {
+    this.grid.updateColumns(columns);
+
+    await elementUpdated(this.grid);
     await elementUpdated(this.grid);
     return this;
   }
@@ -174,6 +176,18 @@ export default class GridTestFixture<T extends object> {
 
   public async filter(config: FilterExpression<T> | FilterExpression<T>[]) {
     this.grid.filter(config);
+    await elementUpdated(this.grid);
+    return this;
+  }
+
+  public async clearSort() {
+    this.grid.clearSort();
+    await elementUpdated(this.grid);
+    return this;
+  }
+
+  public async clearFilter() {
+    this.grid.clearFilter();
     await elementUpdated(this.grid);
     return this;
   }

@@ -1,39 +1,37 @@
-import { BaseOperands } from './base.js';
 import { isDefined } from '../../../internal/is-defined.js';
-import type { FilterOperation } from '../types.js';
+import type { FilterOperands } from '../types.js';
 
-export class BooleanOperands extends BaseOperands<boolean> {
-  public override get default() {
-    return this.all;
-  }
+export type BooleanKeys = 'default' | 'all' | 'true' | 'false' | 'empty' | 'notEmpty';
 
-  public all: FilterOperation<boolean> = {
+export const BooleanOperands = Object.freeze<FilterOperands<boolean, BooleanKeys>>({
+  default: {
     name: 'all',
     unary: true,
     logic: _ => true,
-  };
-
-  public true: FilterOperation<boolean> = {
+  },
+  all: {
+    name: 'all',
+    unary: true,
+    logic: _ => true,
+  },
+  true: {
     name: 'true',
     unary: true,
     logic: target => target === true,
-  };
-
-  public false: FilterOperation<boolean> = {
+  },
+  false: {
     name: 'false',
     unary: true,
     logic: target => target === false,
-  };
-
-  public empty: FilterOperation<boolean> = {
+  },
+  empty: {
     name: 'empty',
     unary: true,
     logic: target => !isDefined(target),
-  };
-
-  public notEmpty: FilterOperation<boolean> = {
+  },
+  notEmpty: {
     name: 'nonEmpty',
     unary: true,
     logic: target => isDefined(target),
-  };
-}
+  },
+});

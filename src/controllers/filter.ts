@@ -40,6 +40,10 @@ export class FilterController<T extends object> implements ReactiveController {
 
   public hostConnected() {}
 
+  public hostUpdate(): void {
+    this.filterRow?.requestUpdate();
+  }
+
   public get(key: Keys<T>) {
     return this.state.get(key);
   }
@@ -56,11 +60,11 @@ export class FilterController<T extends object> implements ReactiveController {
     }
   }
 
-  public getDefaultExpression(column: ColumnConfiguration<T>): FilterExpression<T> {
+  public getDefaultExpression(column: ColumnConfiguration<T>) {
     const caseSensitive =
       typeof column.filter === 'boolean' ? false : Boolean(column.filter?.caseSensitive);
 
-    // TODO: Type it
+    // XXX: Types
     return {
       key: column.key,
       condition: getFilterOperandsFor(column).default,

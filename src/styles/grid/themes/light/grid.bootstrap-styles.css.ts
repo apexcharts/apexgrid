@@ -40,6 +40,7 @@ export const styles = css`
           flex: 1;
   background: var(--igx-content-background, var(--content-background));
   color: var(--igx-content-text-color, var(--content-text-color));
+  overflow: hidden auto !important;
 }
 [part~=virtualized]:focus {
   outline: none;

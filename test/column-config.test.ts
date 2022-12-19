@@ -29,6 +29,15 @@ suite('Column configuration', () => {
         assert.exists(TDD.headers.get(key).element);
       });
     });
+
+    test('Updating configuration', async () => {
+      await TDD.updateColumns([
+        { key: 'id', headerText: 'Primary' },
+        { key: 'name', headerText: 'Username' },
+      ]);
+      assert.strictEqual(TDD.grid.getColumn('id')?.headerText, 'Primary');
+      assert.strictEqual(TDD.grid.getColumn('name')?.headerText, 'Username');
+    });
   });
 
   suite('Properties', () => {
@@ -36,22 +45,23 @@ suite('Column configuration', () => {
       const headerText = 'Primary key';
       assert.strictEqual(TDD.headers.first.text, 'id');
 
-      await TDD.updateColumn('id', { headerText });
+      await TDD.updateColumns({ key: 'id', headerText });
       assert.strictEqual(TDD.headers.first.text, headerText);
     });
 
     test('Visibility', async () => {
       assert.exists(TDD.headers.first.element);
 
-      await TDD.updateColumn('id', { hidden: true });
+      await TDD.updateColumns({ key: 'id', hidden: true });
       assert.notExists(TDD.headers.get('id').element);
 
-      await TDD.updateColumn('id', { hidden: false });
+      await TDD.updateColumns({ key: 'id', hidden: false });
       assert.exists(TDD.headers.first.element);
     });
 
     test('Header template', async () => {
-      await TDD.updateColumn('id', {
+      await TDD.updateColumns({
+        key: 'id',
         headerTemplate: props => html`<h3>Custom template for ${props.column.key}</h3>`,
       });
       assert.strictEqual(TDD.headers.first.text, 'Custom template for id');
@@ -66,10 +76,12 @@ suite('Column configuration', () => {
     });
 
     test('Cell template', async () => {
-      await TDD.updateColumn('name', {
+      await TDD.updateColumns({
+        key: 'name',
         cellTemplate: (props: ApexCellContext<TestData, 'name'>) =>
           html`<input value=${props.value} />`,
       });
+
       assert.shadowDom.equal(
         TDD.rows.first.cells.get('name').element,
         `<input value="${data[0].name}" />`,
@@ -79,6 +91,7 @@ suite('Column configuration', () => {
     test('Width', async () => {
       const headerWidthEquals = (expected: number) =>
         assert.strictEqual(TDD.headers.first.element.getBoundingClientRect().width, expected);
+
       const cellWidthEquals = (expected: number) =>
         assert.strictEqual(
           TDD.rows.first.cells.get('id').element.getBoundingClientRect().width,
@@ -91,11 +104,11 @@ suite('Column configuration', () => {
       cellWidthEquals(250);
 
       // 0.5 * 1000 = 500
-      await TDD.updateColumn('id', { width: '50%' });
+      await TDD.updateColumns({ key: 'id', width: '50%' });
       headerWidthEquals(500);
       cellWidthEquals(500);
 
-      await TDD.updateColumn('id', { width: '200px' });
+      await TDD.updateColumns({ key: 'id', width: '200px' });
       headerWidthEquals(200);
       cellWidthEquals(200);
     });
@@ -103,7 +116,7 @@ suite('Column configuration', () => {
     test('Resize', async () => {
       assert.isFalse(TDD.grid.getColumn('name')?.resizable);
 
-      await TDD.updateColumn('name', { resizable: true });
+      await TDD.updateColumns({ key: 'name', resizable: true });
 
       assert.strictEqual(TDD.grid.getColumn('name')?.resizable, true);
       assert.exists(TDD.headers.get('name').resizePart);

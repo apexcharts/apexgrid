@@ -14,8 +14,8 @@ class InitialDataStateFixture<T extends TestData> extends GridTestFixture<T> {
     { key: 'id', direction: 'descending' },
   ];
   public filterState: FilterExpression<TestData>[] = [
-    { key: 'importance', condition: 'startsWith', searchTerm: 'l' },
-    { key: 'importance', condition: 'startsWith', searchTerm: 'h', criteria: 'or' },
+    { key: 'importance', condition: 'equals', searchTerm: 'low' },
+    { key: 'importance', condition: 'equals', searchTerm: 'high', criteria: 'or' },
   ];
 
   public override setupTemplate() {
@@ -81,7 +81,7 @@ suite('Grid properties', () => {
   });
 
   test('Filter expressions late binding', async () => {
-    await TDD.updateColumn('id', { type: 'number' });
+    await TDD.updateColumns({ key: 'id', type: 'number' });
     await TDD.updateProperty('filterExpressions', [
       { key: 'id', condition: 'greaterThanOrEqual', searchTerm: 8 },
     ]);

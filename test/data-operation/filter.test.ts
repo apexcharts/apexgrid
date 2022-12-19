@@ -31,12 +31,16 @@ class TDDFilterState<T extends object> {
     return this.result.at(index) as T;
   }
 
-  public addCondition(key: Keys<T>, operand: OperandKeys, opts: Partial<FilterExpression<T>> = {}) {
+  public addCondition(
+    key: Keys<T>,
+    operand: OperandKeys<T[keyof T]>,
+    opts: Partial<FilterExpression<T>> = {},
+  ) {
     const config = { key, type: typeof this.data[0][key] as DataType } as ColumnConfiguration<T>;
 
     this.#state.set({
       key,
-      condition: getFilterOperandsFor(config).get(operand),
+      condition: (getFilterOperandsFor(config) as any)[operand],
       ...opts,
     } as unknown as FilterExpression<T>);
     return this;
