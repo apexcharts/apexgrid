@@ -269,13 +269,13 @@ export default class ApexFilterRow<T extends object> extends LitElement {
       same-width
       @igcChange=${this.#handleConditionChanged}
     >
-      ${Object.keys(getFilterOperandsFor(this.column)).map(
-        key => html`
+      ${Object.entries(getFilterOperandsFor(this.column)).map(
+        ([key, operand]) => html`
           <igc-dropdown-item
             .value=${key}
             ?selected=${this.condition.name === key}
           >
-            ${prefixedIcon(key)}${key}
+            ${prefixedIcon(key)}${operand?.label ?? key}
           </igc-dropdown-item>
         `,
       )}

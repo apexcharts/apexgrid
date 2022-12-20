@@ -16,6 +16,7 @@ export type FilterOperationLogic<T> = (
 
 export interface FilterOperation<T> {
   name: string;
+  label?: string;
   unary: boolean;
   logic: FilterOperationLogic<T>;
 }
