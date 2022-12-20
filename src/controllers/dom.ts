@@ -11,6 +11,10 @@ export class GridDOMController<T extends object> implements ReactiveController {
     this.host.addController(this);
   }
 
+  #initialSize = () => {
+    setTimeout(() => this.setScrollOffset());
+  };
+
   public get container() {
     // @ts-expect-error: protected member access
     return this.host.scrollContainer;
@@ -29,9 +33,13 @@ export class GridDOMController<T extends object> implements ReactiveController {
     ></apex-grid-row>`;
   };
 
-  public hostConnected() {
+  public async hostConnected() {
     registerGridIcons();
     this.setGridColumnSizes();
+    // Wait for the initial paint of the virtualizer and recalculate the scrollbar offset
+    // for the next one
+    await this.host.updateComplete;
+    this.container.addEventListener('visibilityChanged', this.#initialSize, { once: true });
   }
 
   public hostUpdate(): void {
