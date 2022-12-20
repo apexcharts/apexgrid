@@ -1,7 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { GRID_CELL_TAG } from '../internal/tags.js';
-import type { ApexCellContext, ColumnConfiguration } from '../internal/types.js';
+import type { ApexCellContext, ColumnConfiguration, PropertyType } from '../internal/types.js';
 import { styles } from '../styles/body-cell/body-cell-styles.css.js';
 import type ApexGridRow from './row.js';
 
@@ -14,7 +14,7 @@ export default class ApexGridCell<T extends object> extends LitElement {
   public static override styles = styles;
 
   @property({ attribute: false })
-  public value!: T[keyof T];
+  public value!: PropertyType<T>;
 
   @property({ attribute: false })
   public column!: ColumnConfiguration<T>;
@@ -30,11 +30,13 @@ export default class ApexGridCell<T extends object> extends LitElement {
       row: this.row,
       column: this.column,
       value: this.value,
-    };
+    } as unknown as ApexCellContext<T>;
   }
 
   protected override render() {
-    return this.column.cellTemplate ? this.column.cellTemplate(this.context) : html`${this.value}`;
+    return this.column.cellTemplate
+      ? this.column.cellTemplate(this.context as ApexCellContext<T> as any)
+      : html`${this.value}`;
   }
 }
 

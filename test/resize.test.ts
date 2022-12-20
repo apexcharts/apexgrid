@@ -40,7 +40,7 @@ suite('Column resizing', () => {
 
   suite('Default', () => {
     test('Resize element state with disabled resizing', async () => {
-      await TDD.updateColumn('name', { resizable: false });
+      await TDD.updateColumns({ key: 'name', resizable: false });
       assert.notExists(TDD.resizePart);
       assert.notExists(TDD.headers.get('name').resizePart);
     });
@@ -85,7 +85,8 @@ suite('Column resizing', () => {
     });
 
     test('Auto-size (header)', async () => {
-      await TDD.updateColumn('name', {
+      await TDD.updateColumns({
+        key: 'name',
         headerTemplate: () => html`<div style="width: 300px"></div>`,
       });
       await TDD.autoSizeHeader('name');
@@ -100,7 +101,8 @@ suite('Column resizing', () => {
     });
 
     test('Auto size (cell)', async () => {
-      await TDD.updateColumn('name', {
+      await TDD.updateColumns({
+        key: 'name',
         cellTemplate: () => html`<div style="width: 600px"></div>`,
       });
       await TDD.autoSizeHeader('name');

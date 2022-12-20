@@ -4,6 +4,7 @@ import { FilterController } from './filter.js';
 import { NavigationController } from './navigation.js';
 import { SortController } from './sort.js';
 import { ResizeController } from './resize.js';
+import { autoGenerateColumns } from '../internal/utils.js';
 import type { ActiveNode, GridHost } from '../internal/types.js';
 
 export class StateController<T extends object> implements ReactiveController {
@@ -20,6 +21,11 @@ export class StateController<T extends object> implements ReactiveController {
     this.navigation.active = node;
   }
 
+  public get headerRow() {
+    // @ts-expect-error - Protected member access
+    return this.host.headerRow;
+  }
+
   constructor(public host: GridHost<T>) {
     this.host.addController(this);
     this.init();
@@ -32,7 +38,13 @@ export class StateController<T extends object> implements ReactiveController {
     this.resizing = new ResizeController(this.host);
   }
 
-  public hostConnected() {}
+  public hostConnected() {
+    autoGenerateColumns(this.host);
+  }
+
+  public hostUpdate(): void {
+    this.headerRow?.requestUpdate();
+  }
 }
 
 export const gridStateContext = createContext<StateController<any>>('gridStateController');

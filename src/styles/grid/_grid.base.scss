@@ -17,13 +17,14 @@ $grid-resize-line-color: var(--igx-grid-resize-line-color, var(--grid-resize-lin
     --z-index-base: 1;
 }
 
-apex-grid-body {
+[part~='virtualized'] {
     grid-row: virtualized-container;
     display: flex;
     flex-flow: column;
     flex: 1;
     background: $content-background;
     color: $content-text-color;
+    overflow: hidden auto !important;
 
     &:focus {
         outline: none;

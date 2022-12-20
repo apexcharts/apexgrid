@@ -1,5 +1,6 @@
-import { html, nothing, PropertyDeclaration, TemplateResult } from 'lit';
+import { html, nothing } from 'lit';
 import { ContextProvider } from '@lit-labs/context';
+import { LitVirtualizer } from '@lit-labs/virtualizer';
 import { customElement, eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
@@ -10,8 +11,7 @@ import { GridDOMController } from '../controllers/dom.js';
 import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { watch } from '../internal/watch.js';
 import { DEFAULT_COLUMN_CONFIG, PIPELINE } from '../internal/constants.js';
-import { registerGridIcons } from '../internal/icon-registry.js';
-import { asArray, autoGenerateColumns, getFilterOperandsFor } from '../internal/utils.js';
+import { asArray, getFilterOperandsFor } from '../internal/utils.js';
 
 import type {
   ColumnConfiguration,
@@ -28,7 +28,6 @@ import { styles as fluent } from '../styles/grid/themes/light/grid.fluent-styles
 import { styles as indigo } from '../styles/grid/themes/light/grid.indigo-styles.css.js';
 import { styles as material } from '../styles/grid/themes/light/grid.material-styles.css.js';
 
-import ApexGridBody from './grid-body.js';
 import ApexGridHeaderRow from './header-row.js';
 import ApexGridRow from './row.js';
 import ApexGridCell from './cell.js';
@@ -142,21 +141,10 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   protected DOM = new GridDOMController<T>(this, this.stateController);
   protected dataController = new DataOperationsController<T>(this);
 
-  protected rowRenderer = <T>(data: T, index: number): TemplateResult => {
-    return html`<apex-grid-row
-      part="row"
-      style=${styleMap({ ...this.DOM.columnSizes, ...this.DOM.getActiveRowStyles(index) })}
-      .index=${index}
-      .activeNode=${this.stateController.active}
-      .data=${data}
-      .columns=${this.columns}
-    ></apex-grid-row>`;
-  };
-
   protected stateProvider = new ContextProvider(this, gridStateContext, this.stateController);
 
-  @query(ApexGridBody.is)
-  protected bodyElement!: ApexGridBody;
+  @query('lit-virtualizer')
+  protected scrollContainer!: LitVirtualizer<T>;
 
   @query(ApexGridHeaderRow.is)
   protected headerRow!: ApexGridHeaderRow<T>;
@@ -246,26 +234,6 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     return this.dataState.length;
   }
 
-  constructor() {
-    super();
-    registerGridIcons();
-  }
-
-  public override connectedCallback() {
-    super.connectedCallback();
-    autoGenerateColumns(this);
-  }
-
-  public override requestUpdate(
-    name?: PropertyKey,
-    oldValue?: unknown,
-    options?: PropertyDeclaration<this, unknown>,
-  ): void {
-    this.headerRow?.requestUpdate();
-    this.filterRow?.requestUpdate();
-    super.requestUpdate(name, oldValue, options);
-  }
-
   @watch('sortExpressions')
   protected watchSortExpressions() {
     if (this.sortExpressions.length) {
@@ -308,8 +276,9 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
     this.stateController.filtering.filter(
       asArray(config).map(each =>
         typeof each.condition === 'string'
-          ? Object.assign(each, {
-              condition: getFilterOperandsFor(this.getColumn(each.key)!).get(each.condition as any),
+          ? // XXX: Types
+            Object.assign(each, {
+              condition: (getFilterOperandsFor(this.getColumn(each.key)!) as any)[each.condition],
             })
           : each,
       ),
@@ -324,6 +293,22 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   }
 
   /**
+   * Resets the current sort state of the control.
+   */
+  public clearSort() {
+    this.stateController.sorting.reset();
+    this.requestUpdate(PIPELINE);
+  }
+
+  /**
+   * Resets the current filter state of the control.
+   */
+  public clearFilter() {
+    this.stateController.filtering.reset();
+    this.requestUpdate(PIPELINE);
+  }
+
+  /**
    * Returns a {@link ColumnConfiguration} for a given column.
    */
   public getColumn(id: Keys<T> | number) {
@@ -335,25 +320,12 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   /**
    * Updates the column configuration of the grid.
    */
-  public updateColumn(key: Keys<T>, config: Partial<ColumnConfiguration<T>>) {
-    // Check and reset data operation states
-    // TODO: Run `pipeline` updates ?
-    if (!config.sort) {
-      this.stateController.sorting.reset(key);
-    }
-
-    if (!config.filter) {
-      this.stateController.filtering.reset(key);
-    }
-
-    this.columns = this.columns.map(each => {
-      if (key === each.key) {
-        each = { ...each, ...config };
-      }
-      return each;
+  public updateColumns(columns: ColumnConfiguration<T> | ColumnConfiguration<T>[]) {
+    asArray(columns).forEach(column => {
+      const idx = this.columns.findIndex(original => original.key === column.key);
+      this.columns[idx] = { ...this.columns[idx], ...column };
     });
-
-    this.requestUpdate();
+    this.requestUpdate(PIPELINE);
   }
 
   @eventOptions({ capture: true })
@@ -368,9 +340,8 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   }
 
   protected bodyKeydownHandler(event: KeyboardEvent) {
-    const target = event.target as HTMLElement & ApexGridBody;
-    if (this.bodyElement.isSameNode(target)) {
-      this.stateController.navigation.navigate(event, this.bodyElement);
+    if (this.scrollContainer.isSameNode(event.target as HTMLElement)) {
+      this.stateController.navigation.navigate(event);
     }
   }
 
@@ -382,12 +353,17 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   }
 
   protected renderBody() {
-    return html`<apex-grid-body
-      @keydown=${this.bodyKeydownHandler}
-      @click=${this.bodyClickHandler}
-      .items=${this.dataState}
-      .renderItem=${this.rowRenderer}
-    ></apex-grid-body>`;
+    return html`
+      <lit-virtualizer
+        .items=${this.dataState}
+        .renderItem=${this.DOM.rowRenderer}
+        tabindex="0"
+        part="virtualized"
+        scroller
+        @click=${this.bodyClickHandler}
+        @keydown=${this.bodyKeydownHandler}
+      ></lit-virtualizer>
+    `;
   }
 
   protected renderFilterRow() {
@@ -397,7 +373,8 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   }
 
   protected override render() {
-    return html`${this.stateController.resizing.renderIndicator()}${this.renderHeaderRow()}${this.renderFilterRow()}${this.renderBody()}`;
+    return html` ${this.stateController.resizing.renderIndicator()} ${this.renderHeaderRow()}
+    ${this.renderFilterRow()} ${this.renderBody()}`;
   }
 }
 

@@ -1,64 +1,72 @@
 import { isDefined } from '../../../internal/is-defined.js';
 import { normalizeCase } from '../../../internal/normalize-case.js';
-import { BaseOperands } from '../operands/base.js';
-import type { FilterOperation } from '../types.js';
+import type { FilterOperands } from '../types.js';
 
-export class StringOperands<T> extends BaseOperands<T, string> {
-  public override get default() {
-    return this.contains;
-  }
+export type StringKeys =
+  | 'default'
+  | 'contains'
+  | 'doesNotContain'
+  | 'startsWith'
+  | 'endsWith'
+  | 'equals'
+  | 'doesNotEqual'
+  | 'empty'
+  | 'notEmpty';
 
-  public contains: FilterOperation<T, string> = {
+export const StringOperands = Object.freeze<FilterOperands<string, StringKeys>>({
+  default: {
     name: 'contains',
     unary: false,
-    logic: (target, searchTerm, caseSensitive?) =>
-      normalizeCase(target, caseSensitive).includes(normalizeCase(searchTerm, caseSensitive)),
-  };
-
-  public doesNotContain: FilterOperation<T, string> = {
+    logic: (target, term, caseSensitive?) =>
+      normalizeCase(target, caseSensitive).includes(normalizeCase(term, caseSensitive)),
+  },
+  contains: {
+    name: 'contains',
+    unary: false,
+    logic: (target, term, caseSensitive?) =>
+      normalizeCase(target, caseSensitive).includes(normalizeCase(term, caseSensitive)),
+  },
+  doesNotContain: {
     name: 'doesNotContain',
     unary: false,
-    logic: (target, searchTerm, caseSensitive?) =>
-      !normalizeCase(target, caseSensitive).includes(normalizeCase(searchTerm, caseSensitive)),
-  };
-
-  public startsWith: FilterOperation<T, string> = {
+    logic: (target, term, caseSensitive?) =>
+      !normalizeCase(target, caseSensitive).includes(normalizeCase(term, caseSensitive)),
+  },
+  startsWith: {
     name: 'startsWith',
     unary: false,
     logic: (target, searchTerm, caseSensitive?) =>
       normalizeCase(target, caseSensitive).startsWith(normalizeCase(searchTerm, caseSensitive)),
-  };
-
-  public endsWith: FilterOperation<T, string> = {
+  },
+  endsWith: {
     name: 'endsWith',
     unary: false,
     logic: (target, searchTerm, caseSensitive?) =>
       normalizeCase(target, caseSensitive).endsWith(normalizeCase(searchTerm, caseSensitive)),
-  };
-
-  public equals: FilterOperation<T, string> = {
+  },
+  equals: {
     name: 'equals',
     unary: false,
     logic: (target, searchTerm, caseSensitive) =>
       normalizeCase(target, caseSensitive) === normalizeCase(searchTerm, caseSensitive),
-  };
+  },
 
-  public doesNotEqual: FilterOperation<T, string> = {
+  doesNotEqual: {
     name: 'doesNotEqual',
     unary: false,
     logic: (target, searchTerm, caseSensitive) =>
       normalizeCase(target, caseSensitive) !== normalizeCase(searchTerm, caseSensitive),
-  };
+  },
 
-  public empty: FilterOperation<T, string> = {
+  empty: {
     name: 'empty',
     unary: true,
     logic: target => !isDefined(target) || target.length < 1,
-  };
+  },
 
-  public notEmpty: FilterOperation<T, string> = {
+  notEmpty: {
     name: 'notEmpty',
     unary: true,
     logic: target => isDefined(target) && target.length > 0,
-  };
-}
+  },
+});

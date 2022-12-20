@@ -1,6 +1,5 @@
 import { ReactiveController } from 'lit';
 import { NAVIGATION_STATE, SENTINEL_NODE } from '../internal/constants.js';
-import type ApexGridBody from '../components/grid-body.js';
 import type { ActiveNode, GridHost, Keys } from '../internal/types.js';
 
 export class NavigationController<T extends object> implements ReactiveController {
@@ -14,6 +13,11 @@ export class NavigationController<T extends object> implements ReactiveControlle
       End: this.end,
     }),
   );
+
+  protected get virtualizer() {
+    // @ts-expect-error - Protected member access
+    return this.host.scrollContainer;
+  }
 
   protected state = NAVIGATION_STATE;
   protected _active = SENTINEL_NODE;
@@ -58,33 +62,29 @@ export class NavigationController<T extends object> implements ReactiveControlle
     this.host.addController(this);
   }
 
-  protected isNotSentinel(node: ActiveNode<T>) {
-    return node !== SENTINEL_NODE;
-  }
-
-  protected home(container: ApexGridBody) {
+  protected home() {
     this.active = Object.assign(this.nextNode, { row: 0 });
-    container.scrollToIndex(this.active.row, 'center');
+    this.virtualizer.scrollToIndex(this.active.row);
   }
 
-  protected end(container: ApexGridBody) {
+  protected end() {
     this.active = Object.assign(this.nextNode, { row: this.host.totalItems - 1 });
-    container.scrollToIndex(this.active.row, 'center');
+    this.virtualizer.scrollToIndex(this.active.row);
   }
 
-  protected arrowDown(container: ApexGridBody) {
+  protected arrowDown() {
     const next = this.nextNode;
 
     this.active = Object.assign(this.nextNode, {
       row: Math.min(next.row + 1, this.host.totalItems - 1),
     });
-    container.scrollToIndex(next.row, 'center');
+    this.virtualizer.scrollToIndex(next.row);
   }
 
-  protected arrowUp(container: ApexGridBody) {
+  protected arrowUp() {
     const next = this.nextNode;
     this.active = Object.assign(next, { row: Math.max(0, next.row - 1) });
-    container.scrollToIndex(next.row, 'center');
+    this.virtualizer.scrollToIndex(next.row);
   }
 
   protected arrowLeft() {
@@ -104,10 +104,10 @@ export class NavigationController<T extends object> implements ReactiveControlle
     this.state = NAVIGATION_STATE;
   }
 
-  public navigate(event: KeyboardEvent, container: ApexGridBody) {
+  public navigate(event: KeyboardEvent) {
     if (this.handlers.has(event.key)) {
       event.preventDefault();
-      this.handlers.get(event.key)!.call(this, container);
+      this.handlers.get(event.key)!.call(this);
     }
   }
 }

@@ -26,7 +26,7 @@ export const styles = css`
   --z-index-base: 1;
 }
 
-apex-grid-body {
+[part~=virtualized] {
   grid-row: virtualized-container;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -40,8 +40,9 @@ apex-grid-body {
           flex: 1;
   background: var(--igx-content-background, var(--content-background));
   color: var(--igx-content-text-color, var(--content-text-color));
+  overflow: hidden auto !important;
 }
-apex-grid-body:focus {
+[part~=virtualized]:focus {
   outline: none;
 }
 

@@ -1,9 +1,10 @@
+import type { SortComparer } from '../../src/operations/sort/types.js';
+
 type Importance = 'low' | 'medium' | 'high';
 
-const importanceOrdering = ['low', 'medium', 'high'];
-export function importanceComparer(a: any, b: any) {
-  return importanceOrdering.indexOf(a) - importanceOrdering.indexOf(b);
-}
+const importanceOrdering = ['low', 'medium', 'high'] as const;
+export const importanceComparer: SortComparer<TestData, 'importance'> = (a, b) =>
+  importanceOrdering.indexOf(a) - importanceOrdering.indexOf(b);
 
 export interface TestData {
   id: number;

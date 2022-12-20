@@ -1,5 +1,4 @@
 import DataOperation from './base.js';
-import type { Values } from '../internal/types.js';
 import type { SortExpression, SortState } from './sort/types.js';
 
 export default class SortDataOperation<T> extends DataOperation<T> {
@@ -10,7 +9,7 @@ export default class SortDataOperation<T> extends DataOperation<T> {
     }),
   );
 
-  protected compareValues(first: Values<T>, second: Values<T>) {
+  protected compareValues<U>(first: U, second: U) {
     if (typeof first === 'string' && typeof second === 'string') {
       return first.localeCompare(second);
     }
@@ -19,12 +18,14 @@ export default class SortDataOperation<T> extends DataOperation<T> {
 
   protected compareObjects(first: T, second: T, expression: SortExpression<T>) {
     const { direction, key, caseSensitive, comparer } = expression;
-    const [a, b] = [
-      this.resolveCase(this.resolveValue(first, key), caseSensitive),
-      this.resolveCase(this.resolveValue(second, key), caseSensitive),
-    ];
 
-    return this.orderBy.get(direction)! * (comparer ? comparer(a, b) : this.compareValues(a, b));
+    const a = this.resolveCase(this.resolveValue(first, key), caseSensitive);
+    const b = this.resolveCase(this.resolveValue(second, key), caseSensitive);
+
+    // TODO: Remove casting as any
+    return (
+      this.orderBy.get(direction)! * (comparer?.(a as any, b as any) ?? this.compareValues(a, b))
+    );
   }
 
   public apply(data: T[], state: SortState<T>) {

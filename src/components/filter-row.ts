@@ -1,5 +1,5 @@
 import { html, LitElement, nothing } from 'lit';
-import { contextProvided } from '@lit-labs/context';
+import { consume } from '@lit-labs/context';
 import { customElement, property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
@@ -12,7 +12,7 @@ import { watch } from '../internal/watch.js';
 import { styles } from '../styles/filter-row/filter-row-styles.css.js';
 
 import type { FilterExpressionTree } from '../operations/filter/tree.js';
-import type { FilterExpression, FilterOperation } from '../operations/filter/types.js';
+import type { FilterExpression, FilterOperation, OperandKeys } from '../operations/filter/types.js';
 import type { ColumnConfiguration } from '../internal/types.js';
 import {
   IgcInputComponent,
@@ -44,7 +44,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
   public static override styles = styles;
 
-  @contextProvided({ context: gridStateContext, subscribe: true })
+  @consume({ context: gridStateContext, subscribe: true })
   @property({ attribute: false })
   public state!: StateController<T>;
 
@@ -57,7 +57,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   }
 
   protected get condition() {
-    return this.expression.condition as FilterOperation<T, any>;
+    return this.expression.condition as FilterOperation<T>;
   }
 
   @property({ attribute: false })
@@ -73,7 +73,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   public dropdown!: IgcDropdownComponent;
 
   @property({ attribute: false })
-  public column: ColumnConfiguration<T> = DEFAULT_COLUMN_CONFIG;
+  public column: ColumnConfiguration<T> = DEFAULT_COLUMN_CONFIG as ColumnConfiguration<T>;
 
   @property({ attribute: false })
   public expression!: FilterExpression<T>;
@@ -95,8 +95,12 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
   #handleConditionChanged(event: CustomEvent<IgcDropdownItemComponent>) {
     event.stopPropagation();
+    const key = event.detail.value as OperandKeys<T[typeof this.column.key]>;
 
-    this.expression.condition = getFilterOperandsFor(this.column).get(event.detail.value as any);
+    // XXX: Types
+    this.expression.condition = (getFilterOperandsFor(this.column) as any)[key] as FilterOperation<
+      T[keyof T]
+    >;
 
     if (this.input.value || this.expression.condition.unary) {
       this.filterController.filterWithEvent(this.expression);
@@ -112,7 +116,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     const shouldUpdate = this.isNumeric ? !isNaN(value as number) : !!value;
 
     if (shouldUpdate) {
-      this.expression.searchTerm = value;
+      this.expression.searchTerm = value as any;
       this.filterController.filterWithEvent(this.expression);
     } else {
       this.#removeExpression(this.expression);
@@ -152,7 +156,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     this.style.display = this.active ? 'flex' : '';
 
     if (!this.active) {
-      this.column = DEFAULT_COLUMN_CONFIG;
+      this.column = DEFAULT_COLUMN_CONFIG as ColumnConfiguration<T>;
     }
 
     this.state.host.requestUpdate();
@@ -205,7 +209,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   }
 
   protected renderExpressionChip(props: ExpressionChipProps<T>) {
-    const { name, unary } = props.expression.condition as FilterOperation<T, any>;
+    const { name, unary } = props.expression.condition as FilterOperation<T>;
     const { searchTerm: term } = props.expression;
 
     const prefix = html`<span slot="select"></span>${prefixedIcon(name)}`;
@@ -264,13 +268,16 @@ export default class ApexFilterRow<T extends object> extends LitElement {
       flip
       same-width
       @igcChange=${this.#handleConditionChanged}
-      >${Array.from(getFilterOperandsFor(this.column)).map(
-        each => html`<igc-dropdown-item
-          .value=${each}
-          ?selected=${this.condition?.name === each}
-        >
-          ${prefixedIcon(each)}${each}
-        </igc-dropdown-item>`,
+    >
+      ${Object.keys(getFilterOperandsFor(this.column)).map(
+        key => html`
+          <igc-dropdown-item
+            .value=${key}
+            ?selected=${this.condition.name === key}
+          >
+            ${prefixedIcon(key)}${key}
+          </igc-dropdown-item>
+        `,
       )}
     </igc-dropdown>`;
   }

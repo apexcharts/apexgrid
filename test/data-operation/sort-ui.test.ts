@@ -70,7 +70,7 @@ suite('Grid UI sort', () => {
     });
 
     test('Non-sortable columns have no sort DOM', async () => {
-      await TDD.updateColumn('id', { sort: false });
+      await TDD.updateColumns({ key: 'id', sort: false });
       TDD.sortDOMDoesNotExist('id');
     });
 
@@ -316,7 +316,7 @@ suite('Grid UI sort', () => {
     });
 
     test('Sort works on non-sortable columns', async () => {
-      await TDD.updateColumn('id', { sort: false });
+      await TDD.updateColumns({ key: 'id', sort: false });
       await TDD.sort({ key: 'id', direction: 'descending' });
 
       assert.strictEqual(TDD.rows.first.data.id, 8);
@@ -346,6 +346,15 @@ suite('Grid UI sort', () => {
       assert.strictEqual(TDD.rows.first.data.importance, 'low');
       TDD.columnIsSorted('importance');
       TDD.columnIsSorted('active');
+    });
+
+    test('API clear state', async () => {
+      await TDD.sort({ key: 'importance', direction: 'descending', comparer: importanceComparer });
+      assert.strictEqual(TDD.rows.first.data.importance, 'high');
+      TDD.columnIsSorted('importance');
+
+      await TDD.clearSort();
+      TDD.columnIsNotSorted('importance');
     });
   });
 });

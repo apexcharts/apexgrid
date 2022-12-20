@@ -1,7 +1,9 @@
-import { ReactiveController } from 'lit';
-import { StyleInfo } from 'lit/directives/style-map.js';
+import { html, ReactiveController } from 'lit';
+import { StyleInfo, styleMap } from 'lit/directives/style-map.js';
+import { RenderItemFunction } from '@lit-labs/virtualizer/virtualize.js';
 import { StateController } from './state.js';
 import { applyColumnWidths } from '../internal/utils.js';
+import { registerGridIcons } from '../internal/icon-registry.js';
 import type { GridHost } from '../internal/types.js';
 
 export class GridDOMController<T extends object> implements ReactiveController {
@@ -9,22 +11,27 @@ export class GridDOMController<T extends object> implements ReactiveController {
     this.host.addController(this);
   }
 
-  public get virtualBody() {
+  public get container() {
     // @ts-expect-error: protected member access
-    return this.host.bodyElement;
+    return this.host.scrollContainer;
   }
 
   public columnSizes: StyleInfo = {};
 
-  public hostConnected(): void {
-    this.setGridColumnSizes();
+  public rowRenderer: RenderItemFunction<T> = (data: T, index: number) => {
+    return html`<apex-grid-row
+      part="row"
+      style=${styleMap({ ...this.columnSizes, ...this.getActiveRowStyles(index) })}
+      .index=${index}
+      .activeNode=${this.state.active}
+      .data=${data}
+      .columns=${this.host.columns}
+    ></apex-grid-row>`;
+  };
 
-    // Wait until the virtualizer updates the DOM. Then measure the scroll width again on the next tick.
-    setTimeout(async () => {
-      const ref = (this.virtualBody as any)._virtualizer;
-      await ref._mutationPromise;
-      this.host.requestUpdate();
-    });
+  public hostConnected() {
+    registerGridIcons();
+    this.setGridColumnSizes();
   }
 
   public hostUpdate(): void {
@@ -33,7 +40,7 @@ export class GridDOMController<T extends object> implements ReactiveController {
   }
 
   public setScrollOffset() {
-    const size = this.virtualBody ? this.virtualBody.offsetWidth - this.virtualBody.clientWidth : 0;
+    const size = this.container ? this.container.offsetWidth - this.container.clientWidth : 0;
     this.host.style.setProperty('--scrollbar-offset', `${size}px`);
   }
 
