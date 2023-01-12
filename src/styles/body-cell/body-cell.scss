@@ -13,6 +13,7 @@ $inset-shadow-width: #{rem(1px)};
     color: inherit;
     border-right: $row-border-width solid transparent;
     font-size: #{rem(13px)};
+    overflow-wrap: anywhere;
 
     &:last-of-type {
         border-right: 0;
