@@ -57,6 +57,7 @@ export class GridDOMController<T extends object> implements ReactiveController {
   }
 
   public getActiveRowStyles(index: number): StyleInfo {
-    return this.state.active.row === index ? { 'z-index': '3' } : {};
+    const { row } = this.state.active;
+    return row === index ? { 'z-index': '3' } : {};
   }
 }

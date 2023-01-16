@@ -26,6 +26,11 @@ export class StateController<T extends object> implements ReactiveController {
     return this.host.headerRow;
   }
 
+  public get scrollContainer() {
+    // @ts-expect-error - Protected member access
+    return this.host.scrollContainer;
+  }
+
   constructor(public host: GridHost<T>) {
     this.host.addController(this);
     this.init();
@@ -44,6 +49,7 @@ export class StateController<T extends object> implements ReactiveController {
 
   public hostUpdate(): void {
     this.headerRow?.requestUpdate();
+    this.scrollContainer?.requestUpdate();
   }
 }
 

@@ -3,7 +3,7 @@ import ApexGridHeaderRow from '../../src/components/header-row.js';
 import type { ColumnConfiguration, Keys } from '../../src/internal/types.js';
 import type { SortExpression } from '../../src/operations/sort/types.js';
 import type { FilterExpression } from '../../src/operations/filter/types.js';
-import type ApexGrid from '../../src/components/grid.js';
+import ApexGrid from '../../src/components/grid.js';
 import ApexGridRow from '../../src/components/row.js';
 import '../../src/index.js';
 import HeaderTestFixture from './header-fixture.js';
@@ -31,6 +31,10 @@ export default class GridTestFixture<T extends object> {
     this.columnConfig = Object.keys(data.at(0)!).map(key => ({ key } as ColumnConfiguration<T>));
   }
 
+  public registerComponents() {
+    ApexGrid.register();
+  }
+
   public updateConfig() {}
 
   public setupParentNode(styles: Partial<CSSStyleDeclaration> = { height: '800px' }) {
@@ -49,7 +53,9 @@ export default class GridTestFixture<T extends object> {
   }
 
   public async setUp() {
+    this.registerComponents();
     this.updateConfig();
+
     this.grid = await fixture(this.setupTemplate(), { parentNode: this.setupParentNode() });
 
     // TODO: Still not good but better than arbitrary condition
@@ -180,14 +186,14 @@ export default class GridTestFixture<T extends object> {
     return this;
   }
 
-  public async clearSort() {
-    this.grid.clearSort();
+  public async clearSort(key?: Keys<T>) {
+    this.grid.clearSort(key);
     await elementUpdated(this.grid);
     return this;
   }
 
-  public async clearFilter() {
-    this.grid.clearFilter();
+  public async clearFilter(key?: Keys<T>) {
+    this.grid.clearFilter(key);
     await elementUpdated(this.grid);
     return this;
   }

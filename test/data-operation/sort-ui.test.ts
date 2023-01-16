@@ -356,5 +356,16 @@ suite('Grid UI sort', () => {
       await TDD.clearSort();
       TDD.columnIsNotSorted('importance');
     });
+
+    test('API clear state (by key)', async () => {
+      await TDD.sort([
+        { key: 'importance', direction: 'descending', comparer: importanceComparer },
+        { key: 'name', direction: 'ascending' },
+      ]);
+      assert.strictEqual(TDD.grid.sortExpressions.length, 2);
+
+      await TDD.clearSort('importance');
+      assert.strictEqual(TDD.grid.sortExpressions.length, 1);
+    });
   });
 });

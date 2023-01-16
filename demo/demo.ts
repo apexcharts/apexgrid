@@ -7,7 +7,7 @@ import {
   IgcSwitchComponent,
   defineComponents,
 } from 'igniteui-webcomponents';
-import '../src/index';
+import { ApexGrid } from '../src/index.js';
 import { ColumnConfiguration } from '../src/index';
 import { Theme } from 'igniteui-webcomponents/theming/types';
 
@@ -32,13 +32,14 @@ function getElement<T>(qs: string): T {
 }
 
 function generateData(length: number): User[] {
-  return [...Array(length)].map(
+  return Array.from(
+    { length },
     (_, idx) =>
       ({
         id: idx,
         name: `User - ${getRandomInt(length)}`,
         age: getRandomInt(100),
-        subscribed: !!getRandomInt(2),
+        subscribed: Boolean(getRandomInt(2)),
         satisfaction: getRandomInt(5),
         priority: oneOf(choices),
         email: `user${idx}@org.com`,
@@ -71,7 +72,7 @@ async function setTheme(theme?: Theme) {
     `/node_modules/igniteui-webcomponents/themes/${variant}/${theme}.css?${Date.now()}`
   );
 
-  Array.from(document.head.querySelectorAll('style[type="tet/css"]'))
+  Array.from(document.head.querySelectorAll('style[type="text/css"]'))
     .slice(0, -1)
     .forEach(s => s.remove());
 
@@ -122,6 +123,7 @@ const columns: ColumnConfiguration<User>[] = [
     cellTemplate: params =>
       html`<igc-rating
         readonly
+        style="--component-size: 2"
         .value=${params.value}
       ></igc-rating>`,
   },
@@ -131,6 +133,8 @@ const columns: ColumnConfiguration<User>[] = [
       html`<igc-select
         outlined
         .value=${params.value}
+        flip
+        style="--component-size: 1"
         >${choices.map(
           choice => html`<igc-select-item .value=${choice}>${choice}</igc-select-item>`,
         )}</igc-select
@@ -158,14 +162,13 @@ const columns: ColumnConfiguration<User>[] = [
 ];
 
 const data = generateData(1e4);
+ApexGrid.register();
 
-document.addEventListener('DOMContentLoaded', async () => {
-  render(
-    html`${themeChoose}<apex-grid
-        .data=${data}
-        .columns=${columns}
-      ></apex-grid>`,
-    document.getElementById('demo')!,
-  );
-  await setTheme('bootstrap');
-});
+render(
+  html`${themeChoose}<apex-grid
+      .data=${data}
+      .columns=${columns}
+    ></apex-grid>`,
+  document.getElementById('demo')!,
+);
+await setTheme('bootstrap');
