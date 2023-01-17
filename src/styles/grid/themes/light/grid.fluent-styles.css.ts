@@ -26,7 +26,7 @@ export const styles = css`/* stylelint-disable max-line-length */ /* stylelint-d
   --z-index-base: 1;
 }
 
-[part~=virtualized] {
+apex-virtualizer {
   grid-row: virtualized-container;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -42,7 +42,7 @@ export const styles = css`/* stylelint-disable max-line-length */ /* stylelint-d
   color: var(--igx-content-text-color, var(--content-text-color));
   overflow: hidden auto !important;
 }
-[part~=virtualized]:focus {
+apex-virtualizer:focus {
   outline: none;
 }
 

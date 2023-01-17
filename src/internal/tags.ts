@@ -1,4 +1,5 @@
 export const GRID_TAG = 'apex-grid' as const;
+export const GRID_BODY = 'apex-virtualizer' as const;
 export const GRID_HEADER_ROW_TAG = 'apex-grid-header-row' as const;
 export const GRID_HEADER_TAG = 'apex-grid-header' as const;
 export const GRID_ROW_TAG = 'apex-grid-row' as const;
