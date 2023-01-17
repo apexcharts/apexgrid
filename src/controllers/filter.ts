@@ -3,7 +3,7 @@ import { PIPELINE } from '../internal/constants.js';
 import { asArray, getFilterOperandsFor } from '../internal/utils.js';
 import { FilterState } from '../operations/filter/state.js';
 
-import type { FilterExpressionTree } from '../operations/filter/tree.js';
+import { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { ColumnConfiguration, GridHost, Keys } from '../internal/types.js';
 import type { FilterExpression } from '../operations/filter/types.js';
 
@@ -22,7 +22,7 @@ export class FilterController<T extends object> implements ReactiveController {
   #emitFilteringEvent(expression: FilterExpression<T>) {
     return this.host.emitEvent('filtering', {
       detail: {
-        expression,
+        // expression,
         state: this.get(expression.key)!,
       },
       cancelable: true,
@@ -77,11 +77,17 @@ export class FilterController<T extends object> implements ReactiveController {
   public removeExpression(expression: FilterExpression<T>) {
     const state = this.get(expression.key);
 
+    if (!this.#emitFilteringEvent(expression)) {
+      return;
+    }
+
     state?.remove(expression);
 
     if (state?.empty) {
       this.reset(state.key);
     }
+
+    this.#emitFilteredEvent(state ?? new FilterExpressionTree(expression.key));
   }
 
   public async filterWithEvent(expression: FilterExpression<T>) {

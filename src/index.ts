@@ -18,6 +18,7 @@ export type {
 } from './operations/sort/types.js';
 
 export type {
+  BaseFilterExpression,
   FilterCriteria,
   FilterExpression,
   OperandKeys,

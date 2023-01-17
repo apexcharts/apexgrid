@@ -1,17 +1,21 @@
 import { html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import { registerComponent } from '../internal/register.js';
 import { GRID_CELL_TAG } from '../internal/tags.js';
 import type { ApexCellContext, ColumnConfiguration, PropertyType } from '../internal/types.js';
 import { styles } from '../styles/body-cell/body-cell-styles.css.js';
 import type ApexGridRow from './row.js';
 
-@customElement(GRID_CELL_TAG)
 export default class ApexGridCell<T extends object> extends LitElement {
   public static get is() {
     return GRID_CELL_TAG;
   }
 
   public static override styles = styles;
+
+  public static register() {
+    registerComponent(this);
+  }
 
   @property({ attribute: false })
   public value!: PropertyType<T>;

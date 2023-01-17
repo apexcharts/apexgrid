@@ -1,12 +1,13 @@
 import { html, LitElement, nothing } from 'lit';
 import { consume } from '@lit-labs/context';
-import { customElement, property, query } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { StateController, gridStateContext } from '../controllers/state.js';
 import { PIPELINE, DEFAULT_COLUMN_CONFIG } from '../internal/constants.js';
 import { GRID_FILTER_ROW_TAG } from '../internal/tags.js';
 import { getFilterOperandsFor } from '../internal/utils.js';
+import { registerComponent } from '../internal/register.js';
 import { watch } from '../internal/watch.js';
 
 import { styles } from '../styles/filter-row/filter-row-styles.css.js';
@@ -36,13 +37,16 @@ function prefixedIcon(icon?: string) {
   ></igc-icon>`;
 }
 
-@customElement(GRID_FILTER_ROW_TAG)
 export default class ApexFilterRow<T extends object> extends LitElement {
   public static get is() {
     return GRID_FILTER_ROW_TAG;
   }
 
   public static override styles = styles;
+
+  public static register() {
+    registerComponent(this);
+  }
 
   @consume({ context: gridStateContext, subscribe: true })
   @property({ attribute: false })

@@ -1,6 +1,6 @@
 import { css } from 'lit';
 
-export const styles = css`                    
+export const styles = css`/* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */
 :host {
   --is-large: clamp(0, (var(--component-size, 1) + 1) - var(--ig-size-large, 3), 1);
   --is-medium:
@@ -26,7 +26,7 @@ export const styles = css`
   --z-index-base: 1;
 }
 
-[part~=virtualized] {
+apex-virtualizer {
   grid-row: virtualized-container;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -42,7 +42,7 @@ export const styles = css`
   color: var(--igx-content-text-color, var(--content-text-color));
   overflow: hidden auto !important;
 }
-[part~=virtualized]:focus {
+apex-virtualizer:focus {
   outline: none;
 }
 

@@ -1,17 +1,21 @@
 import { html, LitElement, nothing } from 'lit';
-import { customElement, property, queryAll } from 'lit/decorators.js';
+import { property, queryAll } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { GRID_ROW_TAG } from '../internal/tags.js';
+import { registerComponent } from '../internal/register.js';
 import type { ActiveNode, ColumnConfiguration } from '../internal/types.js';
 import ApexGridCell from './cell.js';
 import { styles } from '../styles/body-row/body-row-styles.css.js';
 
-@customElement(GRID_ROW_TAG)
 export default class ApexGridRow<T extends object> extends LitElement {
   public static get is() {
     return GRID_ROW_TAG;
   }
   public static override styles = styles;
+
+  public static register() {
+    registerComponent(this, [ApexGridCell]);
+  }
 
   @queryAll(ApexGridCell.is)
   protected _cells!: NodeListOf<ApexGridCell<T>>;

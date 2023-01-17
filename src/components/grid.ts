@@ -1,7 +1,6 @@
 import { html, nothing } from 'lit';
 import { ContextProvider } from '@lit-labs/context';
-import { LitVirtualizer } from '@lit-labs/virtualizer';
-import { customElement, eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
+import { eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { GRID_TAG } from '../internal/tags.js';
@@ -23,11 +22,14 @@ import type { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { FilterExpression } from '../operations/filter/types.js';
 import type { SortExpression } from '../operations/sort/types.js';
 
+import { registerComponent } from '../internal/register.js';
+
 import { styles as bootstrap } from '../styles/grid/themes/light/grid.bootstrap-styles.css.js';
 import { styles as fluent } from '../styles/grid/themes/light/grid.fluent-styles.css.js';
 import { styles as indigo } from '../styles/grid/themes/light/grid.indigo-styles.css.js';
 import { styles as material } from '../styles/grid/themes/light/grid.material-styles.css.js';
 
+import ApexVirtualizer from './virtualizer.js';
 import ApexGridHeaderRow from './header-row.js';
 import ApexGridRow from './row.js';
 import ApexGridCell from './cell.js';
@@ -41,17 +43,7 @@ import {
   IgcDropdownComponent,
   IgcInputComponent,
   IgcIconComponent,
-  IgcDropdownItemComponent,
 } from 'igniteui-webcomponents';
-
-defineComponents(
-  IgcButtonComponent,
-  IgcChipComponent,
-  IgcInputComponent,
-  IgcDropdownComponent,
-  IgcIconComponent,
-  IgcDropdownItemComponent,
-);
 
 /**
  * Event object for the filtering event of the grid.
@@ -60,7 +52,7 @@ export interface ApexFilteringEvent<T extends object> {
   /**
    * The filter expression to apply.
    */
-  expression: FilterExpression<T>;
+  // expression: FilterExpression<T>;
   /**
    * The filter state of the column.
    */
@@ -129,7 +121,6 @@ export interface ApexGridEventMap<T extends object> {
   indigo,
   material,
 })
-@customElement(GRID_TAG)
 export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMap<T>> {
   public static get is() {
     return GRID_TAG;
@@ -137,14 +128,25 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
 
   public static override styles = bootstrap;
 
+  public static register() {
+    registerComponent(this, [ApexVirtualizer, ApexGridRow, ApexGridHeaderRow, ApexFilterRow]);
+    defineComponents(
+      IgcButtonComponent,
+      IgcChipComponent,
+      IgcInputComponent,
+      IgcDropdownComponent,
+      IgcIconComponent,
+    );
+  }
+
   protected stateController = new StateController<T>(this);
   protected DOM = new GridDOMController<T>(this, this.stateController);
   protected dataController = new DataOperationsController<T>(this);
 
   protected stateProvider = new ContextProvider(this, gridStateContext, this.stateController);
 
-  @query('lit-virtualizer')
-  protected scrollContainer!: LitVirtualizer<T>;
+  @query(ApexVirtualizer.is)
+  protected scrollContainer!: ApexVirtualizer;
 
   @query(ApexGridHeaderRow.is)
   protected headerRow!: ApexGridHeaderRow<T>;
@@ -176,6 +178,8 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
    * result in empty column configuration for the grid.
    *
    * This property is ignored if any existing column configuration already exists in the grid.
+   *
+   * @attr auto-generate
    */
   @property({ type: Boolean, attribute: 'auto-generate' })
   public autoGenerate = false;
@@ -194,19 +198,41 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   public remoteConfiguration?: GridRemoteConfig<T>;
 
   /**
-   * Set sort state for the apex grid.
-   *
-   * @remarks
-   *
+   * Set the sort state for the grid.
    */
-  @property({ attribute: false })
-  public sortExpressions: SortExpression<T>[] = [];
+  public set sortExpressions(expressions: SortExpression<T>[]) {
+    if (expressions.length) {
+      this.sort(expressions);
+    }
+  }
 
   /**
-   * Set filter state for the apex grid.
+   * Get the sort state for the grid.
    */
   @property({ attribute: false })
-  public filterExpressions: FilterExpression<T>[] = [];
+  public get sortExpressions(): SortExpression<T>[] {
+    return Array.from(this.stateController.sorting.state.values());
+  }
+
+  /**
+   * Set the filter state for the grid.
+   */
+  public set filterExpressions(expressions: FilterExpression<T>[]) {
+    if (expressions.length) {
+      this.filter(expressions);
+    }
+  }
+
+  /**
+   * Get the filter state for the grid.
+   */
+  @property({ attribute: false })
+  public get filterExpressions(): FilterExpression<T>[] {
+    return this.stateController.filtering.state.values.reduce<FilterExpression<T>[]>(
+      (prev, curr) => [...prev, ...curr.all],
+      [],
+    );
+  }
 
   /**
    * Returns the collection of rendered row elements in the grid.
@@ -232,20 +258,6 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
    */
   public get totalItems() {
     return this.dataState.length;
-  }
-
-  @watch('sortExpressions')
-  protected watchSortExpressions() {
-    if (this.sortExpressions.length) {
-      this.sort(this.sortExpressions);
-    }
-  }
-
-  @watch('filterExpressions')
-  protected watchFilterExpressions() {
-    if (this.filterExpressions.length) {
-      this.filter(this.filterExpressions);
-    }
   }
 
   @watch('columns')
@@ -295,16 +307,16 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   /**
    * Resets the current sort state of the control.
    */
-  public clearSort() {
-    this.stateController.sorting.reset();
+  public clearSort(key?: Keys<T>) {
+    this.stateController.sorting.reset(key);
     this.requestUpdate(PIPELINE);
   }
 
   /**
    * Resets the current filter state of the control.
    */
-  public clearFilter() {
-    this.stateController.filtering.reset();
+  public clearFilter(key?: Keys<T>) {
+    this.stateController.filtering.reset(key);
     this.requestUpdate(PIPELINE);
   }
 
@@ -354,15 +366,12 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
 
   protected renderBody() {
     return html`
-      <lit-virtualizer
+      <apex-virtualizer
         .items=${this.dataState}
         .renderItem=${this.DOM.rowRenderer}
-        tabindex="0"
-        part="virtualized"
-        scroller
         @click=${this.bodyClickHandler}
         @keydown=${this.bodyKeydownHandler}
-      ></lit-virtualizer>
+      ></apex-virtualizer>
     `;
   }
 

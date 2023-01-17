@@ -4,7 +4,9 @@ import type { NumberOperands } from './operands/number.js';
 import type { StringOperands } from './operands/string.js';
 
 /**
- * The link operator
+ * Controls how a data record should resolve in a filter operation:
+ *  - `'and'` - the record must pass all the conditions.
+ *  - `'or'`  - the record must pass at least one condition.
  */
 export type FilterCriteria = 'and' | 'or';
 
@@ -30,20 +32,24 @@ export type FilterOperands<DataType, Operands extends string> = {
  */
 export interface BaseFilterExpression<T, K extends Keys<T> = Keys<T>> {
   /**
-   * The target column.
+   * The target column for the filter operation.
    */
   key: K;
   /**
-   *
+   * The filter function which will be executed against the data records.
    */
   condition: FilterOperation<T[K]> | OperandKeys<T[K]>;
 
   /**
+   * The filtering value used in the filter condition function.
    *
+   * @remarks
+   * Optional for unary conditions.
    */
   searchTerm?: T[K];
   /**
-   *
+   * Dictates how this expression should resolve in the filter operation in relation to
+   * other expressions.
    */
   criteria?: FilterCriteria;
   /**
@@ -55,6 +61,9 @@ export interface BaseFilterExpression<T, K extends Keys<T> = Keys<T>> {
   caseSensitive?: boolean;
 }
 
+/**
+ * See {@link BaseFilterExpression} for the full documentation.
+ */
 export type FilterExpression<T, K extends Keys<T> = Keys<T>> = K extends Keys<T>
   ? BaseFilterExpression<T, K>
   : never;

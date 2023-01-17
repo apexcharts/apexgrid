@@ -1,6 +1,6 @@
 import { css } from 'lit';
 
-export const styles = css`                    
+export const styles = css`/* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */ /* stylelint-disable max-line-length */
 :host {
   --is-large: clamp(0, (var(--component-size, 1) + 1) - var(--ig-size-large, 3), 1);
   --is-medium:
@@ -27,6 +27,7 @@ export const styles = css`
   color: inherit;
   border-right: var(--igx-row-border-width, var(--row-border-width)) solid transparent;
   font-size: 0.8125rem;
+  overflow-wrap: anywhere;
 }
 :host:last-of-type {
   border-right: 0;

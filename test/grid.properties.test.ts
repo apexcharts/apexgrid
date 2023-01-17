@@ -75,12 +75,12 @@ suite('Grid properties', () => {
   setup(async () => await TDD.setUp());
   teardown(() => TDD.tearDown());
 
-  test('Sort expressions late binding', async () => {
+  test('Sort expressions late binding (set)', async () => {
     await TDD.updateProperty('sortExpressions', [{ key: 'id', direction: 'descending' }]);
     assert.strictEqual(TDD.rows.first.data.id, 8);
   });
 
-  test('Filter expressions late binding', async () => {
+  test('Filter expressions late binding (set)', async () => {
     await TDD.updateColumns({ key: 'id', type: 'number' });
     await TDD.updateProperty('filterExpressions', [
       { key: 'id', condition: 'greaterThanOrEqual', searchTerm: 8 },
@@ -88,5 +88,25 @@ suite('Grid properties', () => {
 
     assert.strictEqual(TDD.grid.totalItems, 1);
     assert.strictEqual(TDD.rows.first.data.id, 8);
+  });
+
+  test('Sort expressions (get)', async () => {
+    await TDD.sort([
+      { key: 'name', direction: 'descending' },
+      { key: 'id', direction: 'ascending' },
+    ]);
+
+    assert.strictEqual(TDD.grid.sortExpressions.length, 2);
+  });
+
+  test('Filter expressions (get)', async () => {
+    await TDD.updateColumns({ key: 'id', type: 'number' });
+    await TDD.filter([
+      { key: 'name', condition: 'startsWith', searchTerm: 'a' },
+      { key: 'name', condition: 'contains', searchTerm: 'a' },
+      { key: 'id', condition: 'greaterThan', searchTerm: 3 },
+    ]);
+
+    assert.strictEqual(TDD.grid.filterExpressions.length, 3);
   });
 });

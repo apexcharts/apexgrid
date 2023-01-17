@@ -4,6 +4,12 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/define.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/index.ts",
       "declarations": [],
       "exports": [
@@ -29,14 +35,6 @@
           "declaration": {
             "name": "ApexFilteringEvent",
             "module": "./components/grid.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "BaseOperands",
-          "declaration": {
-            "name": "BaseOperands",
-            "module": "./operations/filter/operands/base.js"
           }
         },
         {
@@ -81,6 +79,22 @@
         },
         {
           "kind": "js",
+          "name": "BaseSortComparer",
+          "declaration": {
+            "name": "BaseSortComparer",
+            "module": "./operations/sort/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "BaseSortExpression",
+          "declaration": {
+            "name": "BaseSortExpression",
+            "module": "./operations/sort/types.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "SortExpression",
           "declaration": {
             "name": "SortExpression",
@@ -101,6 +115,22 @@
           "declaration": {
             "name": "SortState",
             "module": "./operations/sort/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SortComparer",
+          "declaration": {
+            "name": "SortComparer",
+            "module": "./operations/sort/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "BaseFilterExpression",
+          "declaration": {
+            "name": "BaseFilterExpression",
+            "module": "./operations/filter/types.js"
           }
         },
         {
@@ -161,6 +191,30 @@
         },
         {
           "kind": "js",
+          "name": "BaseApexCellContext",
+          "declaration": {
+            "name": "BaseApexCellContext",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "BaseColumnConfiguration",
+          "declaration": {
+            "name": "BaseColumnConfiguration",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "BaseColumnSortConfiguration",
+          "declaration": {
+            "name": "BaseColumnSortConfiguration",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "ColumnConfiguration",
           "declaration": {
             "name": "ColumnConfiguration",
@@ -209,9 +263,9 @@
         },
         {
           "kind": "js",
-          "name": "Values",
+          "name": "PropertyType",
           "declaration": {
-            "name": "Values",
+            "name": "PropertyType",
             "module": "./internal/types.js"
           }
         },
@@ -257,10 +311,16 @@
               "static": true
             },
             {
+              "kind": "method",
+              "name": "register",
+              "privacy": "public",
+              "static": true
+            },
+            {
               "kind": "field",
               "name": "value",
               "type": {
-                "text": "T[keyof T]"
+                "text": "PropertyType<T>"
               },
               "privacy": "public"
             },
@@ -325,13 +385,6 @@
             "name": "ApexGridCell",
             "module": "src/components/cell.ts"
           }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ApexGridCell",
-            "module": "src/components/cell.ts"
-          }
         }
       ]
     },
@@ -347,6 +400,12 @@
             {
               "kind": "field",
               "name": "is",
+              "privacy": "public",
+              "static": true
+            },
+            {
+              "kind": "method",
+              "name": "register",
               "privacy": "public",
               "static": true
             },
@@ -643,62 +702,6 @@
             "name": "ApexFilterRow",
             "module": "src/components/filter-row.ts"
           }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ApexFilterRow",
-            "module": "src/components/filter-row.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/grid-body.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ApexGridBody",
-          "members": [
-            {
-              "kind": "field",
-              "name": "is",
-              "privacy": "public",
-              "static": true
-            },
-            {
-              "kind": "field",
-              "name": "scroller",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "true"
-            }
-          ],
-          "superclass": {
-            "name": "LitVirtualizer",
-            "package": "@lit-labs/virtualizer"
-          }
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ApexGridBody",
-            "module": "src/components/grid-body.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ApexGridBody",
-            "module": "src/components/grid-body.ts"
-          }
         }
       ]
     },
@@ -714,6 +717,12 @@
             {
               "kind": "field",
               "name": "is",
+              "privacy": "public",
+              "static": true
+            },
+            {
+              "kind": "method",
+              "name": "register",
               "privacy": "public",
               "static": true
             },
@@ -737,20 +746,15 @@
             },
             {
               "kind": "field",
-              "name": "rowRenderer",
-              "privacy": "protected"
-            },
-            {
-              "kind": "field",
               "name": "stateProvider",
               "privacy": "protected",
               "default": "new ContextProvider(this, gridStateContext, this.stateController)"
             },
             {
               "kind": "field",
-              "name": "bodyElement",
+              "name": "scrollContainer",
               "type": {
-                "text": "ApexGridBody"
+                "text": "LitVirtualizer<T>"
               },
               "privacy": "protected"
             },
@@ -809,6 +813,17 @@
             },
             {
               "kind": "field",
+              "name": "autoGenerate",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false",
+              "description": "Whether the grid will try to \"resolve\" its column configuration based on the passed\ndata source.",
+              "attribute": "auto-generate"
+            },
+            {
+              "kind": "field",
               "name": "sortConfiguration",
               "type": {
                 "text": "GridSortConfiguration"
@@ -829,46 +844,41 @@
             {
               "kind": "field",
               "name": "sortExpressions",
+              "privacy": "public",
+              "description": "Get the sort state for the grid.",
               "type": {
                 "text": "SortExpression<T>[]"
-              },
-              "privacy": "public",
-              "default": "[]"
+              }
             },
             {
               "kind": "field",
               "name": "filterExpressions",
+              "privacy": "public",
+              "description": "Get the filter state for the grid.",
               "type": {
                 "text": "FilterExpression<T>[]"
-              },
-              "privacy": "public",
-              "default": "[]"
+              }
             },
             {
               "kind": "field",
               "name": "rows",
               "privacy": "public",
-              "description": "Returns the collection of"
+              "description": "Returns the collection of rendered row elements in the grid."
             },
             {
               "kind": "field",
               "name": "dataView",
-              "privacy": "public"
+              "type": {
+                "text": "ReadonlyArray<T>"
+              },
+              "privacy": "public",
+              "description": "Returns the state of the data source after sort/filter operations\nhave been applied."
             },
             {
               "kind": "field",
               "name": "totalItems",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "watchSortExpressions",
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "watchFilterExpressions",
-              "privacy": "protected"
+              "privacy": "public",
+              "description": "The total number of items in the ApexGrid.dataView collection."
             },
             {
               "kind": "method",
@@ -922,11 +932,41 @@
                 {
                   "name": "expressions",
                   "type": {
-                    "text": "Partial<SortExpression<T>> | Partial<SortExpression<T>>[]"
+                    "text": "SortExpression<T> | SortExpression<T>[]"
                   }
                 }
               ],
               "description": "Performs a sort operation in the grid based on the passed expression(s)."
+            },
+            {
+              "kind": "method",
+              "name": "clearSort",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "key",
+                  "optional": true,
+                  "type": {
+                    "text": "Keys<T>"
+                  }
+                }
+              ],
+              "description": "Resets the current sort state of the control."
+            },
+            {
+              "kind": "method",
+              "name": "clearFilter",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "key",
+                  "optional": true,
+                  "type": {
+                    "text": "Keys<T>"
+                  }
+                }
+              ],
+              "description": "Resets the current filter state of the control."
             },
             {
               "kind": "method",
@@ -944,19 +984,13 @@
             },
             {
               "kind": "method",
-              "name": "updateColumn",
+              "name": "updateColumns",
               "privacy": "public",
               "parameters": [
                 {
-                  "name": "key",
+                  "name": "columns",
                   "type": {
-                    "text": "Keys<T>"
-                  }
-                },
-                {
-                  "name": "config",
-                  "type": {
-                    "text": "Partial<ColumnConfiguration<T>>"
+                    "text": "ColumnConfiguration<T> | ColumnConfiguration<T>[]"
                   }
                 }
               ],
@@ -1130,6 +1164,18 @@
               }
             }
           ],
+          "attributes": [
+            {
+              "name": "auto-generate",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the grid will try to \"resolve\" its column configuration based on the passed\ndata source.",
+              "fieldName": "autoGenerate",
+              "attribute": "auto-generate"
+            }
+          ],
           "superclass": {
             "name": "EventEmitterBase",
             "module": "/src/internal/mixins/event-emitter.js"
@@ -1142,13 +1188,6 @@
         {
           "kind": "js",
           "name": "default",
-          "declaration": {
-            "name": "ApexGrid",
-            "module": "src/components/grid.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
           "declaration": {
             "name": "ApexGrid",
             "module": "src/components/grid.ts"
@@ -1168,6 +1207,12 @@
             {
               "kind": "field",
               "name": "is",
+              "privacy": "public",
+              "static": true
+            },
+            {
+              "kind": "method",
+              "name": "register",
               "privacy": "public",
               "static": true
             },
@@ -1229,13 +1274,6 @@
             "name": "ApexGridHeaderRow",
             "module": "src/components/header-row.ts"
           }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ApexGridHeaderRow",
-            "module": "src/components/header-row.ts"
-          }
         }
       ]
     },
@@ -1251,6 +1289,12 @@
             {
               "kind": "field",
               "name": "is",
+              "privacy": "public",
+              "static": true
+            },
+            {
+              "kind": "method",
+              "name": "register",
               "privacy": "public",
               "static": true
             },
@@ -1362,13 +1406,6 @@
             "name": "ApexGridHeader",
             "module": "src/components/header.ts"
           }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "ApexGridHeader",
-            "module": "src/components/header.ts"
-          }
         }
       ]
     },
@@ -1384,6 +1421,12 @@
             {
               "kind": "field",
               "name": "is",
+              "privacy": "public",
+              "static": true
+            },
+            {
+              "kind": "method",
+              "name": "register",
               "privacy": "public",
               "static": true
             },
@@ -1446,13 +1489,6 @@
         {
           "kind": "js",
           "name": "default",
-          "declaration": {
-            "name": "ApexGridRow",
-            "module": "src/components/row.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
           "declaration": {
             "name": "ApexGridRow",
             "module": "src/components/row.ts"
@@ -1550,7 +1586,12 @@
           "members": [
             {
               "kind": "field",
-              "name": "virtualBody",
+              "name": "#initialSize",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "container",
               "privacy": "public"
             },
             {
@@ -1563,14 +1604,17 @@
               "default": "{}"
             },
             {
+              "kind": "field",
+              "name": "rowRenderer",
+              "type": {
+                "text": "RenderItemFunction<T>"
+              },
+              "privacy": "public"
+            },
+            {
               "kind": "method",
               "name": "hostConnected",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
+              "privacy": "public"
             },
             {
               "kind": "method",
@@ -1691,6 +1735,16 @@
             },
             {
               "kind": "method",
+              "name": "hostUpdate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "get",
               "privacy": "public",
               "parameters": [
@@ -1723,6 +1777,7 @@
               "parameters": [
                 {
                   "name": "column",
+                  "optional": true,
                   "type": {
                     "text": "ColumnConfiguration<T>"
                   }
@@ -1733,11 +1788,6 @@
               "kind": "method",
               "name": "getDefaultExpression",
               "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "FilterExpression<T>"
-                }
-              },
               "parameters": [
                 {
                   "name": "column",
@@ -1817,6 +1867,11 @@
             },
             {
               "kind": "field",
+              "name": "virtualizer",
+              "privacy": "protected"
+            },
+            {
+              "kind": "field",
               "name": "state",
               "privacy": "protected",
               "default": "NAVIGATION_STATE"
@@ -1875,68 +1930,23 @@
             },
             {
               "kind": "method",
-              "name": "isNotSentinel",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "node",
-                  "type": {
-                    "text": "ActiveNode<T>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "home",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "container",
-                  "type": {
-                    "text": "ApexGridBody"
-                  }
-                }
-              ]
+              "privacy": "protected"
             },
             {
               "kind": "method",
               "name": "end",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "container",
-                  "type": {
-                    "text": "ApexGridBody"
-                  }
-                }
-              ]
+              "privacy": "protected"
             },
             {
               "kind": "method",
               "name": "arrowDown",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "container",
-                  "type": {
-                    "text": "ApexGridBody"
-                  }
-                }
-              ]
+              "privacy": "protected"
             },
             {
               "kind": "method",
               "name": "arrowUp",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "container",
-                  "type": {
-                    "text": "ApexGridBody"
-                  }
-                }
-              ]
+              "privacy": "protected"
             },
             {
               "kind": "method",
@@ -1967,12 +1977,6 @@
                   "name": "event",
                   "type": {
                     "text": "KeyboardEvent"
-                  }
-                },
-                {
-                  "name": "container",
-                  "type": {
-                    "text": "ApexGridBody"
                   }
                 }
               ]
@@ -2158,16 +2162,12 @@
             {
               "kind": "method",
               "name": "#resolveSortOptions",
-              "return": {
-                "type": {
-                  "text": "Partial<SortExpression<T>>"
-                }
-              },
               "parameters": [
                 {
                   "name": "options",
+                  "optional": true,
                   "type": {
-                    "text": "boolean | undefined | ColumnSortConfiguration<T>"
+                    "text": "boolean | ColumnSortConfiguration<T>"
                   }
                 }
               ]
@@ -2175,11 +2175,6 @@
             {
               "kind": "method",
               "name": "#createDefaultExpression",
-              "return": {
-                "type": {
-                  "text": "SortExpression<T>"
-                }
-              },
               "parameters": [
                 {
                   "name": "key",
@@ -2368,6 +2363,16 @@
               "privacy": "public"
             },
             {
+              "kind": "field",
+              "name": "headerRow",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "scrollContainer",
+              "privacy": "public"
+            },
+            {
               "kind": "method",
               "name": "init",
               "privacy": "protected"
@@ -2376,6 +2381,16 @@
               "kind": "method",
               "name": "hostConnected",
               "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "hostUpdate",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             }
           ]
         },
@@ -2448,10 +2463,7 @@
         },
         {
           "kind": "variable",
-          "name": "DEFAULT_COLUMN_CONFIG",
-          "type": {
-            "text": "ColumnConfiguration<any>"
-          }
+          "name": "DEFAULT_COLUMN_CONFIG"
         },
         {
           "kind": "variable",
@@ -2543,6 +2555,74 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/internal/is-defined.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "isDefined",
+          "return": {
+            "type": {
+              "text": "value is NonNullable<T>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "T | null | undefined"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "isDefined",
+          "declaration": {
+            "name": "isDefined",
+            "module": "src/internal/is-defined.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/normalize-case.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "normalizeCase",
+          "parameters": [
+            {
+              "name": "string",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "caseSensitive",
+              "optional": true,
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "normalizeCase",
+          "declaration": {
+            "name": "normalizeCase",
+            "module": "src/internal/normalize-case.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/internal/part-map.ts",
       "declarations": [
         {
@@ -2571,6 +2651,48 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/internal/register.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "registerComponent",
+          "parameters": [
+            {
+              "name": "component",
+              "type": {
+                "text": "ApexComponent"
+              }
+            },
+            {
+              "name": "dependencies",
+              "default": "[]",
+              "type": {
+                "text": "ApexComponent[]"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "registerComponent",
+          "declaration": {
+            "name": "registerComponent",
+            "module": "src/internal/register.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "component",
+            "module": "src/internal/register.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/internal/tags.ts",
       "declarations": [
         {
@@ -2580,14 +2702,6 @@
             "text": "'apex-grid'"
           },
           "default": "'apex-grid'"
-        },
-        {
-          "kind": "variable",
-          "name": "GRID_BODY_TAG",
-          "type": {
-            "text": "'apex-grid-body'"
-          },
-          "default": "'apex-grid-body'"
         },
         {
           "kind": "variable",
@@ -2636,14 +2750,6 @@
           "name": "GRID_TAG",
           "declaration": {
             "name": "GRID_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GRID_BODY_TAG",
-          "declaration": {
-            "name": "GRID_BODY_TAG",
             "module": "src/internal/tags.ts"
           }
         },
@@ -2701,42 +2807,6 @@
       "declarations": [
         {
           "kind": "function",
-          "name": "isDefined",
-          "return": {
-            "type": {
-              "text": "value is NonNullable<T>"
-            }
-          },
-          "parameters": [
-            {
-              "name": "value",
-              "type": {
-                "text": "T | null | undefined"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "normalizeCase",
-          "parameters": [
-            {
-              "name": "string",
-              "type": {
-                "text": "string"
-              }
-            },
-            {
-              "name": "caseSensitive",
-              "optional": true,
-              "type": {
-                "text": "boolean"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
           "name": "applyColumnWidths",
           "return": {
             "type": {
@@ -2748,6 +2818,18 @@
               "name": "columns",
               "type": {
                 "text": "Array<ColumnConfiguration<T>>"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "autoGenerateColumns",
+          "parameters": [
+            {
+              "name": "grid",
+              "type": {
+                "text": "GridHost<T>"
               }
             }
           ]
@@ -2780,25 +2862,17 @@
       "exports": [
         {
           "kind": "js",
-          "name": "isDefined",
-          "declaration": {
-            "name": "isDefined",
-            "module": "src/internal/utils.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "normalizeCase",
-          "declaration": {
-            "name": "normalizeCase",
-            "module": "src/internal/utils.ts"
-          }
-        },
-        {
-          "kind": "js",
           "name": "applyColumnWidths",
           "declaration": {
             "name": "applyColumnWidths",
+            "module": "src/internal/utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "autoGenerateColumns",
+          "declaration": {
+            "name": "autoGenerateColumns",
             "module": "src/internal/utils.ts"
           }
         },
@@ -2878,7 +2952,7 @@
                 {
                   "name": "key",
                   "type": {
-                    "text": "Keys<T>"
+                    "text": "K"
                   }
                 }
               ]
@@ -2891,7 +2965,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "text": "Values<T>"
+                    "text": "U"
                   }
                 },
                 {
@@ -3035,7 +3109,7 @@
                 {
                   "name": "key",
                   "type": {
-                    "text": "Keys<T>"
+                    "text": "K"
                   }
                 }
               ],
@@ -3052,7 +3126,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "text": "Values<T>"
+                    "text": "U"
                   }
                 },
                 {
@@ -3109,13 +3183,13 @@
                 {
                   "name": "first",
                   "type": {
-                    "text": "Values<T>"
+                    "text": "U"
                   }
                 },
                 {
                   "name": "second",
                   "type": {
-                    "text": "Values<T>"
+                    "text": "U"
                   }
                 }
               ]
@@ -3187,7 +3261,7 @@
                 {
                   "name": "key",
                   "type": {
-                    "text": "Keys<T>"
+                    "text": "K"
                   }
                 }
               ],
@@ -3204,7 +3278,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "text": "Values<T>"
+                    "text": "U"
                   }
                 },
                 {
@@ -3418,76 +3492,6 @@
           "declaration": {
             "name": "EventEmitterBase",
             "module": "src/internal/mixins/event-emitter.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/body-cell/body-cell-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/body-cell/body-cell-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/body-row/body-row-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/body-row/body-row-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/filter-row/filter-row-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/filter-row/filter-row-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/header-cell/header-cell-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/header-cell/header-cell-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/header-row/header-row.base-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/header-row/header-row.base-styles.ts"
           }
         }
       ]
@@ -3713,164 +3717,11 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/operations/filter/operands/base.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "BaseOperands",
-          "members": [
-            {
-              "kind": "method",
-              "name": "get",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "condition",
-                  "type": {
-                    "text": "keyof this"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "default",
-              "type": {
-                "text": "FilterOperation<T, Type>"
-              },
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "conditions",
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "[Symbol.iterator]",
-              "privacy": "public"
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "BaseOperands",
-          "declaration": {
-            "name": "BaseOperands",
-            "module": "src/operations/filter/operands/base.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/operations/filter/operands/boolean.ts",
       "declarations": [
         {
-          "kind": "class",
-          "description": "",
-          "name": "BooleanOperands",
-          "members": [
-            {
-              "kind": "field",
-              "name": "default",
-              "type": {
-                "text": "FilterOperation<T, Type>"
-              },
-              "privacy": "public",
-              "inheritedFrom": {
-                "name": "BaseOperands",
-                "module": "src/operations/filter/operands/base.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "all",
-              "type": {
-                "text": "FilterOperation<T, boolean>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'all',\n    unary: true,\n    logic: _ => true,\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "true",
-              "type": {
-                "text": "FilterOperation<T, boolean>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'true',\n    unary: true,\n    logic: target => target === true,\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "false",
-              "type": {
-                "text": "FilterOperation<T, boolean>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'false',\n    unary: true,\n    logic: target => target === false,\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "empty",
-              "type": {
-                "text": "FilterOperation<T, boolean>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'empty',\n    unary: true,\n    logic: target => !isDefined(target),\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "notEmpty",
-              "type": {
-                "text": "FilterOperation<T, boolean>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'nonEmpty',\n    unary: true,\n    logic: target => isDefined(target),\n  }"
-            },
-            {
-              "kind": "method",
-              "name": "get",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "condition",
-                  "type": {
-                    "text": "keyof this"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "BaseOperands",
-                "module": "src/operations/filter/operands/base.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "conditions",
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "BaseOperands",
-                "module": "src/operations/filter/operands/base.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "[Symbol.iterator]",
-              "privacy": "public",
-              "inheritedFrom": {
-                "name": "BaseOperands",
-                "module": "src/operations/filter/operands/base.ts"
-              }
-            }
-          ],
-          "superclass": {
-            "name": "BaseOperands",
-            "module": "/src/operations/filter/operands/base.js"
-          }
+          "kind": "variable",
+          "name": "BooleanOperands"
         }
       ],
       "exports": [
@@ -3889,134 +3740,8 @@
       "path": "src/operations/filter/operands/number.ts",
       "declarations": [
         {
-          "kind": "class",
-          "description": "",
-          "name": "NumberOperands",
-          "members": [
-            {
-              "kind": "field",
-              "name": "default",
-              "type": {
-                "text": "FilterOperation<T, Type>"
-              },
-              "privacy": "public",
-              "inheritedFrom": {
-                "name": "BaseOperands",
-                "module": "src/operations/filter/operands/base.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "equals",
-              "type": {
-                "text": "FilterOperation<T, number>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'equals',\n    unary: false,\n    logic: (target, searchTerm) => target === searchTerm,\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "doesNotEqual",
-              "type": {
-                "text": "FilterOperation<T, number>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'doesNotEqual',\n    unary: false,\n    logic: (target, searchTerm) => target !== searchTerm,\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "greaterThan",
-              "type": {
-                "text": "FilterOperation<T, number>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'greaterThan',\n    unary: false,\n    logic: (target, searchTerm) => target > searchTerm,\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "lessThan",
-              "type": {
-                "text": "FilterOperation<T, number>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'lessThan',\n    unary: false,\n    logic: (target, searchTerm) => target < searchTerm,\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "greaterThanOrEqual",
-              "type": {
-                "text": "FilterOperation<T, number>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'greaterThanOrEqual',\n    unary: false,\n    logic: (target, searchTerm) => target >= searchTerm,\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "lessThanOrEqual",
-              "type": {
-                "text": "FilterOperation<T, number>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'lessThanOrEqual',\n    unary: false,\n    logic: (target, searchTerm) => target <= searchTerm,\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "empty",
-              "type": {
-                "text": "FilterOperation<T, number>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'empty',\n    unary: true,\n    logic: target => !isDefined(target) || isNaN(target),\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "notEmpty",
-              "type": {
-                "text": "FilterOperation<T, number>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'notEmpty',\n    unary: true,\n    logic: target => isDefined(target) && !isNaN(target),\n  }"
-            },
-            {
-              "kind": "method",
-              "name": "get",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "condition",
-                  "type": {
-                    "text": "keyof this"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "BaseOperands",
-                "module": "src/operations/filter/operands/base.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "conditions",
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "BaseOperands",
-                "module": "src/operations/filter/operands/base.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "[Symbol.iterator]",
-              "privacy": "public",
-              "inheritedFrom": {
-                "name": "BaseOperands",
-                "module": "src/operations/filter/operands/base.ts"
-              }
-            }
-          ],
-          "superclass": {
-            "name": "BaseOperands",
-            "module": "/src/operations/filter/operands/base.js"
-          }
+          "kind": "variable",
+          "name": "NumberOperands"
         }
       ],
       "exports": [
@@ -4035,134 +3760,8 @@
       "path": "src/operations/filter/operands/string.ts",
       "declarations": [
         {
-          "kind": "class",
-          "description": "",
-          "name": "StringOperands",
-          "members": [
-            {
-              "kind": "field",
-              "name": "default",
-              "type": {
-                "text": "FilterOperation<T, Type>"
-              },
-              "privacy": "public",
-              "inheritedFrom": {
-                "name": "BaseOperands",
-                "module": "src/operations/filter/operands/base.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "contains",
-              "type": {
-                "text": "FilterOperation<T, string>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'contains',\n    unary: false,\n    logic: (target, searchTerm, caseSensitive?) =>\n      normalizeCase(target, caseSensitive).includes(normalizeCase(searchTerm, caseSensitive)),\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "doesNotContain",
-              "type": {
-                "text": "FilterOperation<T, string>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'doesNotContain',\n    unary: false,\n    logic: (target, searchTerm, caseSensitive?) =>\n      !normalizeCase(target, caseSensitive).includes(normalizeCase(searchTerm, caseSensitive)),\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "startsWith",
-              "type": {
-                "text": "FilterOperation<T, string>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'startsWith',\n    unary: false,\n    logic: (target, searchTerm, caseSensitive?) =>\n      normalizeCase(target, caseSensitive).startsWith(normalizeCase(searchTerm, caseSensitive)),\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "endsWith",
-              "type": {
-                "text": "FilterOperation<T, string>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'endsWith',\n    unary: false,\n    logic: (target, searchTerm, caseSensitive?) =>\n      normalizeCase(target, caseSensitive).endsWith(normalizeCase(searchTerm, caseSensitive)),\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "equals",
-              "type": {
-                "text": "FilterOperation<T, string>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'equals',\n    unary: false,\n    logic: (target, searchTerm, caseSensitive) =>\n      normalizeCase(target, caseSensitive) === normalizeCase(searchTerm, caseSensitive),\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "doesNotEqual",
-              "type": {
-                "text": "FilterOperation<T, string>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'doesNotEqual',\n    unary: false,\n    logic: (target, searchTerm, caseSensitive) =>\n      normalizeCase(target, caseSensitive) !== normalizeCase(searchTerm, caseSensitive),\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "empty",
-              "type": {
-                "text": "FilterOperation<T, string>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'empty',\n    unary: true,\n    logic: target => !isDefined(target) || target.length < 1,\n  }"
-            },
-            {
-              "kind": "field",
-              "name": "notEmpty",
-              "type": {
-                "text": "FilterOperation<T, string>"
-              },
-              "privacy": "public",
-              "default": "{\n    name: 'notEmpty',\n    unary: true,\n    logic: target => isDefined(target) && target.length > 0,\n  }"
-            },
-            {
-              "kind": "method",
-              "name": "get",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "condition",
-                  "type": {
-                    "text": "keyof this"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "BaseOperands",
-                "module": "src/operations/filter/operands/base.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "conditions",
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "BaseOperands",
-                "module": "src/operations/filter/operands/base.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "[Symbol.iterator]",
-              "privacy": "public",
-              "inheritedFrom": {
-                "name": "BaseOperands",
-                "module": "src/operations/filter/operands/base.ts"
-              }
-            }
-          ],
-          "superclass": {
-            "name": "BaseOperands",
-            "module": "/src/operations/filter/operands/base.js"
-          }
+          "kind": "variable",
+          "name": "StringOperands"
         }
       ],
       "exports": [
@@ -4172,62 +3771,6 @@
           "declaration": {
             "name": "StringOperands",
             "module": "src/operations/filter/operands/string.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/grid/themes/light/grid.bootstrap-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/grid/themes/light/grid.bootstrap-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/grid/themes/light/grid.fluent-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/grid/themes/light/grid.fluent-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/grid/themes/light/grid.indigo-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/grid/themes/light/grid.indigo-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/styles/grid/themes/light/grid.material-styles.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "module": "src/styles/grid/themes/light/grid.material-styles.ts"
           }
         }
       ]

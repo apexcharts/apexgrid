@@ -1,22 +1,26 @@
 import { html, LitElement, nothing, PropertyValueMap } from 'lit';
 import { consume } from '@lit-labs/context';
-import { customElement, property, queryAll } from 'lit/decorators.js';
+import { property, queryAll } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { gridStateContext, StateController } from '../controllers/state.js';
 import { partNameMap } from '../internal/part-map.js';
 import { GRID_HEADER_ROW_TAG } from '../internal/tags.js';
+import { registerComponent } from '../internal/register.js';
 
 import ApexGridHeader from './header.js';
 import { styles } from '../styles/header-row/header-row.base-styles.css.js';
 
 import type { ColumnConfiguration } from '../internal/types.js';
 
-@customElement(GRID_HEADER_ROW_TAG)
 export default class ApexGridHeaderRow<T extends object> extends LitElement {
   public static get is() {
     return GRID_HEADER_ROW_TAG;
   }
   public static override styles = styles;
+
+  public static register() {
+    registerComponent(this, [ApexGridHeader]);
+  }
 
   @queryAll(ApexGridHeader.is)
   protected _headers!: NodeListOf<ApexGridHeader<T>>;

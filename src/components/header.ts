@@ -1,8 +1,9 @@
 import { html, LitElement, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { consume } from '@lit-labs/context';
 import { partNameMap } from '../internal/part-map.js';
 import { GRID_HEADER_TAG } from '../internal/tags.js';
+import { registerComponent } from '../internal/register.js';
 import {
   MIN_COL_RESIZE_WIDTH,
   SORT_ICON_ASCENDING,
@@ -12,13 +13,16 @@ import type { ColumnConfiguration, ApexHeaderContext } from '../internal/types.j
 import { StateController, gridStateContext } from '../controllers/state.js';
 import { styles } from '../styles/header-cell/header-cell-styles.css.js';
 
-@customElement(GRID_HEADER_TAG)
 export default class ApexGridHeader<T extends object> extends LitElement {
   public static get is() {
     return GRID_HEADER_TAG;
   }
 
   public static override styles = styles;
+
+  public static register() {
+    registerComponent(this);
+  }
 
   protected get context(): ApexHeaderContext<T> {
     return {

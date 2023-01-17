@@ -122,11 +122,11 @@ export interface BaseColumnConfiguration<T extends object, K extends Keys<T> = K
   /**
    * Header template callback.
    */
-  headerTemplate?: (params: ApexHeaderContext<T>) => TemplateResult;
+  headerTemplate?: (params: ApexHeaderContext<T>) => TemplateResult | unknown;
   /**
    * Cell template callback.
    */
-  cellTemplate?: (params: ApexCellContext<T, K>) => TemplateResult;
+  cellTemplate?: (params: ApexCellContext<T, K>) => TemplateResult | unknown;
 }
 
 /**

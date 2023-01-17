@@ -10,7 +10,8 @@
   "license": "SEE LICENSE IN LICENSE.mds",
   "author": "apex-grid",
   "exports": {
-    ".": "./dist/src/index.js"
+    ".": "./dist/src/index.js",
+    "./define": "./dist/src/define.js"
   },
   "type": "module",
   "main": "dist/src/index.js",
@@ -21,7 +22,7 @@
     "!/dist/test/"
   ],
   "scripts": {
-    "analyze": "cem analyze --litelement --globs \"src/**/*.{js,ts}\"",
+    "analyze": "cem analyze --litelement --globs \"src/**/*.{js,ts}\" --exclude \"src/styles/**/*\"",
     "build": "npm run build:tsc && npm run dev:vite && npm run typedoc",
     "build:tsc": "tsc",
     "dev:vite": "vite build",
@@ -59,35 +60,35 @@
     "@lit-labs/context": "^0.2.0",
     "@lit-labs/virtualizer": "^1.0.1",
     "igniteui-theming": "^1.2.0",
-    "igniteui-webcomponents": "^4.1.0",
-    "lit": "^2.5.0"
+    "igniteui-webcomponents": "^4.1.1",
+    "lit": "^2.6.1"
   },
   "devDependencies": {
     "@blockquote/rollup-plugin-total-bundlesize": "^1.0.0",
-    "@blockquote/sass-style-template": "^3.0.0",
+    "@blockquote/sass-style-template": "3.0.0",
     "@blockquote/test-runner-mocha-style-reporter": "^1.4.1",
-    "@custom-elements-manifest/analyzer": "^0.6.6",
-    "@open-wc/eslint-config": "^9.1.0",
+    "@custom-elements-manifest/analyzer": "^0.6.8",
+    "@open-wc/eslint-config": "^9.2.0",
     "@open-wc/testing": "^3.1.7",
-    "@typescript-eslint/eslint-plugin": "^5.48.0",
-    "@typescript-eslint/parser": "^5.48.0",
+    "@typescript-eslint/eslint-plugin": "^5.48.1",
+    "@typescript-eslint/parser": "^5.48.1",
     "@web/dev-server": "^0.1.35",
     "@web/test-runner": "^0.15.0",
     "@web/test-runner-playwright": "^0.9.0",
     "concurrently": "^7.6.0",
-    "eslint": "^8.31.0",
+    "eslint": "^8.32.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-log-filenames": "^1.0.6",
-    "husky": "^8.0.2",
+    "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
-    "prettier": "^2.8.1",
+    "prettier": "^2.8.3",
     "sinon": "^15.0.1",
     "stylelint": "^14.16.1",
     "stylelint-config-standard-scss": "^6.1.0",
     "tslib": "^2.4.1",
-    "typedoc": "^0.23.23",
+    "typedoc": "^0.23.24",
     "typescript": "^4.9.4",
-    "vite": "^4.0.3"
+    "vite": "^4.0.4"
   },
   "customElements": "custom-elements.json"
 }
