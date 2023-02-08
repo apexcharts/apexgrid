@@ -5,6 +5,7 @@ import { FilterState } from '../operations/filter/state.js';
 
 import type { ColumnConfiguration, GridHost, Keys } from '../internal/types.js';
 import type { FilterExpression } from '../operations/filter/types.js';
+import type { ApexFilteredEvent } from '../components/grid.js';
 
 export class FilterController<T extends object> implements ReactiveController {
   constructor(protected host: GridHost<T>) {
@@ -26,6 +27,7 @@ export class FilterController<T extends object> implements ReactiveController {
   #emitFilteringEvent(expression: FilterExpression<T>, type: 'add' | 'modify' | 'remove') {
     return this.host.emitEvent('filtering', {
       detail: {
+        key: expression.key,
         expressions: [expression],
         type,
       },
@@ -33,8 +35,8 @@ export class FilterController<T extends object> implements ReactiveController {
     });
   }
 
-  #emitFilteredEvent(state?: FilterExpression<T>[]) {
-    return this.host.emitEvent('filtered', { detail: state ?? [] });
+  #emitFilteredEvent(detail?: ApexFilteredEvent<T>) {
+    return this.host.emitEvent('filtered', { detail });
   }
 
   #filter(expression: FilterExpression<T> | FilterExpression<T>[]) {
@@ -87,6 +89,7 @@ export class FilterController<T extends object> implements ReactiveController {
     if (
       !this.host.emitEvent('filtering', {
         detail: {
+          key,
           expressions: state,
           type: 'remove',
         },
@@ -100,7 +103,7 @@ export class FilterController<T extends object> implements ReactiveController {
     this.#filter([]);
 
     await this.host.updateComplete;
-    this.#emitFilteredEvent(this.get(key)?.all);
+    this.#emitFilteredEvent({ key, state: this.get(key)?.all ?? [] });
   }
 
   public async removeExpression(expression: FilterExpression<T>) {
@@ -119,7 +122,7 @@ export class FilterController<T extends object> implements ReactiveController {
     this.#filter([]);
 
     await this.host.updateComplete;
-    this.#emitFilteredEvent(state?.all);
+    this.#emitFilteredEvent({ key: expression.key, state: state?.all ?? [] });
   }
 
   public async filterWithEvent(expression: FilterExpression<T>, type: 'add' | 'modify' | 'remove') {
@@ -130,7 +133,7 @@ export class FilterController<T extends object> implements ReactiveController {
     this.#filter(expression);
 
     await this.host.updateComplete;
-    this.#emitFilteredEvent(this.get(expression.key)?.all);
+    this.#emitFilteredEvent({ key: expression.key, state: this.get(expression.key)?.all ?? [] });
   }
 
   public filter(expression: FilterExpression<T> | FilterExpression<T>[]) {

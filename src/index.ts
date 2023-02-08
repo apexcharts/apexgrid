@@ -1,5 +1,5 @@
 export { ApexGrid } from './components/grid.js';
-export type { ApexGridEventMap, ApexFilteringEvent } from './components/grid.js';
+export type { ApexGridEventMap, ApexFilteringEvent, ApexFilteredEvent } from './components/grid.js';
 
 export { BooleanOperands } from './operations/filter/operands/boolean.js';
 export { NumberOperands } from './operations/filter/operands/number.js';

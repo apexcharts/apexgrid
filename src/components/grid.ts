@@ -49,6 +49,11 @@ import {
  */
 export interface ApexFilteringEvent<T extends object> {
   /**
+   * The target column for the filter operation.
+   */
+  key: Keys<T>;
+
+  /**
    * The filter expression(s) to apply.
    */
   expressions: FilterExpression<T>[];
@@ -63,6 +68,21 @@ export interface ApexFilteringEvent<T extends object> {
    * `remove` - the expression(s) will be removed from the state of the column.
    */
   type: 'add' | 'modify' | 'remove';
+}
+
+/**
+ * Event object for the filtered event of the grid.
+ */
+export interface ApexFilteredEvent<T extends object> {
+  /**
+   * The target column for the filter operation.
+   */
+  key: Keys<T>;
+
+  /**
+   * The filter state of the column after the operation.
+   */
+  state: FilterExpression<T>[];
 }
 
 /**
@@ -103,7 +123,7 @@ export interface ApexGridEventMap<T extends object> {
    *
    * @event
    */
-  filtered: CustomEvent<FilterExpression<T>[]>;
+  filtered: CustomEvent<ApexFilteredEvent<T>>;
 }
 
 /**
