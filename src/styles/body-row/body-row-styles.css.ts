@@ -15,7 +15,7 @@ export const styles = css`/* stylelint-disable max-line-length */ /* stylelint-d
 :host {
   display: grid;
   width: 100%;
-  min-height: max(var(--is-large, 1) * 3.125rem, var(--is-medium, 1) * 2.125rem, var(--is-small, 1) * 1.5rem);
+  min-height: max(var(--is-large, 1) * max(3.125rem, -1 * 3.125rem), var(--is-medium, 1) * max(2.125rem, -1 * 2.125rem), var(--is-small, 1) * max(1.5rem, -1 * 1.5rem));
   -webkit-border-after: var(--igx-row-border-width, var(--header-border-width)) var(--igx-row-border-style, var(--header-border-style)) var(--igx-row-border-color, var(--header-border-color));
           border-block-end: var(--igx-row-border-width, var(--header-border-width)) var(--igx-row-border-style, var(--header-border-style)) var(--igx-row-border-color, var(--header-border-color));
   background: var(--igx-row-odd-background, var(--row-odd-background));

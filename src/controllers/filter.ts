@@ -3,7 +3,6 @@ import { PIPELINE } from '../internal/constants.js';
 import { asArray, getFilterOperandsFor } from '../internal/utils.js';
 import { FilterState } from '../operations/filter/state.js';
 
-import { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { ColumnConfiguration, GridHost, Keys } from '../internal/types.js';
 import type { FilterExpression } from '../operations/filter/types.js';
 
@@ -19,22 +18,30 @@ export class FilterController<T extends object> implements ReactiveController {
     return this.host.filterRow;
   }
 
-  #emitFilteringEvent(expression: FilterExpression<T>) {
+  get #virtualizer() {
+    // @ts-expect-error - protected access
+    return this.host.scrollContainer;
+  }
+
+  #emitFilteringEvent(expression: FilterExpression<T>, type: 'add' | 'modify' | 'remove') {
     return this.host.emitEvent('filtering', {
       detail: {
-        // expression,
-        state: this.get(expression.key)!,
+        expressions: [expression],
+        type,
       },
       cancelable: true,
     });
   }
 
-  #emitFilteredEvent(detail: FilterExpressionTree<T>) {
-    return this.host.emitEvent('filtered', { detail });
+  #emitFilteredEvent(state?: FilterExpression<T>[]) {
+    return this.host.emitEvent('filtered', { detail: state ?? [] });
   }
 
-  protected _filter(expression: FilterExpression<T> | FilterExpression<T>[]) {
+  #filter(expression: FilterExpression<T> | FilterExpression<T>[]) {
     asArray(expression).forEach(expr => this.state.set(expr));
+    // HACK: In the case where the scrollTop is a large and amount and a big chunk of data is filtered out
+    // HACK: the virtualizer can't recalculate its scroll position correctly. Thus, we reset the scrollTop state.
+    this.#virtualizer?.scrollTo({ top: 0 });
     this.host.requestUpdate(PIPELINE);
   }
 
@@ -74,10 +81,32 @@ export class FilterController<T extends object> implements ReactiveController {
     } as unknown as FilterExpression<T>;
   }
 
-  public removeExpression(expression: FilterExpression<T>) {
+  public async removeAllExpressions(key: Keys<T>) {
+    const state = this.get(key)?.all ?? [];
+
+    if (
+      !this.host.emitEvent('filtering', {
+        detail: {
+          expressions: state,
+          type: 'remove',
+        },
+        cancelable: true,
+      })
+    ) {
+      return;
+    }
+
+    this.reset(key);
+    this.#filter([]);
+
+    await this.host.updateComplete;
+    this.#emitFilteredEvent(this.get(key)?.all);
+  }
+
+  public async removeExpression(expression: FilterExpression<T>) {
     const state = this.get(expression.key);
 
-    if (!this.#emitFilteringEvent(expression)) {
+    if (!this.#emitFilteringEvent(expression, 'remove')) {
       return;
     }
 
@@ -87,22 +116,25 @@ export class FilterController<T extends object> implements ReactiveController {
       this.reset(state.key);
     }
 
-    this.#emitFilteredEvent(state ?? new FilterExpressionTree(expression.key));
+    this.#filter([]);
+
+    await this.host.updateComplete;
+    this.#emitFilteredEvent(state?.all);
   }
 
-  public async filterWithEvent(expression: FilterExpression<T>) {
-    if (!this.#emitFilteringEvent(expression)) {
+  public async filterWithEvent(expression: FilterExpression<T>, type: 'add' | 'modify' | 'remove') {
+    if (!this.#emitFilteringEvent(expression, type)) {
       return;
     }
 
-    this._filter(expression);
+    this.#filter(expression);
 
     await this.host.updateComplete;
-    this.#emitFilteredEvent(this.get(expression.key)!);
+    this.#emitFilteredEvent(this.get(expression.key)?.all);
   }
 
   public filter(expression: FilterExpression<T> | FilterExpression<T>[]) {
-    this._filter(
+    this.#filter(
       asArray(expression).map(expr =>
         Object.assign(this.getDefaultExpression(this.host.getColumn(expr.key)!), expr),
       ),

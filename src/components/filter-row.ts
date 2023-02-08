@@ -4,7 +4,7 @@ import { property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { StateController, gridStateContext } from '../controllers/state.js';
-import { PIPELINE, DEFAULT_COLUMN_CONFIG } from '../internal/constants.js';
+import { DEFAULT_COLUMN_CONFIG } from '../internal/constants.js';
 import { GRID_FILTER_ROW_TAG } from '../internal/tags.js';
 import { getFilterOperandsFor } from '../internal/utils.js';
 import { registerComponent } from '../internal/register.js';
@@ -94,7 +94,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     this.active = true;
 
     await this.updateComplete;
-    this.input.select();
+    this.input?.select();
   }
 
   #handleConditionChanged(event: CustomEvent<IgcDropdownItemComponent>) {
@@ -107,7 +107,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
     >;
 
     if (this.input.value || this.expression.condition.unary) {
-      this.filterController.filterWithEvent(this.expression);
+      this.filterController.filterWithEvent(this.expression, 'modify');
     }
 
     this.requestUpdate();
@@ -118,14 +118,18 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
     const value = this.isNumeric ? parseFloat(event.detail) : event.detail;
     const shouldUpdate = this.isNumeric ? !isNaN(value as number) : !!value;
+    const type = this.filterController.get(this.expression.key)?.has(this.expression)
+      ? 'modify'
+      : 'add';
 
     if (shouldUpdate) {
       this.expression.searchTerm = value as any;
-      this.filterController.filterWithEvent(this.expression);
+
+      this.filterController.filterWithEvent(this.expression, type);
     } else {
       this.#removeExpression(this.expression);
-      this.state.host.requestUpdate(PIPELINE);
     }
+
     this.requestUpdate();
   }
 
@@ -146,8 +150,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   }
 
   #handleResetClick() {
-    this.filterController.reset(this.column.key);
-    this.state.host.requestUpdate(PIPELINE);
+    this.filterController.removeAllExpressions(this.column.key);
     this.requestUpdate();
   }
 
@@ -171,7 +174,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
       e.stopPropagation();
 
       expression.criteria = expression.criteria === 'and' ? 'or' : 'and';
-      this.filterController.filterWithEvent(expression);
+      this.filterController.filterWithEvent(expression, 'modify');
       this.requestUpdate();
     };
   }
@@ -181,7 +184,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
       e.stopPropagation();
       this.expression = expression;
       await this.updateComplete;
-      this.input.select();
+      this.input?.select();
     };
   }
 
@@ -196,7 +199,6 @@ export default class ApexFilterRow<T extends object> extends LitElement {
         this.input.focus();
       }
 
-      this.state.host.requestUpdate(PIPELINE);
       this.requestUpdate();
     };
   }

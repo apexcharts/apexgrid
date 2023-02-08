@@ -15,31 +15,31 @@ export class DataOperationsController<T extends object> implements ReactiveContr
 
   public hostConnected() {}
 
-  protected get hasRemoteSort() {
-    return isDefined(this.host.remoteConfiguration?.sort);
+  protected get hasCustomSort() {
+    return isDefined(this.host.dataPipelineConfiguration?.sort);
   }
 
-  protected get hasRemoteFilter() {
-    return isDefined(this.host.remoteConfiguration?.filter);
+  protected get hasCustomFilter() {
+    return isDefined(this.host.dataPipelineConfiguration?.filter);
   }
 
-  protected get remoteFilter() {
-    return this.host.remoteConfiguration!.filter!;
+  protected get customFilter() {
+    return this.host.dataPipelineConfiguration!.filter!;
   }
 
-  protected get remoteSort() {
-    return this.host.remoteConfiguration!.sort!;
+  protected get customSort() {
+    return this.host.dataPipelineConfiguration!.sort!;
   }
 
   public async apply(data: T[], state: StateController<T>) {
     const { filtering, sorting } = state;
 
-    data = this.hasRemoteFilter
-      ? await this.remoteFilter(data, filtering.state)
+    data = this.hasCustomFilter
+      ? await this.customFilter({ data, grid: this.host, type: 'filter' })
       : this.filtering.apply(data, filtering.state);
 
-    data = this.hasRemoteSort
-      ? await this.remoteSort(data, sorting.state)
+    data = this.hasCustomSort
+      ? await this.customSort({ data, grid: this.host, type: 'sort' })
       : this.sorting.apply(data, sorting.state);
 
     return data;

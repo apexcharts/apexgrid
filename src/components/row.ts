@@ -7,6 +7,9 @@ import type { ActiveNode, ColumnConfiguration } from '../internal/types.js';
 import ApexGridCell from './cell.js';
 import { styles } from '../styles/body-row/body-row-styles.css.js';
 
+/**
+ * Component representing the DOM row in the Apex grid.
+ */
 export default class ApexGridRow<T extends object> extends LitElement {
   public static get is() {
     return GRID_ROW_TAG;

@@ -348,6 +348,35 @@ suite('Grid UI sort', () => {
       TDD.columnIsSorted('active');
     });
 
+    test('Expressions with direction `none`', async () => {
+      await TDD.sort([
+        {
+          key: 'importance',
+          direction: 'ascending',
+          comparer: importanceComparer,
+        },
+        {
+          key: 'active',
+          direction: 'ascending',
+        },
+      ]);
+
+      assert.strictEqual(TDD.rows.first.data.importance, 'low');
+      TDD.columnIsSorted('importance');
+      TDD.columnIsSorted('active');
+
+      await TDD.sort({ key: 'active', direction: 'none' });
+      TDD.columnIsSorted('importance');
+      TDD.columnIsNotSorted('active');
+      assert.strictEqual(TDD.grid.sortExpressions.length, 1);
+
+      await TDD.clearSort();
+      await TDD.sort({ key: 'importance', direction: 'none', comparer: importanceComparer });
+
+      TDD.columnIsNotSorted('importance');
+      assert.strictEqual(TDD.grid.sortExpressions.length, 0);
+    });
+
     test('API clear state', async () => {
       await TDD.sort({ key: 'importance', direction: 'descending', comparer: importanceComparer });
       assert.strictEqual(TDD.rows.first.data.importance, 'high');

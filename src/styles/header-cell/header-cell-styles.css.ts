@@ -43,7 +43,7 @@ export const styles = css`/* stylelint-disable max-line-length */ /* stylelint-d
           justify-content: space-between;
   width: 100%;
   height: 100%;
-  padding: 0 max(var(--is-large, 1) * 1.5rem, var(--is-medium, 1) * 1rem, var(--is-small, 1) * 0.5rem);
+  padding: 0 max(var(--is-large, 1) * max(1.5rem, -1 * 1.5rem), var(--is-medium, 1) * max(1rem, -1 * 1rem), var(--is-small, 1) * max(0.5rem, -1 * 0.5rem));
   font-weight: 500;
   overflow: hidden;
   -webkit-user-select: none;

@@ -1,4 +1,5 @@
 import { ReactiveController } from 'lit';
+import ApexGridRow from '../components/row.js';
 import { NAVIGATION_STATE, SENTINEL_NODE } from '../internal/constants.js';
 import type { ActiveNode, GridHost, Keys } from '../internal/types.js';
 
@@ -47,6 +48,16 @@ export class NavigationController<T extends object> implements ReactiveControlle
     ].key;
   }
 
+  protected scrollToCell(node: ActiveNode<T>) {
+    const row = Array.from(this.virtualizer.querySelectorAll(ApexGridRow.is)).find(
+      row => row.index === node.row,
+    ) as unknown as ApexGridRow<T>;
+
+    if (row) {
+      row.cells.find(cell => cell.column.key === node.column)?.scrollIntoView({ block: 'nearest' });
+    }
+  }
+
   public get active() {
     return this._active as ActiveNode<T>;
   }
@@ -64,37 +75,39 @@ export class NavigationController<T extends object> implements ReactiveControlle
 
   protected home() {
     this.active = Object.assign(this.nextNode, { row: 0 });
-    this.virtualizer.scrollToIndex(this.active.row);
+    this.virtualizer.element(this.active.row)?.scrollIntoView({ block: 'nearest' });
   }
 
   protected end() {
     this.active = Object.assign(this.nextNode, { row: this.host.totalItems - 1 });
-    this.virtualizer.scrollToIndex(this.active.row);
+    this.virtualizer.element(this.active.row)?.scrollIntoView({ block: 'nearest' });
   }
 
   protected arrowDown() {
     const next = this.nextNode;
 
-    this.active = Object.assign(this.nextNode, {
+    this.active = Object.assign(next, {
       row: Math.min(next.row + 1, this.host.totalItems - 1),
     });
-    this.virtualizer.scrollToIndex(next.row);
+    this.virtualizer.element(next.row)?.scrollIntoView({ block: 'nearest' });
   }
 
   protected arrowUp() {
     const next = this.nextNode;
     this.active = Object.assign(next, { row: Math.max(0, next.row - 1) });
-    this.virtualizer.scrollToIndex(next.row);
+    this.virtualizer.element(next.row)?.scrollIntoView({ block: 'nearest' });
   }
 
   protected arrowLeft() {
     const next = this.nextNode;
     this.active = Object.assign(next, { column: this.getPreviousColumn(next.column) });
+    this.scrollToCell(this.active);
   }
 
   protected arrowRight() {
     const next = this.nextNode;
     this.active = Object.assign(next, { column: this.getNextColumn(next.column) });
+    this.scrollToCell(this.active);
   }
 
   public hostConnected() {}

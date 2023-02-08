@@ -10,15 +10,14 @@ import { GridDOMController } from '../controllers/dom.js';
 import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { watch } from '../internal/watch.js';
 import { DEFAULT_COLUMN_CONFIG, PIPELINE } from '../internal/constants.js';
-import { asArray, getFilterOperandsFor } from '../internal/utils.js';
+import { asArray, autoGenerateColumns, getFilterOperandsFor } from '../internal/utils.js';
 
 import type {
   ColumnConfiguration,
-  GridRemoteConfig,
+  DataPipelineConfiguration,
   GridSortConfiguration,
   Keys,
 } from '../internal/types.js';
-import type { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { FilterExpression } from '../operations/filter/types.js';
 import type { SortExpression } from '../operations/sort/types.js';
 
@@ -50,16 +49,22 @@ import {
  */
 export interface ApexFilteringEvent<T extends object> {
   /**
-   * The filter expression to apply.
+   * The filter expression(s) to apply.
    */
-  // expression: FilterExpression<T>;
+  expressions: FilterExpression<T>[];
+
   /**
-   * The filter state of the column.
+   * The type of modification which will be applied to the filter
+   * state of the column.
+   *
+   * @remarks
+   * `add` - a new filter expression will be added to the state of the column.
+   * `modify` - an existing filter expression will be modified.
+   * `remove` - the expression(s) will be removed from the state of the column.
    */
-  state: FilterExpressionTree<T>;
+  type: 'add' | 'modify' | 'remove';
 }
 
-// TODO: Subject to change as these are way too generic names
 /**
  * Events for the apex-grid.
  */
@@ -98,7 +103,7 @@ export interface ApexGridEventMap<T extends object> {
    *
    * @event
    */
-  filtered: CustomEvent<FilterExpressionTree<T>>;
+  filtered: CustomEvent<FilterExpression<T>[]>;
 }
 
 /**
@@ -121,7 +126,7 @@ export interface ApexGridEventMap<T extends object> {
   indigo,
   material,
 })
-export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMap<T>> {
+export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMap<T>> {
   public static get is() {
     return GRID_TAG;
   }
@@ -173,11 +178,22 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
    * data source.
    *
    * @remarks
-   * This is a one-time operation which is executed when the grid is initially added to the DOM.
+   * This is usually executed on initial rendering in the DOM. It depends on having an existing data source
+   * to infer the column configuration for the grid.
    * Passing an empty data source or having a late bound data source (such as a HTTP request) will usually
    * result in empty column configuration for the grid.
    *
    * This property is ignored if any existing column configuration already exists in the grid.
+   *
+   * In a scenario where you want to bind a new data source and still keep the auto-generation behavior,
+   * make sure to reset the column collection of the grid before passing in the new data source.
+   *
+   * @example
+   * ```typescript
+   * // assuming autoGenerate is set to true
+   * grid.columns = [];
+   * grid.data = [...];
+   * ```
    *
    * @attr auto-generate
    */
@@ -195,7 +211,7 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
    * Configuration object which controls remote data operations for the grid.
    */
   @property({ attribute: false })
-  public remoteConfiguration?: GridRemoteConfig<T>;
+  public dataPipelineConfiguration!: DataPipelineConfiguration<T>;
 
   /**
    * Set the sort state for the grid.
@@ -268,6 +284,8 @@ export default class ApexGrid<T extends object> extends EventEmitterBase<ApexGri
   @watch('data')
   protected dataChanged() {
     this.dataState = structuredClone(this.data);
+    autoGenerateColumns(this);
+
     if (this.hasUpdated) {
       this.pipeline();
     }
