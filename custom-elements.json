@@ -6,7 +6,16 @@
       "kind": "javascript-module",
       "path": "src/define.ts",
       "declarations": [],
-      "exports": []
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ApexGrid",
+          "declaration": {
+            "name": "ApexGrid",
+            "module": "src/define.ts"
+          }
+        }
+      ]
     },
     {
       "kind": "javascript-module",
@@ -17,7 +26,7 @@
           "kind": "js",
           "name": "ApexGrid",
           "declaration": {
-            "name": "default",
+            "name": "ApexGrid",
             "module": "./components/grid.js"
           }
         },
@@ -59,22 +68,6 @@
           "declaration": {
             "name": "StringOperands",
             "module": "./operations/filter/operands/string.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "FilterState",
-          "declaration": {
-            "name": "FilterState",
-            "module": "./operations/filter/state.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "FilterExpressionTree",
-          "declaration": {
-            "name": "FilterExpressionTree",
-            "module": "./operations/filter/tree.js"
           }
         },
         {
@@ -215,6 +208,14 @@
         },
         {
           "kind": "js",
+          "name": "BasePropertyType",
+          "declaration": {
+            "name": "BasePropertyType",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "ColumnConfiguration",
           "declaration": {
             "name": "ColumnConfiguration",
@@ -231,14 +232,6 @@
         },
         {
           "kind": "js",
-          "name": "GridSortConfiguration",
-          "declaration": {
-            "name": "GridSortConfiguration",
-            "module": "./internal/types.js"
-          }
-        },
-        {
-          "kind": "js",
           "name": "ColumnSortConfiguration",
           "declaration": {
             "name": "ColumnSortConfiguration",
@@ -247,9 +240,41 @@
         },
         {
           "kind": "js",
+          "name": "DataPipelineConfiguration",
+          "declaration": {
+            "name": "DataPipelineConfiguration",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DataPipelineHook",
+          "declaration": {
+            "name": "DataPipelineHook",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DataPipelineParams",
+          "declaration": {
+            "name": "DataPipelineParams",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "DataType",
           "declaration": {
             "name": "DataType",
+            "module": "./internal/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GridSortConfiguration",
+          "declaration": {
+            "name": "GridSortConfiguration",
             "module": "./internal/types.js"
           }
         },
@@ -268,30 +293,6 @@
             "name": "PropertyType",
             "module": "./internal/types.js"
           }
-        },
-        {
-          "kind": "js",
-          "name": "GridRemoteConfig",
-          "declaration": {
-            "name": "GridRemoteConfig",
-            "module": "./internal/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "RemoteFilterHook",
-          "declaration": {
-            "name": "RemoteFilterHook",
-            "module": "./internal/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "RemoteSortHook",
-          "declaration": {
-            "name": "RemoteSortHook",
-            "module": "./internal/types.js"
-          }
         }
       ]
     },
@@ -301,7 +302,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Component representing a DOM cell of the Apex grid.",
           "name": "ApexGridCell",
           "members": [
             {
@@ -322,7 +323,8 @@
               "type": {
                 "text": "PropertyType<T>"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "description": "The value which will be rendered by the component."
             },
             {
               "kind": "field",
@@ -330,7 +332,8 @@
               "type": {
                 "text": "ColumnConfiguration<T>"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "description": "A reference to the column configuration object."
             },
             {
               "kind": "field",
@@ -340,6 +343,7 @@
               },
               "privacy": "public",
               "default": "false",
+              "description": "Indicates whether this is the active cell in the grid.",
               "attribute": "active",
               "reflects": true
             },
@@ -349,7 +353,8 @@
               "type": {
                 "text": "ApexGridRow<T>"
               },
-              "privacy": "public"
+              "privacy": "public",
+              "description": "The parent row component holding this cell."
             },
             {
               "kind": "field",
@@ -367,6 +372,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Indicates whether this is the active cell in the grid.",
               "fieldName": "active"
             }
           ],
@@ -754,7 +760,7 @@
               "kind": "field",
               "name": "scrollContainer",
               "type": {
-                "text": "LitVirtualizer<T>"
+                "text": "ApexVirtualizer"
               },
               "privacy": "protected"
             },
@@ -834,9 +840,9 @@
             },
             {
               "kind": "field",
-              "name": "remoteConfiguration",
+              "name": "dataPipelineConfiguration",
               "type": {
-                "text": "GridRemoteConfig<T> | undefined"
+                "text": "DataPipelineConfiguration<T>"
               },
               "privacy": "public",
               "description": "Configuration object which controls remote data operations for the grid."
@@ -1187,7 +1193,7 @@
       "exports": [
         {
           "kind": "js",
-          "name": "default",
+          "name": "ApexGrid",
           "declaration": {
             "name": "ApexGrid",
             "module": "src/components/grid.ts"
@@ -1415,7 +1421,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "Component representing the DOM row in the Apex grid.",
           "name": "ApexGridRow",
           "members": [
             {
@@ -1498,6 +1504,54 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/components/virtualizer.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ApexVirtualizer",
+          "members": [
+            {
+              "kind": "field",
+              "name": "is",
+              "privacy": "public",
+              "static": true
+            },
+            {
+              "kind": "method",
+              "name": "register",
+              "privacy": "public",
+              "static": true
+            },
+            {
+              "kind": "field",
+              "name": "scroller",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "true"
+            }
+          ],
+          "superclass": {
+            "name": "LitVirtualizer",
+            "package": "@lit-labs/virtualizer/LitVirtualizer.js"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ApexVirtualizer",
+            "module": "src/components/virtualizer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/controllers/data-operation.ts",
       "declarations": [
         {
@@ -1524,22 +1578,22 @@
             },
             {
               "kind": "field",
-              "name": "hasRemoteSort",
+              "name": "hasCustomSort",
               "privacy": "protected"
             },
             {
               "kind": "field",
-              "name": "hasRemoteFilter",
+              "name": "hasCustomFilter",
               "privacy": "protected"
             },
             {
               "kind": "field",
-              "name": "remoteFilter",
+              "name": "customFilter",
               "privacy": "protected"
             },
             {
               "kind": "field",
-              "name": "remoteSort",
+              "name": "customSort",
               "privacy": "protected"
             },
             {
@@ -1692,6 +1746,11 @@
               "privacy": "public"
             },
             {
+              "kind": "field",
+              "name": "#virtualizer",
+              "privacy": "private"
+            },
+            {
               "kind": "method",
               "name": "#emitFilteringEvent",
               "parameters": [
@@ -1699,6 +1758,12 @@
                   "name": "expression",
                   "type": {
                     "text": "FilterExpression<T>"
+                  }
+                },
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "'add' | 'modify' | 'remove'"
                   }
                 }
               ]
@@ -1708,17 +1773,17 @@
               "name": "#emitFilteredEvent",
               "parameters": [
                 {
-                  "name": "detail",
+                  "name": "state",
+                  "optional": true,
                   "type": {
-                    "text": "FilterExpressionTree<T>"
+                    "text": "FilterExpression<T>[]"
                   }
                 }
               ]
             },
             {
               "kind": "method",
-              "name": "_filter",
-              "privacy": "protected",
+              "name": "#filter",
               "parameters": [
                 {
                   "name": "expression",
@@ -1799,6 +1864,19 @@
             },
             {
               "kind": "method",
+              "name": "removeAllExpressions",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "Keys<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "removeExpression",
               "privacy": "public",
               "parameters": [
@@ -1819,6 +1897,12 @@
                   "name": "expression",
                   "type": {
                     "text": "FilterExpression<T>"
+                  }
+                },
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "'add' | 'modify' | 'remove'"
                   }
                 }
               ]
@@ -1919,6 +2003,19 @@
                   "name": "key",
                   "type": {
                     "text": "Keys<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "scrollToCell",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "ActiveNode<T>"
                   }
                 }
               ]
@@ -2228,6 +2325,18 @@
             },
             {
               "kind": "method",
+              "name": "#setExpression",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "SortExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "sortFromHeaderClick",
               "privacy": "public",
               "parameters": [
@@ -2414,517 +2523,6 @@
           "declaration": {
             "name": "gridStateContext",
             "module": "src/controllers/state.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/constants.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "PIPELINE",
-          "type": {
-            "text": "string"
-          },
-          "default": "'pipeline'"
-        },
-        {
-          "kind": "variable",
-          "name": "SORT_ICON_ASCENDING",
-          "type": {
-            "text": "'arrow-upward'"
-          },
-          "default": "'arrow-upward'"
-        },
-        {
-          "kind": "variable",
-          "name": "SORT_ICON_DESCENDING",
-          "type": {
-            "text": "'arrow-downward'"
-          },
-          "default": "'arrow-downward'"
-        },
-        {
-          "kind": "variable",
-          "name": "MIN_COL_RESIZE_WIDTH",
-          "type": {
-            "text": "number"
-          },
-          "default": "80"
-        },
-        {
-          "kind": "variable",
-          "name": "SENTINEL_NODE",
-          "type": {
-            "text": "Readonly<ActiveNode<any>>"
-          }
-        },
-        {
-          "kind": "variable",
-          "name": "DEFAULT_COLUMN_CONFIG"
-        },
-        {
-          "kind": "variable",
-          "name": "NAVIGATION_STATE",
-          "type": {
-            "text": "Map<NavigationState, ActiveNode<any>>"
-          },
-          "default": "new Map([\n  ['previous', SENTINEL_NODE],\n  ['current', SENTINEL_NODE],\n])"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "PIPELINE",
-          "declaration": {
-            "name": "PIPELINE",
-            "module": "src/internal/constants.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "SORT_ICON_ASCENDING",
-          "declaration": {
-            "name": "SORT_ICON_ASCENDING",
-            "module": "src/internal/constants.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "SORT_ICON_DESCENDING",
-          "declaration": {
-            "name": "SORT_ICON_DESCENDING",
-            "module": "src/internal/constants.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "MIN_COL_RESIZE_WIDTH",
-          "declaration": {
-            "name": "MIN_COL_RESIZE_WIDTH",
-            "module": "src/internal/constants.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "SENTINEL_NODE",
-          "declaration": {
-            "name": "SENTINEL_NODE",
-            "module": "src/internal/constants.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "DEFAULT_COLUMN_CONFIG",
-          "declaration": {
-            "name": "DEFAULT_COLUMN_CONFIG",
-            "module": "src/internal/constants.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "NAVIGATION_STATE",
-          "declaration": {
-            "name": "NAVIGATION_STATE",
-            "module": "src/internal/constants.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/icon-registry.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "registerGridIcons"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "registerGridIcons",
-          "declaration": {
-            "name": "registerGridIcons",
-            "module": "src/internal/icon-registry.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/is-defined.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "isDefined",
-          "return": {
-            "type": {
-              "text": "value is NonNullable<T>"
-            }
-          },
-          "parameters": [
-            {
-              "name": "value",
-              "type": {
-                "text": "T | null | undefined"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "isDefined",
-          "declaration": {
-            "name": "isDefined",
-            "module": "src/internal/is-defined.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/normalize-case.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "normalizeCase",
-          "parameters": [
-            {
-              "name": "string",
-              "type": {
-                "text": "string"
-              }
-            },
-            {
-              "name": "caseSensitive",
-              "optional": true,
-              "type": {
-                "text": "boolean"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "normalizeCase",
-          "declaration": {
-            "name": "normalizeCase",
-            "module": "src/internal/normalize-case.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/part-map.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "partNameMap",
-          "parameters": [
-            {
-              "name": "parts",
-              "type": {
-                "text": "PartNameInfo"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "partNameMap",
-          "declaration": {
-            "name": "partNameMap",
-            "module": "src/internal/part-map.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/register.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "registerComponent",
-          "parameters": [
-            {
-              "name": "component",
-              "type": {
-                "text": "ApexComponent"
-              }
-            },
-            {
-              "name": "dependencies",
-              "default": "[]",
-              "type": {
-                "text": "ApexComponent[]"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "registerComponent",
-          "declaration": {
-            "name": "registerComponent",
-            "module": "src/internal/register.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "component",
-            "module": "src/internal/register.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/tags.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "GRID_TAG",
-          "type": {
-            "text": "'apex-grid'"
-          },
-          "default": "'apex-grid'"
-        },
-        {
-          "kind": "variable",
-          "name": "GRID_HEADER_ROW_TAG",
-          "type": {
-            "text": "'apex-grid-header-row'"
-          },
-          "default": "'apex-grid-header-row'"
-        },
-        {
-          "kind": "variable",
-          "name": "GRID_HEADER_TAG",
-          "type": {
-            "text": "'apex-grid-header'"
-          },
-          "default": "'apex-grid-header'"
-        },
-        {
-          "kind": "variable",
-          "name": "GRID_ROW_TAG",
-          "type": {
-            "text": "'apex-grid-row'"
-          },
-          "default": "'apex-grid-row'"
-        },
-        {
-          "kind": "variable",
-          "name": "GRID_CELL_TAG",
-          "type": {
-            "text": "'apex-grid-cell'"
-          },
-          "default": "'apex-grid-cell'"
-        },
-        {
-          "kind": "variable",
-          "name": "GRID_FILTER_ROW_TAG",
-          "type": {
-            "text": "'apex-filter-row'"
-          },
-          "default": "'apex-filter-row'"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GRID_TAG",
-          "declaration": {
-            "name": "GRID_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GRID_HEADER_ROW_TAG",
-          "declaration": {
-            "name": "GRID_HEADER_ROW_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GRID_HEADER_TAG",
-          "declaration": {
-            "name": "GRID_HEADER_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GRID_ROW_TAG",
-          "declaration": {
-            "name": "GRID_ROW_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GRID_CELL_TAG",
-          "declaration": {
-            "name": "GRID_CELL_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GRID_FILTER_ROW_TAG",
-          "declaration": {
-            "name": "GRID_FILTER_ROW_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/utils.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "applyColumnWidths",
-          "return": {
-            "type": {
-              "text": "StyleInfo"
-            }
-          },
-          "parameters": [
-            {
-              "name": "columns",
-              "type": {
-                "text": "Array<ColumnConfiguration<T>>"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "autoGenerateColumns",
-          "parameters": [
-            {
-              "name": "grid",
-              "type": {
-                "text": "GridHost<T>"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "asArray",
-          "parameters": [
-            {
-              "name": "value",
-              "type": {
-                "text": "T | T[]"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "getFilterOperandsFor",
-          "parameters": [
-            {
-              "name": "column",
-              "type": {
-                "text": "ColumnConfiguration<T>"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "applyColumnWidths",
-          "declaration": {
-            "name": "applyColumnWidths",
-            "module": "src/internal/utils.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "autoGenerateColumns",
-          "declaration": {
-            "name": "autoGenerateColumns",
-            "module": "src/internal/utils.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "asArray",
-          "declaration": {
-            "name": "asArray",
-            "module": "src/internal/utils.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "getFilterOperandsFor",
-          "declaration": {
-            "name": "getFilterOperandsFor",
-            "module": "src/internal/utils.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/watch.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "watch",
-          "parameters": [
-            {
-              "name": "propName",
-              "type": {
-                "text": "string"
-              }
-            },
-            {
-              "name": "options",
-              "optional": true,
-              "type": {
-                "text": "WatchOptions"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "watch",
-          "declaration": {
-            "name": "watch",
-            "module": "src/internal/watch.ts"
           }
         }
       ]
@@ -3314,6 +2912,765 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/internal/constants.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "PIPELINE",
+          "type": {
+            "text": "string"
+          },
+          "default": "'pipeline'"
+        },
+        {
+          "kind": "variable",
+          "name": "SORT_ICON_ASCENDING",
+          "type": {
+            "text": "'arrow-upward'"
+          },
+          "default": "'arrow-upward'"
+        },
+        {
+          "kind": "variable",
+          "name": "SORT_ICON_DESCENDING",
+          "type": {
+            "text": "'arrow-downward'"
+          },
+          "default": "'arrow-downward'"
+        },
+        {
+          "kind": "variable",
+          "name": "MIN_COL_RESIZE_WIDTH",
+          "type": {
+            "text": "number"
+          },
+          "default": "80"
+        },
+        {
+          "kind": "variable",
+          "name": "SENTINEL_NODE",
+          "type": {
+            "text": "Readonly<ActiveNode<any>>"
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "DEFAULT_COLUMN_CONFIG"
+        },
+        {
+          "kind": "variable",
+          "name": "NAVIGATION_STATE",
+          "type": {
+            "text": "Map<NavigationState, ActiveNode<any>>"
+          },
+          "default": "new Map([\n  ['previous', SENTINEL_NODE],\n  ['current', SENTINEL_NODE],\n])"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "PIPELINE",
+          "declaration": {
+            "name": "PIPELINE",
+            "module": "src/internal/constants.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SORT_ICON_ASCENDING",
+          "declaration": {
+            "name": "SORT_ICON_ASCENDING",
+            "module": "src/internal/constants.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SORT_ICON_DESCENDING",
+          "declaration": {
+            "name": "SORT_ICON_DESCENDING",
+            "module": "src/internal/constants.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MIN_COL_RESIZE_WIDTH",
+          "declaration": {
+            "name": "MIN_COL_RESIZE_WIDTH",
+            "module": "src/internal/constants.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SENTINEL_NODE",
+          "declaration": {
+            "name": "SENTINEL_NODE",
+            "module": "src/internal/constants.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DEFAULT_COLUMN_CONFIG",
+          "declaration": {
+            "name": "DEFAULT_COLUMN_CONFIG",
+            "module": "src/internal/constants.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NAVIGATION_STATE",
+          "declaration": {
+            "name": "NAVIGATION_STATE",
+            "module": "src/internal/constants.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/icon-registry.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "registerGridIcons"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "registerGridIcons",
+          "declaration": {
+            "name": "registerGridIcons",
+            "module": "src/internal/icon-registry.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/is-defined.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "isDefined",
+          "return": {
+            "type": {
+              "text": "value is NonNullable<T>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "T | null | undefined"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "isDefined",
+          "declaration": {
+            "name": "isDefined",
+            "module": "src/internal/is-defined.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/normalize-case.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "normalizeCase",
+          "parameters": [
+            {
+              "name": "string",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "caseSensitive",
+              "optional": true,
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "normalizeCase",
+          "declaration": {
+            "name": "normalizeCase",
+            "module": "src/internal/normalize-case.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/part-map.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "partNameMap",
+          "parameters": [
+            {
+              "name": "parts",
+              "type": {
+                "text": "PartNameInfo"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "partNameMap",
+          "declaration": {
+            "name": "partNameMap",
+            "module": "src/internal/part-map.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/register.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "registerComponent",
+          "parameters": [
+            {
+              "name": "component",
+              "type": {
+                "text": "ApexComponent"
+              }
+            },
+            {
+              "name": "dependencies",
+              "default": "[]",
+              "type": {
+                "text": "ApexComponent[]"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "registerComponent",
+          "declaration": {
+            "name": "registerComponent",
+            "module": "src/internal/register.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "component",
+            "module": "src/internal/register.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/tags.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "GRID_TAG",
+          "type": {
+            "text": "'apex-grid'"
+          },
+          "default": "'apex-grid'"
+        },
+        {
+          "kind": "variable",
+          "name": "GRID_BODY",
+          "type": {
+            "text": "'apex-virtualizer'"
+          },
+          "default": "'apex-virtualizer'"
+        },
+        {
+          "kind": "variable",
+          "name": "GRID_HEADER_ROW_TAG",
+          "type": {
+            "text": "'apex-grid-header-row'"
+          },
+          "default": "'apex-grid-header-row'"
+        },
+        {
+          "kind": "variable",
+          "name": "GRID_HEADER_TAG",
+          "type": {
+            "text": "'apex-grid-header'"
+          },
+          "default": "'apex-grid-header'"
+        },
+        {
+          "kind": "variable",
+          "name": "GRID_ROW_TAG",
+          "type": {
+            "text": "'apex-grid-row'"
+          },
+          "default": "'apex-grid-row'"
+        },
+        {
+          "kind": "variable",
+          "name": "GRID_CELL_TAG",
+          "type": {
+            "text": "'apex-grid-cell'"
+          },
+          "default": "'apex-grid-cell'"
+        },
+        {
+          "kind": "variable",
+          "name": "GRID_FILTER_ROW_TAG",
+          "type": {
+            "text": "'apex-filter-row'"
+          },
+          "default": "'apex-filter-row'"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GRID_TAG",
+          "declaration": {
+            "name": "GRID_TAG",
+            "module": "src/internal/tags.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GRID_BODY",
+          "declaration": {
+            "name": "GRID_BODY",
+            "module": "src/internal/tags.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GRID_HEADER_ROW_TAG",
+          "declaration": {
+            "name": "GRID_HEADER_ROW_TAG",
+            "module": "src/internal/tags.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GRID_HEADER_TAG",
+          "declaration": {
+            "name": "GRID_HEADER_TAG",
+            "module": "src/internal/tags.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GRID_ROW_TAG",
+          "declaration": {
+            "name": "GRID_ROW_TAG",
+            "module": "src/internal/tags.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GRID_CELL_TAG",
+          "declaration": {
+            "name": "GRID_CELL_TAG",
+            "module": "src/internal/tags.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GRID_FILTER_ROW_TAG",
+          "declaration": {
+            "name": "GRID_FILTER_ROW_TAG",
+            "module": "src/internal/tags.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/utils.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "applyColumnWidths",
+          "return": {
+            "type": {
+              "text": "StyleInfo"
+            }
+          },
+          "parameters": [
+            {
+              "name": "columns",
+              "type": {
+                "text": "Array<ColumnConfiguration<T>>"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "autoGenerateColumns",
+          "parameters": [
+            {
+              "name": "grid",
+              "type": {
+                "text": "GridHost<T>"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "asArray",
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "T | T[]"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getFilterOperandsFor",
+          "parameters": [
+            {
+              "name": "column",
+              "type": {
+                "text": "ColumnConfiguration<T>"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "applyColumnWidths",
+          "declaration": {
+            "name": "applyColumnWidths",
+            "module": "src/internal/utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "autoGenerateColumns",
+          "declaration": {
+            "name": "autoGenerateColumns",
+            "module": "src/internal/utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "asArray",
+          "declaration": {
+            "name": "asArray",
+            "module": "src/internal/utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getFilterOperandsFor",
+          "declaration": {
+            "name": "getFilterOperandsFor",
+            "module": "src/internal/utils.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/watch.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "watch",
+          "parameters": [
+            {
+              "name": "propName",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "options",
+              "optional": true,
+              "type": {
+                "text": "WatchOptions"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "watch",
+          "declaration": {
+            "name": "watch",
+            "module": "src/internal/watch.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/operations/filter/state.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "FilterState",
+          "members": [
+            {
+              "kind": "field",
+              "name": "state",
+              "type": {
+                "text": "Map<Keys<T>, FilterExpressionTree<T>>"
+              },
+              "privacy": "protected",
+              "default": "new Map()"
+            },
+            {
+              "kind": "field",
+              "name": "empty",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "keys",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "values",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "ands",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "ors",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "has",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "Keys<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "get",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "Keys<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "delete",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "Keys<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "clear",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "set",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FilterState",
+          "declaration": {
+            "name": "FilterState",
+            "module": "src/operations/filter/state.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/operations/filter/tree.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "FilterExpressionTree",
+          "members": [
+            {
+              "kind": "field",
+              "name": "operands",
+              "type": {
+                "text": "Array<FilterExpression<T>>"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "empty",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "length",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "all",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "ands",
+              "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "ors",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "has",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "add",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "remove",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "iterator",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "[Symbol.iterator]",
+              "privacy": "public"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FilterExpressionTree",
+          "declaration": {
+            "name": "FilterExpressionTree",
+            "module": "src/operations/filter/tree.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/operations/filter/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/operations/sort/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/internal/mixins/event-emitter.ts",
       "declarations": [
         {
@@ -3495,225 +3852,6 @@
           }
         }
       ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/operations/filter/state.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "FilterState",
-          "members": [
-            {
-              "kind": "field",
-              "name": "state",
-              "type": {
-                "text": "Map<Keys<T>, FilterExpressionTree<T>>"
-              },
-              "privacy": "protected",
-              "default": "new Map()"
-            },
-            {
-              "kind": "field",
-              "name": "empty",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "keys",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "values",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "ands",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "ors",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "has",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "key",
-                  "type": {
-                    "text": "Keys<T>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "get",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "key",
-                  "type": {
-                    "text": "Keys<T>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "delete",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "key",
-                  "type": {
-                    "text": "Keys<T>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "clear",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "set",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "expression",
-                  "type": {
-                    "text": "FilterExpression<T>"
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "FilterState",
-          "declaration": {
-            "name": "FilterState",
-            "module": "src/operations/filter/state.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/operations/filter/tree.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "FilterExpressionTree",
-          "members": [
-            {
-              "kind": "field",
-              "name": "operands",
-              "type": {
-                "text": "Array<FilterExpression<T>>"
-              },
-              "privacy": "protected",
-              "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "empty",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "length",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "all",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "ands",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "ors",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "add",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "expression",
-                  "type": {
-                    "text": "FilterExpression<T>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "remove",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "expression",
-                  "type": {
-                    "text": "FilterExpression<T>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "iterator",
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "[Symbol.iterator]",
-              "privacy": "public"
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "FilterExpressionTree",
-          "declaration": {
-            "name": "FilterExpressionTree",
-            "module": "src/operations/filter/tree.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/operations/filter/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/operations/sort/types.ts",
-      "declarations": [],
-      "exports": []
     },
     {
       "kind": "javascript-module",
