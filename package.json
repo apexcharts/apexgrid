@@ -19,7 +19,10 @@
   "files": [
     "/dist/",
     "/dist/bundle.*",
-    "!/dist/test/"
+    "!/dist/test/",
+    "LICENSE",
+    "README.md",
+    "custom-elements.json"
   ],
   "engines": {
     "node": "^14.21.0 || >= 16.19.0"
