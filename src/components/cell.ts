@@ -6,6 +6,9 @@ import type { ApexCellContext, ColumnConfiguration, PropertyType } from '../inte
 import { styles } from '../styles/body-cell/body-cell-styles.css.js';
 import type ApexGridRow from './row.js';
 
+/**
+ * Component representing a DOM cell of the Apex grid.
+ */
 export default class ApexGridCell<T extends object> extends LitElement {
   public static get is() {
     return GRID_CELL_TAG;
@@ -17,15 +20,28 @@ export default class ApexGridCell<T extends object> extends LitElement {
     registerComponent(this);
   }
 
+  /**
+   * The value which will be rendered by the component.
+   */
   @property({ attribute: false })
   public value!: PropertyType<T>;
 
+  /**
+   * A reference to the column configuration object.
+   */
   @property({ attribute: false })
   public column!: ColumnConfiguration<T>;
 
+  /**
+   * Indicates whether this is the active cell in the grid.
+   *
+   */
   @property({ type: Boolean, reflect: true })
   public active = false;
 
+  /**
+   * The parent row component holding this cell.
+   */
   public row!: ApexGridRow<T>;
 
   protected get context(): ApexCellContext<T> {

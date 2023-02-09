@@ -26,6 +26,10 @@ export class FilterExpressionTree<T> {
     return this.operands.filter(each => each.criteria === 'or');
   }
 
+  public has(expression: FilterExpression<T>) {
+    return this.operands.includes(expression);
+  }
+
   public add(expression: FilterExpression<T>) {
     if (!expression.criteria) {
       expression.criteria = 'and';

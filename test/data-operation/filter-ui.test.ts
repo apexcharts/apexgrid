@@ -1,11 +1,12 @@
 import { assert, elementUpdated } from '@open-wc/testing';
 import sinon from 'sinon';
 import { StringOperands } from '../../src/operations/filter/operands/string.js';
+import { NumberOperands } from '../../src/operations/filter/operands/number.js';
 import GridTestFixture from '../utils/grid-fixture.js';
-import data from '../utils/test-data.js';
+import data, { TestData } from '../utils/test-data.js';
 
 import type { Keys } from '../../src/internal/types.js';
-import type { OperandKeys } from '../../src/operations/filter/types.js';
+import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types.js';
 
 class FilterFixture<T extends object> extends GridTestFixture<T> {
   public override updateConfig(): void {
@@ -317,7 +318,6 @@ suite('Grid UI filter', () => {
 
   suite('Events', () => {
     test('Event sequence', async () => {
-      // TODO
       const spy = sinon.spy(TDD.grid, 'emitEvent');
 
       await TDD.activateFilterRow('name');
@@ -345,24 +345,26 @@ suite('Grid UI filter', () => {
       assert.strictEqual(TDD.grid.totalItems, 8);
     });
 
-    test.skip('Modify event arguments mid-flight', async () => {
+    test('Modify event arguments mid-flight', async () => {
       const spy = sinon.spy(TDD.grid, 'emitEvent');
 
-      // const expression: FilterExpression<TestData> = {
-      //   key: 'id',
-      //   condition: NumberOperands.greaterThan,
-      //   searchTerm: 7,
-      // };
+      const expression: FilterExpression<TestData> = {
+        key: 'id',
+        condition: NumberOperands.greaterThan,
+        searchTerm: 7,
+      };
 
-      // TDD.grid.addEventListener('filtering', e => Object.assign(e.detail.expression, expression));
+      TDD.grid.addEventListener('filtering', e =>
+        Object.assign(e.detail.expressions[0], expression),
+      );
 
       await TDD.activateFilterRow('name');
       await TDD.filterByInput('a');
 
       const eventData = spy.firstCall.lastArg.detail;
-      assert.strictEqual(eventData.expression.key, 'id');
-      assert.strictEqual(eventData.expression.searchTerm, 7);
-      assert.strictEqual(eventData.expression.condition.name, 'greaterThan');
+      assert.strictEqual(eventData.expressions[0].key, 'id');
+      assert.strictEqual(eventData.expressions[0].searchTerm, 7);
+      assert.strictEqual(eventData.expressions[0].condition.name, 'greaterThan');
 
       assert.strictEqual(TDD.grid.totalItems, 1);
       assert.strictEqual(TDD.rows.first.data.id, 8);

@@ -23,7 +23,7 @@ export const styles = css`/* stylelint-disable max-line-length */ /* stylelint-d
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  padding: 0 max(var(--is-large, 1) * 1.5rem, var(--is-medium, 1) * 1rem, var(--is-small, 1) * 0.5rem);
+  padding: 0 max(var(--is-large, 1) * max(1.5rem, -1 * 1.5rem), var(--is-medium, 1) * max(1rem, -1 * 1rem), var(--is-small, 1) * max(0.5rem, -1 * 0.5rem));
   color: inherit;
   border-right: var(--igx-row-border-width, var(--row-border-width)) solid transparent;
   font-size: 0.8125rem;

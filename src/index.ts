@@ -1,12 +1,9 @@
-export { default as ApexGrid } from './components/grid.js';
-export type { ApexGridEventMap, ApexFilteringEvent } from './components/grid.js';
+export { ApexGrid } from './components/grid.js';
+export type { ApexGridEventMap, ApexFilteringEvent, ApexFilteredEvent } from './components/grid.js';
 
 export { BooleanOperands } from './operations/filter/operands/boolean.js';
 export { NumberOperands } from './operations/filter/operands/number.js';
 export { StringOperands } from './operations/filter/operands/string.js';
-
-export { FilterState } from './operations/filter/state.js';
-export { FilterExpressionTree } from './operations/filter/tree.js';
 
 export type {
   BaseSortComparer,
@@ -31,14 +28,15 @@ export type {
   BaseApexCellContext,
   BaseColumnConfiguration,
   BaseColumnSortConfiguration,
+  BasePropertyType,
   ColumnConfiguration,
   ColumnFilterConfiguration,
-  GridSortConfiguration,
   ColumnSortConfiguration,
+  DataPipelineConfiguration,
+  DataPipelineHook,
+  DataPipelineParams,
   DataType,
+  GridSortConfiguration,
   Keys,
   PropertyType,
-  GridRemoteConfig,
-  RemoteFilterHook,
-  RemoteSortHook,
 } from './internal/types.js';

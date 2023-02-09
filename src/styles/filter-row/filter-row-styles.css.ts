@@ -16,7 +16,7 @@ export const styles = css`/* stylelint-disable max-line-length */ /* stylelint-d
   --ig-size: 1;
   display: grid;
   grid-row: filter-row;
-  min-height: max(var(--is-large, 1) * 3.125rem, var(--is-medium, 1) * 2.125rem, var(--is-small, 1) * 1.5rem);
+  min-height: max(var(--is-large, 1) * max(3.125rem, -1 * 3.125rem), var(--is-medium, 1) * max(2.125rem, -1 * 2.125rem), var(--is-small, 1) * max(1.5rem, -1 * 1.5rem));
   background: var(--igx-header-background, var(--header-background));
   color: var(--igx-header-text-color, var(--header-text-color));
   -webkit-border-after: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
@@ -34,7 +34,7 @@ export const styles = css`/* stylelint-disable max-line-length */ /* stylelint-d
       -ms-flex-align: center;
           align-items: center;
   overflow: hidden;
-  padding: 0 max(var(--is-large, 1) * 1.5rem, var(--is-medium, 1) * 1rem, var(--is-small, 1) * 0.5rem);
+  padding: 0 max(var(--is-large, 1) * max(1.5rem, -1 * 1.5rem), var(--is-medium, 1) * max(1rem, -1 * 1rem), var(--is-small, 1) * max(0.5rem, -1 * 0.5rem));
   background: var(--igx-filtering-row-background, var(--filtering-row-background));
   color: var(--igx-filtering-row-text-color, var(--filtering-row-text-color));
   -webkit-border-end: var(--igx-header-border-width, var(--header-border-width)) var(--igx-header-border-style, var(--header-border-style)) var(--igx-header-border-color, var(--header-border-color));
@@ -44,7 +44,7 @@ export const styles = css`/* stylelint-disable max-line-length */ /* stylelint-d
 [part~=active-state] {
   background: var(--igx-filtering-row-background, var(--filtering-row-background));
   color: var(--igx-filtering-row-text-color, var(--filtering-row-text-color));
-  min-height: max(var(--is-large, 1) * 3.125rem, var(--is-medium, 1) * 2.125rem, var(--is-small, 1) * 1.5rem);
+  min-height: max(var(--is-large, 1) * max(3.125rem, -1 * 3.125rem), var(--is-medium, 1) * max(2.125rem, -1 * 2.125rem), var(--is-small, 1) * max(1.5rem, -1 * 1.5rem));
   min-width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -63,13 +63,13 @@ export const styles = css`/* stylelint-disable max-line-length */ /* stylelint-d
 }
 
 [part~=filter-row-input] {
-  -webkit-padding-start: max(var(--is-large, 1) * 1.5rem, var(--is-medium, 1) * 1rem, var(--is-small, 1) * 0.5rem);
-          padding-inline-start: max(var(--is-large, 1) * 1.5rem, var(--is-medium, 1) * 1rem, var(--is-small, 1) * 0.5rem);
+  -webkit-padding-start: max(var(--is-large, 1) * max(1.5rem, -1 * 1.5rem), var(--is-medium, 1) * max(1rem, -1 * 1rem), var(--is-small, 1) * max(0.5rem, -1 * 0.5rem));
+          padding-inline-start: max(var(--is-large, 1) * max(1.5rem, -1 * 1.5rem), var(--is-medium, 1) * max(1rem, -1 * 1rem), var(--is-small, 1) * max(0.5rem, -1 * 0.5rem));
 }
 
 [part~=filter-row-actions] {
-  -webkit-padding-end: max(var(--is-large, 1) * 1.5rem, var(--is-medium, 1) * 1rem, var(--is-small, 1) * 0.5rem);
-          padding-inline-end: max(var(--is-large, 1) * 1.5rem, var(--is-medium, 1) * 1rem, var(--is-small, 1) * 0.5rem);
+  -webkit-padding-end: max(var(--is-large, 1) * max(1.5rem, -1 * 1.5rem), var(--is-medium, 1) * max(1rem, -1 * 1rem), var(--is-small, 1) * max(0.5rem, -1 * 0.5rem));
+          padding-inline-end: max(var(--is-large, 1) * max(1.5rem, -1 * 1.5rem), var(--is-medium, 1) * max(1rem, -1 * 1rem), var(--is-small, 1) * max(0.5rem, -1 * 0.5rem));
 }
 
 [part~=filter-row-input],

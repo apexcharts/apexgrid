@@ -70,6 +70,12 @@ export class SortController<T extends object> implements ReactiveController {
     return this.host.emitEvent('sorted', { detail });
   }
 
+  #setExpression(expression: SortExpression<T>) {
+    expression.direction === 'none'
+      ? this.reset(expression.key)
+      : this.state.set(expression.key, { ...expression });
+  }
+
   public async sortFromHeaderClick(column: ColumnConfiguration<T>) {
     const expression = this.prepareExpression(column);
 
@@ -81,12 +87,7 @@ export class SortController<T extends object> implements ReactiveController {
       this.reset();
     }
 
-    if (expression.direction == 'none') {
-      this.reset(expression.key);
-      this.host.requestUpdate(PIPELINE);
-    } else {
-      this._sort(expression);
-    }
+    this._sort(expression);
 
     await this.host.updateComplete;
     this.#emitSortedEvent(expression);
@@ -111,7 +112,7 @@ export class SortController<T extends object> implements ReactiveController {
   }
 
   protected _sort(expressions: SortExpression<T> | SortExpression<T>[]) {
-    asArray(expressions).forEach(expr => this.state.set(expr.key, { ...expr }));
+    asArray(expressions).forEach(expr => this.#setExpression(expr));
     this.host.requestUpdate(PIPELINE);
   }
 

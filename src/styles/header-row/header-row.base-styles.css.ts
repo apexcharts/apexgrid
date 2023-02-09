@@ -15,7 +15,7 @@ export const styles = css`/* stylelint-disable max-line-length */ /* stylelint-d
 :host {
   display: grid;
   grid-row: header-row;
-  min-height: max(var(--is-large, 1) * 3.125rem, var(--is-medium, 1) * 2.125rem, var(--is-small, 1) * 1.5rem);
+  min-height: max(var(--is-large, 1) * max(3.125rem, -1 * 3.125rem), var(--is-medium, 1) * max(2.125rem, -1 * 2.125rem), var(--is-small, 1) * max(1.5rem, -1 * 1.5rem));
   background: var(--igx-header-background, var(--header-background));
   color: var(--igx-header-text-color, var(--header-text-color));
   contain: content;

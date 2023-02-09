@@ -1,10 +1,9 @@
 import { ReactiveControllerHost, TemplateResult } from 'lit';
-import type ApexGrid from '../components/grid.js';
+import type { ApexGrid } from '../components/grid.js';
 import type ApexGridCell from '../components/cell.js';
 import type ApexGridRow from '../components/row.js';
 import type ApexGridHeader from '../components/header.js';
-import type { SortComparer, SortState } from '../operations/sort/types.js';
-import type { FilterState } from '../operations/filter/state.js';
+import type { SortComparer } from '../operations/sort/types.js';
 
 export type NavigationState = 'previous' | 'current';
 export type GridHost<T extends object> = ReactiveControllerHost & ApexGrid<T>;
@@ -14,7 +13,10 @@ export type GridHost<T extends object> = ReactiveControllerHost & ApexGrid<T>;
  */
 export type Keys<T> = keyof T;
 
-type BasePropertyType<T, K extends Keys<T> = Keys<T>> = T[K];
+/**
+ * Helper type for resolving types of type T.
+ */
+export type BasePropertyType<T, K extends Keys<T> = Keys<T>> = T[K];
 
 /**
  * Helper type for resolving types of type T.
@@ -185,27 +187,40 @@ export type ApexCellContext<T extends object, K extends Keys<T> = Keys<T>> = K e
   : never;
 
 /**
- * Remote sort callback function.
- *
- * The callback is passed the current data view state as well as the current sort state configuration of the grid.
- *
+ * The parameters passed to a {@link DataPipelineHook} callback.
  */
-export type RemoteSortHook<T> = (data: T[], state: SortState<T>) => T[] | Promise<T[]>;
-/**
- * Remote filter callback function.
- *
- * The callback is passed the current data view state as well as the current filter state configuration of the grid.
- */
-export type RemoteFilterHook<T> = (data: T[], state: FilterState<T>) => T[] | Promise<T[]>;
+export type DataPipelineParams<T extends object> = {
+  /**
+   * The current data state of the grid.
+   */
+  data: T[];
+  /**
+   * The grid component itself.
+   */
+  grid: ApexGrid<T>;
+  /**
+   * The type of data operation being performed.
+   */
+  type: 'sort' | 'filter';
+};
 
-/** Configuration for grid remote operations. */
-export interface GridRemoteConfig<T> {
+/**
+ * Callback function for customizing data operations in the grid.
+ */
+export type DataPipelineHook<T extends object> = (
+  state: DataPipelineParams<T>,
+) => T[] | Promise<T[]>;
+
+/**
+ * Configuration for customizing the various data operations of the grid.
+ */
+export interface DataPipelineConfiguration<T extends object> {
   /**
-   * Callback for remote sorting.
+   * Hook for customizing sort operations.
    */
-  sort?: RemoteSortHook<T>;
+  sort?: DataPipelineHook<T>;
   /**
-   * Callback for remote filtering.
+   * Hook for customizing filter operations.
    */
-  filter?: RemoteFilterHook<T>;
+  filter?: DataPipelineHook<T>;
 }

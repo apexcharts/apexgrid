@@ -3,7 +3,7 @@ import ApexGridHeaderRow from '../../src/components/header-row.js';
 import type { ColumnConfiguration, Keys } from '../../src/internal/types.js';
 import type { SortExpression } from '../../src/operations/sort/types.js';
 import type { FilterExpression } from '../../src/operations/filter/types.js';
-import ApexGrid from '../../src/components/grid.js';
+import { ApexGrid } from '../../src/components/grid.js';
 import ApexGridRow from '../../src/components/row.js';
 import '../../src/index.js';
 import HeaderTestFixture from './header-fixture.js';
