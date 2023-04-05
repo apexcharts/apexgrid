@@ -168,7 +168,10 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
   protected DOM = new GridDOMController<T>(this, this.stateController);
   protected dataController = new DataOperationsController<T>(this);
 
-  protected stateProvider = new ContextProvider(this, gridStateContext, this.stateController);
+  protected stateProvider = new ContextProvider(this, {
+    context: gridStateContext,
+    initialValue: this.stateController,
+  });
 
   @query(ApexVirtualizer.is)
   protected scrollContainer!: ApexVirtualizer;
