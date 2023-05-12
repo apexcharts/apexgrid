@@ -48,6 +48,14 @@
         },
         {
           "kind": "js",
+          "name": "ApexFilteredEvent",
+          "declaration": {
+            "name": "ApexFilteredEvent",
+            "module": "./components/grid.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "BooleanOperands",
           "declaration": {
             "name": "BooleanOperands",
@@ -309,7 +317,8 @@
               "kind": "field",
               "name": "is",
               "privacy": "public",
-              "static": true
+              "static": true,
+              "readonly": true
             },
             {
               "kind": "method",
@@ -362,7 +371,8 @@
               "type": {
                 "text": "ApexCellContext<T>"
               },
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             }
           ],
           "attributes": [
@@ -407,7 +417,8 @@
               "kind": "field",
               "name": "is",
               "privacy": "public",
-              "static": true
+              "static": true,
+              "readonly": true
             },
             {
               "kind": "method",
@@ -426,17 +437,20 @@
             {
               "kind": "field",
               "name": "isNumeric",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "filterController",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "condition",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -724,7 +738,8 @@
               "kind": "field",
               "name": "is",
               "privacy": "public",
-              "static": true
+              "static": true,
+              "readonly": true
             },
             {
               "kind": "method",
@@ -754,7 +769,7 @@
               "kind": "field",
               "name": "stateProvider",
               "privacy": "protected",
-              "default": "new ContextProvider(this, gridStateContext, this.stateController)"
+              "default": "new ContextProvider(this, {\n    context: gridStateContext,\n    initialValue: this.stateController,\n  })"
             },
             {
               "kind": "field",
@@ -869,7 +884,8 @@
               "kind": "field",
               "name": "rows",
               "privacy": "public",
-              "description": "Returns the collection of rendered row elements in the grid."
+              "description": "Returns the collection of rendered row elements in the grid.",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -878,13 +894,15 @@
                 "text": "ReadonlyArray<T>"
               },
               "privacy": "public",
-              "description": "Returns the state of the data source after sort/filter operations\nhave been applied."
+              "description": "Returns the state of the data source after sort/filter operations\nhave been applied.",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "totalItems",
               "privacy": "public",
-              "description": "The total number of items in the ApexGrid.dataView collection."
+              "description": "The total number of items in the ApexGrid.dataView collection.",
+              "readonly": true
             },
             {
               "kind": "method",
@@ -1214,7 +1232,8 @@
               "kind": "field",
               "name": "is",
               "privacy": "public",
-              "static": true
+              "static": true,
+              "readonly": true
             },
             {
               "kind": "method",
@@ -1250,7 +1269,8 @@
             {
               "kind": "field",
               "name": "headers",
-              "privacy": "public"
+              "privacy": "public",
+              "readonly": true
             },
             {
               "kind": "method",
@@ -1296,7 +1316,8 @@
               "kind": "field",
               "name": "is",
               "privacy": "public",
-              "static": true
+              "static": true,
+              "readonly": true
             },
             {
               "kind": "method",
@@ -1310,17 +1331,20 @@
               "type": {
                 "text": "ApexHeaderContext<T>"
               },
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "isSortable",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "resizeController",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -1428,7 +1452,8 @@
               "kind": "field",
               "name": "is",
               "privacy": "public",
-              "static": true
+              "static": true,
+              "readonly": true
             },
             {
               "kind": "method",
@@ -1464,7 +1489,8 @@
             {
               "kind": "field",
               "name": "cells",
-              "privacy": "public"
+              "privacy": "public",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -1515,7 +1541,8 @@
               "kind": "field",
               "name": "is",
               "privacy": "public",
-              "static": true
+              "static": true,
+              "readonly": true
             },
             {
               "kind": "method",
@@ -1579,22 +1606,26 @@
             {
               "kind": "field",
               "name": "hasCustomSort",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "hasCustomFilter",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "customFilter",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "customSort",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "method",
@@ -1646,7 +1677,8 @@
             {
               "kind": "field",
               "name": "container",
-              "privacy": "public"
+              "privacy": "public",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -1743,12 +1775,14 @@
             {
               "kind": "field",
               "name": "filterRow",
-              "privacy": "public"
+              "privacy": "public",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "#virtualizer",
-              "privacy": "private"
+              "privacy": "private",
+              "readonly": true
             },
             {
               "kind": "method",
@@ -1773,10 +1807,10 @@
               "name": "#emitFilteredEvent",
               "parameters": [
                 {
-                  "name": "state",
+                  "name": "detail",
                   "optional": true,
                   "type": {
-                    "text": "FilterExpression<T>[]"
+                    "text": "ApexFilteredEvent<T>"
                   }
                 }
               ]
@@ -1952,7 +1986,8 @@
             {
               "kind": "field",
               "name": "virtualizer",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -1969,17 +2004,20 @@
             {
               "kind": "field",
               "name": "nextNode",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "columns",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "firstColumn",
-              "privacy": "protected"
+              "privacy": "protected",
+              "readonly": true
             },
             {
               "kind": "method",
@@ -2249,12 +2287,14 @@
             {
               "kind": "field",
               "name": "#isMultipleSort",
-              "privacy": "private"
+              "privacy": "private",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "#isTriStateSort",
-              "privacy": "private"
+              "privacy": "private",
+              "readonly": true
             },
             {
               "kind": "method",
@@ -2474,12 +2514,14 @@
             {
               "kind": "field",
               "name": "headerRow",
-              "privacy": "public"
+              "privacy": "public",
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "scrollContainer",
-              "privacy": "public"
+              "privacy": "public",
+              "readonly": true
             },
             {
               "kind": "method",
@@ -2523,389 +2565,6 @@
           "declaration": {
             "name": "gridStateContext",
             "module": "src/controllers/state.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/operations/base.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "DataOperation",
-          "members": [
-            {
-              "kind": "method",
-              "name": "resolveValue",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "record",
-                  "type": {
-                    "text": "T"
-                  }
-                },
-                {
-                  "name": "key",
-                  "type": {
-                    "text": "K"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "resolveCase",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "U"
-                  }
-                },
-                {
-                  "name": "caseSensitive",
-                  "optional": true,
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "apply",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "T[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "args",
-                  "type": {
-                    "text": "unknown[]"
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "DataOperation",
-            "module": "src/operations/base.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/operations/filter.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "FilterDataOperation",
-          "members": [
-            {
-              "kind": "method",
-              "name": "resolveFilter",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "record",
-                  "type": {
-                    "text": "T"
-                  }
-                },
-                {
-                  "name": "expr",
-                  "type": {
-                    "text": "FilterExpression<T>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "match",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "record",
-                  "type": {
-                    "text": "T"
-                  }
-                },
-                {
-                  "name": "ands",
-                  "type": {
-                    "text": "FilterExpression<T>[]"
-                  }
-                },
-                {
-                  "name": "ors",
-                  "type": {
-                    "text": "FilterExpression<T>[]"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "apply",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "T[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "data",
-                  "type": {
-                    "text": "T[]"
-                  }
-                },
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "FilterState<T>"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DataOperation",
-                "module": "src/operations/base.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "resolveValue",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "record",
-                  "type": {
-                    "text": "T"
-                  }
-                },
-                {
-                  "name": "key",
-                  "type": {
-                    "text": "K"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DataOperation",
-                "module": "src/operations/base.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "resolveCase",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "U"
-                  }
-                },
-                {
-                  "name": "caseSensitive",
-                  "optional": true,
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DataOperation",
-                "module": "src/operations/base.ts"
-              }
-            }
-          ],
-          "superclass": {
-            "name": "DataOperation",
-            "module": "/src/operations/base.js"
-          }
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "FilterDataOperation",
-            "module": "src/operations/filter.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/operations/sort.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "SortDataOperation",
-          "members": [
-            {
-              "kind": "field",
-              "name": "orderBy",
-              "privacy": "protected",
-              "default": "new Map(\n    Object.entries({\n      ascending: 1,\n      descending: -1,\n    }),\n  )"
-            },
-            {
-              "kind": "method",
-              "name": "compareValues",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "first",
-                  "type": {
-                    "text": "U"
-                  }
-                },
-                {
-                  "name": "second",
-                  "type": {
-                    "text": "U"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "compareObjects",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "first",
-                  "type": {
-                    "text": "T"
-                  }
-                },
-                {
-                  "name": "second",
-                  "type": {
-                    "text": "T"
-                  }
-                },
-                {
-                  "name": "expression",
-                  "type": {
-                    "text": "SortExpression<T>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "apply",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "T[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "data",
-                  "type": {
-                    "text": "T[]"
-                  }
-                },
-                {
-                  "name": "state",
-                  "type": {
-                    "text": "SortState<T>"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DataOperation",
-                "module": "src/operations/base.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "resolveValue",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "record",
-                  "type": {
-                    "text": "T"
-                  }
-                },
-                {
-                  "name": "key",
-                  "type": {
-                    "text": "K"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DataOperation",
-                "module": "src/operations/base.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "resolveCase",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "U"
-                  }
-                },
-                {
-                  "name": "caseSensitive",
-                  "optional": true,
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "DataOperation",
-                "module": "src/operations/base.ts"
-              }
-            }
-          ],
-          "superclass": {
-            "name": "DataOperation",
-            "module": "/src/operations/base.js"
-          }
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "SortDataOperation",
-            "module": "src/operations/sort.ts"
           }
         }
       ]
@@ -3439,100 +3098,66 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/operations/filter/state.ts",
+      "path": "src/operations/base.ts",
       "declarations": [
         {
           "kind": "class",
           "description": "",
-          "name": "FilterState",
+          "name": "DataOperation",
           "members": [
             {
-              "kind": "field",
-              "name": "state",
-              "type": {
-                "text": "Map<Keys<T>, FilterExpressionTree<T>>"
-              },
+              "kind": "method",
+              "name": "resolveValue",
               "privacy": "protected",
-              "default": "new Map()"
-            },
-            {
-              "kind": "field",
-              "name": "empty",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "keys",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "values",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "ands",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "ors",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "has",
-              "privacy": "public",
               "parameters": [
+                {
+                  "name": "record",
+                  "type": {
+                    "text": "T"
+                  }
+                },
                 {
                   "name": "key",
                   "type": {
-                    "text": "Keys<T>"
+                    "text": "K"
                   }
                 }
               ]
             },
             {
               "kind": "method",
-              "name": "get",
-              "privacy": "public",
+              "name": "resolveCase",
+              "privacy": "protected",
               "parameters": [
                 {
-                  "name": "key",
+                  "name": "value",
                   "type": {
-                    "text": "Keys<T>"
+                    "text": "U"
+                  }
+                },
+                {
+                  "name": "caseSensitive",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
                   }
                 }
               ]
             },
             {
               "kind": "method",
-              "name": "delete",
+              "name": "apply",
               "privacy": "public",
-              "parameters": [
-                {
-                  "name": "key",
-                  "type": {
-                    "text": "Keys<T>"
-                  }
+              "return": {
+                "type": {
+                  "text": "T[]"
                 }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "clear",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "set",
-              "privacy": "public",
+              },
               "parameters": [
                 {
-                  "name": "expression",
+                  "name": "args",
                   "type": {
-                    "text": "FilterExpression<T>"
+                    "text": "unknown[]"
                   }
                 }
               ]
@@ -3543,64 +3168,36 @@
       "exports": [
         {
           "kind": "js",
-          "name": "FilterState",
+          "name": "default",
           "declaration": {
-            "name": "FilterState",
-            "module": "src/operations/filter/state.ts"
+            "name": "DataOperation",
+            "module": "src/operations/base.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/operations/filter/tree.ts",
+      "path": "src/operations/filter.ts",
       "declarations": [
         {
           "kind": "class",
           "description": "",
-          "name": "FilterExpressionTree",
+          "name": "FilterDataOperation",
           "members": [
             {
-              "kind": "field",
-              "name": "operands",
-              "type": {
-                "text": "Array<FilterExpression<T>>"
-              },
+              "kind": "method",
+              "name": "resolveFilter",
               "privacy": "protected",
-              "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "empty",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "length",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "all",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "ands",
-              "privacy": "public"
-            },
-            {
-              "kind": "field",
-              "name": "ors",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "has",
-              "privacy": "public",
               "parameters": [
                 {
-                  "name": "expression",
+                  "name": "record",
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "expr",
                   "type": {
                     "text": "FilterExpression<T>"
                   }
@@ -3609,65 +3206,278 @@
             },
             {
               "kind": "method",
-              "name": "add",
-              "privacy": "public",
+              "name": "match",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
               "parameters": [
                 {
-                  "name": "expression",
+                  "name": "record",
                   "type": {
-                    "text": "FilterExpression<T>"
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "ands",
+                  "type": {
+                    "text": "FilterExpression<T>[]"
+                  }
+                },
+                {
+                  "name": "ors",
+                  "type": {
+                    "text": "FilterExpression<T>[]"
                   }
                 }
               ]
             },
             {
               "kind": "method",
-              "name": "remove",
+              "name": "apply",
               "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "T[]"
+                }
+              },
               "parameters": [
                 {
-                  "name": "expression",
+                  "name": "data",
                   "type": {
-                    "text": "FilterExpression<T>"
+                    "text": "T[]"
+                  }
+                },
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "FilterState<T>"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "DataOperation",
+                "module": "src/operations/base.ts"
+              }
             },
             {
               "kind": "method",
-              "name": "iterator",
-              "privacy": "protected"
+              "name": "resolveValue",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "record",
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "K"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DataOperation",
+                "module": "src/operations/base.ts"
+              }
             },
             {
               "kind": "method",
-              "name": "[Symbol.iterator]",
-              "privacy": "public"
+              "name": "resolveCase",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "U"
+                  }
+                },
+                {
+                  "name": "caseSensitive",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DataOperation",
+                "module": "src/operations/base.ts"
+              }
             }
-          ]
+          ],
+          "superclass": {
+            "name": "DataOperation",
+            "module": "/src/operations/base.js"
+          }
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "FilterExpressionTree",
+          "name": "default",
           "declaration": {
-            "name": "FilterExpressionTree",
-            "module": "src/operations/filter/tree.ts"
+            "name": "FilterDataOperation",
+            "module": "src/operations/filter.ts"
           }
         }
       ]
     },
     {
       "kind": "javascript-module",
-      "path": "src/operations/filter/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/operations/sort/types.ts",
-      "declarations": [],
-      "exports": []
+      "path": "src/operations/sort.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "SortDataOperation",
+          "members": [
+            {
+              "kind": "field",
+              "name": "orderBy",
+              "privacy": "protected",
+              "default": "new Map(\n    Object.entries({\n      ascending: 1,\n      descending: -1,\n    }),\n  )"
+            },
+            {
+              "kind": "method",
+              "name": "compareValues",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "first",
+                  "type": {
+                    "text": "U"
+                  }
+                },
+                {
+                  "name": "second",
+                  "type": {
+                    "text": "U"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "compareObjects",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "first",
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "second",
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "SortExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "apply",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "T[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "data",
+                  "type": {
+                    "text": "T[]"
+                  }
+                },
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "SortState<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DataOperation",
+                "module": "src/operations/base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveValue",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "record",
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "K"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DataOperation",
+                "module": "src/operations/base.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resolveCase",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "U"
+                  }
+                },
+                {
+                  "name": "caseSensitive",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DataOperation",
+                "module": "src/operations/base.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "DataOperation",
+            "module": "/src/operations/base.js"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "SortDataOperation",
+            "module": "src/operations/sort.ts"
+          }
+        }
+      ]
     },
     {
       "kind": "javascript-module",
@@ -3852,6 +3662,248 @@
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/operations/filter/state.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "FilterState",
+          "members": [
+            {
+              "kind": "field",
+              "name": "state",
+              "type": {
+                "text": "Map<Keys<T>, FilterExpressionTree<T>>"
+              },
+              "privacy": "protected",
+              "default": "new Map()"
+            },
+            {
+              "kind": "field",
+              "name": "empty",
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "keys",
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "values",
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "ands",
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "ors",
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "has",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "Keys<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "get",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "Keys<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "delete",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "Keys<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "clear",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "set",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FilterState",
+          "declaration": {
+            "name": "FilterState",
+            "module": "src/operations/filter/state.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/operations/filter/tree.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "FilterExpressionTree",
+          "members": [
+            {
+              "kind": "field",
+              "name": "operands",
+              "type": {
+                "text": "Array<FilterExpression<T>>"
+              },
+              "privacy": "protected",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "empty",
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "length",
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "all",
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "ands",
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "ors",
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "has",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "add",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "remove",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "expression",
+                  "type": {
+                    "text": "FilterExpression<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "iterator",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "[Symbol.iterator]",
+              "privacy": "public"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FilterExpressionTree",
+          "declaration": {
+            "name": "FilterExpressionTree",
+            "module": "src/operations/filter/tree.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/operations/filter/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/operations/sort/types.ts",
+      "declarations": [],
+      "exports": []
     },
     {
       "kind": "javascript-module",
