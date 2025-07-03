@@ -1,8 +1,7 @@
 import { assert } from '@open-wc/testing';
-import type { Keys } from '../../src/internal/types.js';
 import sinon from 'sinon';
-
 import { SORT_ICON_ASCENDING, SORT_ICON_DESCENDING } from '../../src/internal/constants.js';
+import type { Keys } from '../../src/internal/types.js';
 import GridTestFixture from '../utils/grid-fixture.js';
 import data, { importanceComparer } from '../utils/test-data.js';
 
@@ -212,7 +211,7 @@ suite('Grid UI sort', () => {
             },
             cancelable: true,
           },
-        ],
+        ]
       );
 
       assert.strictEqual(spy.lastCall.firstArg, 'sorted');
@@ -227,7 +226,7 @@ suite('Grid UI sort', () => {
               caseSensitive: false,
             },
           },
-        ],
+        ]
       );
 
       spy.resetHistory();
@@ -250,7 +249,7 @@ suite('Grid UI sort', () => {
             },
             cancelable: true,
           },
-        ],
+        ]
       );
 
       assert.strictEqual(spy.lastCall.firstArg, 'sorted');
@@ -265,7 +264,7 @@ suite('Grid UI sort', () => {
               caseSensitive: false,
             },
           },
-        ],
+        ]
       );
     });
 
@@ -285,7 +284,9 @@ suite('Grid UI sort', () => {
 
     test('Modify event arguments mid-flight', async () => {
       const spy = sinon.spy(TDD.grid, 'emitEvent');
-      TDD.grid.addEventListener('sorting', e => (e.detail.direction = 'descending'));
+      TDD.grid.addEventListener('sorting', e => {
+        e.detail.direction = 'descending';
+      });
 
       // Click for ASC sort, but modify to DESC in the handler
       await TDD.sortHeader('id');
@@ -304,7 +305,7 @@ suite('Grid UI sort', () => {
             },
             cancelable: true,
           },
-        ],
+        ]
       );
     });
   });

@@ -1,12 +1,10 @@
 import { assert, fixtureCleanup } from '@open-wc/testing';
-
+import type { ColumnConfiguration, DataType, Keys } from '../../src/internal/types.js';
 import { getFilterOperandsFor } from '../../src/internal/utils.js';
 import { FilterState } from '../../src/operations/filter/state.js';
+import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types.js';
 import FilterDataOperation from '../../src/operations/filter.js';
 import data from '../utils/test-data.js';
-
-import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types.js';
-import type { ColumnConfiguration, DataType, Keys } from '../../src/internal/types.js';
 
 class TDDFilterState<T extends object> {
   #result: T[] = [];
@@ -34,7 +32,7 @@ class TDDFilterState<T extends object> {
   public addCondition(
     key: Keys<T>,
     operand: OperandKeys<T[keyof T]>,
-    opts: Partial<FilterExpression<T>> = {},
+    opts: Partial<FilterExpression<T>> = {}
   ) {
     const config = { key, type: typeof this.data[0][key] as DataType } as ColumnConfiguration<T>;
 

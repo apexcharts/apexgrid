@@ -1,6 +1,6 @@
 type ApexComponent = CustomElementConstructor & {
   is: string;
-  register: Function;
+  register: () => void;
 };
 
 export function registerComponent(component: ApexComponent, dependencies: ApexComponent[] = []) {

@@ -1,8 +1,8 @@
-import { ReactiveControllerHost, TemplateResult } from 'lit';
-import type { ApexGrid } from '../components/grid.js';
+import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import type ApexGridCell from '../components/cell.js';
-import type ApexGridRow from '../components/row.js';
+import type { ApexGrid } from '../components/grid.js';
 import type ApexGridHeader from '../components/header.js';
+import type ApexGridRow from '../components/row.js';
 import type { SortComparer } from '../operations/sort/types.js';
 
 export type NavigationState = 'previous' | 'current';
@@ -208,7 +208,7 @@ export type DataPipelineParams<T extends object> = {
  * Callback function for customizing data operations in the grid.
  */
 export type DataPipelineHook<T extends object> = (
-  state: DataPipelineParams<T>,
+  state: DataPipelineParams<T>
 ) => T[] | Promise<T[]>;
 
 /**

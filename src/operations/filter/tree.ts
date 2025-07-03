@@ -35,11 +35,10 @@ export class FilterExpressionTree<T> {
       expression.criteria = 'and';
     }
 
-    if (this.operands.includes(expression)) {
-      return this;
+    if (!this.has(expression)) {
+      this.operands.push(expression);
     }
 
-    this.operands.push(expression);
     return this;
   }
 

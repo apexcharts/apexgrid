@@ -7,10 +7,9 @@ export default class FilterDataOperation<T extends object> extends DataOperation
     const condition = expr.condition as FilterOperation<T>;
     return condition.logic(
       // XXX: Types
-      // @ts-expect-error - resolve
-      this.resolveValue(record, expr.key),
-      expr.searchTerm,
-      expr.caseSensitive,
+      this.resolveValue(record, expr.key) as T,
+      expr.searchTerm as T,
+      expr.caseSensitive
     );
   }
 
@@ -20,7 +19,7 @@ export default class FilterDataOperation<T extends object> extends DataOperation
         return this.match(
           record,
           ands.filter(f => f.key !== or.key),
-          [],
+          []
         );
       }
     }

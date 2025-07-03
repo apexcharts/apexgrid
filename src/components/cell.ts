@@ -16,8 +16,8 @@ export default class ApexGridCell<T extends object> extends LitElement {
 
   public static override styles = styles;
 
-  public static register() {
-    registerComponent(this);
+  public static register(): void {
+    registerComponent(ApexGridCell);
   }
 
   /**

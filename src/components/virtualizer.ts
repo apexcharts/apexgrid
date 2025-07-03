@@ -8,7 +8,7 @@ export default class ApexVirtualizer extends LitVirtualizer {
   }
 
   public static register() {
-    registerComponent(this);
+    registerComponent(ApexVirtualizer);
   }
 
   public override scroller = true;

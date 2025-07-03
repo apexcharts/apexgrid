@@ -1,12 +1,11 @@
 import { assert, elementUpdated } from '@open-wc/testing';
 import sinon from 'sinon';
-import { StringOperands } from '../../src/operations/filter/operands/string.js';
-import { NumberOperands } from '../../src/operations/filter/operands/number.js';
-import GridTestFixture from '../utils/grid-fixture.js';
-import data, { TestData } from '../utils/test-data.js';
-
 import type { Keys } from '../../src/internal/types.js';
+import { NumberOperands } from '../../src/operations/filter/operands/number.js';
+import { StringOperands } from '../../src/operations/filter/operands/string.js';
 import type { FilterExpression, OperandKeys } from '../../src/operations/filter/types.js';
+import GridTestFixture from '../utils/grid-fixture.js';
+import data, { type TestData } from '../utils/test-data.js';
 
 class FilterFixture<T extends object> extends GridTestFixture<T> {
   public override updateConfig(): void {
@@ -107,7 +106,7 @@ suite('Grid UI filter', () => {
     test('Default state for no filterable columns', async () => {
       await TDD.updateProperty(
         'columns',
-        TDD.columnConfig.map(each => ({ ...each, filter: false })),
+        TDD.columnConfig.map(each => ({ ...each, filter: false }))
       );
 
       assert.isNotOk(TDD.filterRow.element);
@@ -355,7 +354,7 @@ suite('Grid UI filter', () => {
       };
 
       TDD.grid.addEventListener('filtering', e =>
-        Object.assign(e.detail.expressions[0], expression),
+        Object.assign(e.detail.expressions[0], expression)
       );
 
       await TDD.activateFilterRow('name');

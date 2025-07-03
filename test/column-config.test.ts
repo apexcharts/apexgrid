@@ -1,7 +1,7 @@
 import { assert, elementUpdated, html } from '@open-wc/testing';
 import type { ApexCellContext, Keys } from '../src/internal/types.js';
 import GridTestFixture from './utils/grid-fixture.js';
-import data, { TestData } from './utils/test-data.js';
+import data, { type TestData } from './utils/test-data.js';
 
 const TDD = new GridTestFixture(data, { width: '1000px' });
 const defaultKeys = Object.keys(data[0]) as Array<Keys<TestData>>;
@@ -13,10 +13,11 @@ suite('Column configuration', () => {
   suite('Binding', () => {
     test('Through attribute', async () => {
       assert.strictEqual(TDD.grid.columns.length, defaultKeys.length);
-      defaultKeys.forEach(key => {
+
+      for (const key of defaultKeys) {
         assert.exists(TDD.grid.getColumn(key));
         assert.exists(TDD.headers.get(key).element);
-      });
+      }
     });
 
     test('After initial render', async () => {
@@ -24,10 +25,10 @@ suite('Column configuration', () => {
       TDD.grid.columns = newKeys.map(key => ({ key }));
       await elementUpdated(TDD.grid);
 
-      newKeys.forEach(key => {
+      for (const key of newKeys) {
         assert.exists(TDD.grid.getColumn(key));
         assert.exists(TDD.headers.get(key).element);
-      });
+      }
     });
 
     test('Updating configuration', async () => {
@@ -71,7 +72,7 @@ suite('Column configuration', () => {
             <span>
               <h3>Custom template for id</h3>
             </span>
-          </span>`,
+          </span>`
       );
     });
 
@@ -84,7 +85,7 @@ suite('Column configuration', () => {
 
       assert.shadowDom.equal(
         TDD.rows.first.cells.get('name').element,
-        `<input value="${data[0].name}" />`,
+        `<input value="${data[0].name}" />`
       );
     });
 
@@ -95,7 +96,7 @@ suite('Column configuration', () => {
       const cellWidthEquals = (expected: number) =>
         assert.strictEqual(
           TDD.rows.first.cells.get('id').element.getBoundingClientRect().width,
-          expected,
+          expected
         );
 
       // 4 columns * 1fr out of 1000px = 250px

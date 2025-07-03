@@ -1,4 +1,4 @@
-import { ReactiveController } from 'lit';
+import type { ReactiveController } from 'lit';
 import ApexGridRow from '../components/row.js';
 import { NAVIGATION_STATE, SENTINEL_NODE } from '../internal/constants.js';
 import type { ActiveNode, GridHost, Keys } from '../internal/types.js';
@@ -12,7 +12,7 @@ export class NavigationController<T extends object> implements ReactiveControlle
       ArrowRight: this.arrowRight,
       Home: this.home,
       End: this.end,
-    }),
+    })
   );
 
   protected get virtualizer() {
@@ -50,7 +50,7 @@ export class NavigationController<T extends object> implements ReactiveControlle
 
   protected scrollToCell(node: ActiveNode<T>) {
     const row = Array.from(this.virtualizer.querySelectorAll(ApexGridRow.is)).find(
-      row => row.index === node.row,
+      row => row.index === node.row
     ) as unknown as ApexGridRow<T>;
 
     if (row) {

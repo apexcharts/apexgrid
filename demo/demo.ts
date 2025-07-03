@@ -1,17 +1,24 @@
-import { html, render } from 'lit';
 import {
   configureTheme,
+  defineComponents,
   IgcAvatarComponent,
+  IgcCheckboxComponent,
   IgcRatingComponent,
   IgcSelectComponent,
   IgcSwitchComponent,
-  defineComponents,
 } from 'igniteui-webcomponents';
-import { ApexGrid } from '../src/index.js';
-import { ColumnConfiguration } from '../src/index';
 import { Theme } from 'igniteui-webcomponents/theming/types';
+import { html, render } from 'lit';
+import { ColumnConfiguration } from '../src/index';
+import { ApexGrid } from '../src/index.js';
 
-defineComponents(IgcAvatarComponent, IgcRatingComponent, IgcSelectComponent, IgcSwitchComponent);
+defineComponents(
+  IgcAvatarComponent,
+  IgcCheckboxComponent,
+  IgcRatingComponent,
+  IgcSelectComponent,
+  IgcSwitchComponent,
+);
 
 type User = {
   id: number;
@@ -44,7 +51,7 @@ function generateData(length: number): User[] {
         priority: oneOf(choices),
         email: `user${idx}@org.com`,
         avatar: getAvatar(),
-      } as User),
+      }) as User,
   );
 }
 
@@ -85,8 +92,6 @@ const themeChoose = html`
       value="bootstrap"
       outlined
       label="Choose theme"
-      same-width
-      flip
       @igcChange=${({ detail }) => setTheme(detail.value)}
     >
       ${themes.map(theme => html`<igc-select-item .value=${theme}>${theme}</igc-select-item>`)}
@@ -123,7 +128,7 @@ const columns: ColumnConfiguration<User>[] = [
     cellTemplate: params =>
       html`<igc-rating
         readonly
-        style="--component-size: 2"
+        style="--ig-size: 1"
         .value=${params.value}
       ></igc-rating>`,
   },
@@ -133,8 +138,7 @@ const columns: ColumnConfiguration<User>[] = [
       html`<igc-select
         outlined
         .value=${params.value}
-        flip
-        style="--component-size: 1"
+        style="--ig-size: 1"
         >${choices.map(
           choice => html`<igc-select-item .value=${choice}>${choice}</igc-select-item>`,
         )}</igc-select
@@ -154,10 +158,11 @@ const columns: ColumnConfiguration<User>[] = [
     type: 'boolean',
     sort: true,
     filter: true,
-    cellTemplate: params => html`<igc-checkbox
-      label-position="before"
-      ?checked=${params.value}
-    ></igc-checkbox>`,
+    cellTemplate: params =>
+      html`<igc-checkbox
+        label-position="before"
+        ?checked=${params.value}
+      ></igc-checkbox>`,
   },
 ];
 

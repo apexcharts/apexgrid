@@ -1,5 +1,5 @@
-import { FilterExpressionTree } from './tree.js';
 import type { Keys } from '../../internal/types.js';
+import { FilterExpressionTree } from './tree.js';
 import type { FilterExpression } from './types.js';
 
 export class FilterState<T> {
@@ -18,11 +18,11 @@ export class FilterState<T> {
   }
 
   public get ands() {
-    return this.values.map(each => each.ands).flat();
+    return this.values.flatMap(each => each.ands);
   }
 
   public get ors() {
-    return this.values.map(each => each.ors).flat();
+    return this.values.flatMap(each => each.ors);
   }
 
   public has(key: Keys<T>) {

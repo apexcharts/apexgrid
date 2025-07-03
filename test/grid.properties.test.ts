@@ -1,12 +1,10 @@
 import { assert } from '@open-wc/testing';
 import { html } from 'lit';
-
-import GridTestFixture from './utils/grid-fixture.js';
-import data, { TestData } from './utils/test-data.js';
-
-import type { SortExpression } from '../src/operations/sort/types.js';
 import type { FilterExpression } from '../src/operations/filter/types.js';
+import type { SortExpression } from '../src/operations/sort/types.js';
+import GridTestFixture from './utils/grid-fixture.js';
 import testData from './utils/test-data.js';
+import data, { type TestData } from './utils/test-data.js';
 
 class InitialDataStateFixture<T extends TestData> extends GridTestFixture<T> {
   public sortState: SortExpression<TestData>[] = [
@@ -47,7 +45,10 @@ suite('Grid auto-generate column configuration', () => {
   teardown(() => autoGenerateTDD.tearDown());
 
   test('Default', async () => {
-    autoGenerateTDD.grid.columns.forEach(({ key }) => assert.isTrue(keys.has(key)));
+    for (const { key } of autoGenerateTDD.grid.columns) {
+      assert.isTrue(keys.has(key));
+    }
+
     assert.strictEqual(autoGenerateTDD.grid.rows.length, testData.length);
   });
 });

@@ -1,9 +1,9 @@
-import { ReactiveController } from 'lit';
-import SortDataOperation from '../operations/sort.js';
-import FilterDataOperation from '../operations/filter.js';
-import type { GridHost } from '../internal/types.js';
-import type { StateController } from './state.js';
+import type { ReactiveController } from 'lit';
 import { isDefined } from '../internal/is-defined.js';
+import type { GridHost } from '../internal/types.js';
+import FilterDataOperation from '../operations/filter.js';
+import SortDataOperation from '../operations/sort.js';
+import type { StateController } from './state.js';
 
 export class DataOperationsController<T extends object> implements ReactiveController {
   protected sorting = new SortDataOperation<T>();
@@ -33,15 +33,16 @@ export class DataOperationsController<T extends object> implements ReactiveContr
 
   public async apply(data: T[], state: StateController<T>) {
     const { filtering, sorting } = state;
+    let transformed: T[];
 
-    data = this.hasCustomFilter
+    transformed = this.hasCustomFilter
       ? await this.customFilter({ data, grid: this.host, type: 'filter' })
       : this.filtering.apply(data, filtering.state);
 
-    data = this.hasCustomSort
-      ? await this.customSort({ data, grid: this.host, type: 'sort' })
-      : this.sorting.apply(data, sorting.state);
+    transformed = this.hasCustomSort
+      ? await this.customSort({ data: transformed, grid: this.host, type: 'sort' })
+      : this.sorting.apply(transformed, sorting.state);
 
-    return data;
+    return transformed;
   }
 }

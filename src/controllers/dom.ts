@@ -1,13 +1,16 @@
-import { html, ReactiveController } from 'lit';
-import { StyleInfo, styleMap } from 'lit/directives/style-map.js';
-import { RenderItemFunction } from '@lit-labs/virtualizer/virtualize.js';
-import { StateController } from './state.js';
-import { applyColumnWidths } from '../internal/utils.js';
+import type { RenderItemFunction } from '@lit-labs/virtualizer/virtualize.js';
+import { html, type ReactiveController } from 'lit';
+import { type StyleInfo, styleMap } from 'lit/directives/style-map.js';
 import { registerGridIcons } from '../internal/icon-registry.js';
 import type { GridHost } from '../internal/types.js';
+import { applyColumnWidths } from '../internal/utils.js';
+import type { StateController } from './state.js';
 
 export class GridDOMController<T extends object> implements ReactiveController {
-  constructor(protected host: GridHost<T>, protected state: StateController<T>) {
+  constructor(
+    protected host: GridHost<T>,
+    protected state: StateController<T>
+  ) {
     this.host.addController(this);
   }
 
@@ -23,14 +26,17 @@ export class GridDOMController<T extends object> implements ReactiveController {
   public columnSizes: StyleInfo = {};
 
   public rowRenderer: RenderItemFunction<T> = (data: T, index: number) => {
-    return html`<apex-grid-row
-      part="row"
-      style=${styleMap({ ...this.columnSizes, ...this.getActiveRowStyles(index) })}
-      .index=${index}
-      .activeNode=${this.state.active}
-      .data=${data}
-      .columns=${this.host.columns}
-    ></apex-grid-row>`;
+    return html`
+      <apex-grid-row
+        part="row"
+        style=${styleMap({ ...this.columnSizes, ...this.getActiveRowStyles(index) })}
+        .index=${index}
+        .activeNode=${this.state.active}
+        .data=${data}
+        .columns=${this.host.columns}
+      >
+      </apex-grid-row>
+    `;
   };
 
   public async hostConnected() {

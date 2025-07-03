@@ -1,11 +1,10 @@
-import { ReactiveController } from 'lit';
+import type { ReactiveController } from 'lit';
+import type { ApexFilteredEvent } from '../components/grid.js';
 import { PIPELINE } from '../internal/constants.js';
+import type { ColumnConfiguration, GridHost, Keys } from '../internal/types.js';
 import { asArray, getFilterOperandsFor } from '../internal/utils.js';
 import { FilterState } from '../operations/filter/state.js';
-
-import type { ColumnConfiguration, GridHost, Keys } from '../internal/types.js';
 import type { FilterExpression } from '../operations/filter/types.js';
-import type { ApexFilteredEvent } from '../components/grid.js';
 
 export class FilterController<T extends object> implements ReactiveController {
   constructor(protected host: GridHost<T>) {
@@ -40,7 +39,10 @@ export class FilterController<T extends object> implements ReactiveController {
   }
 
   #filter(expression: FilterExpression<T> | FilterExpression<T>[]) {
-    asArray(expression).forEach(expr => this.state.set(expr));
+    for (const expr of asArray(expression)) {
+      this.state.set(expr);
+    }
+
     // HACK: In the case where the scrollTop is a large and amount and a big chunk of data is filtered out
     // HACK: the virtualizer can't recalculate its scroll position correctly. Thus, we reset the scrollTop state.
     this.#virtualizer?.scrollTo({ top: 0 });
@@ -139,8 +141,8 @@ export class FilterController<T extends object> implements ReactiveController {
   public filter(expression: FilterExpression<T> | FilterExpression<T>[]) {
     this.#filter(
       asArray(expression).map(expr =>
-        Object.assign(this.getDefaultExpression(this.host.getColumn(expr.key)!), expr),
-      ),
+        Object.assign(this.getDefaultExpression(this.host.getColumn(expr.key)!), expr)
+      )
     );
   }
 }

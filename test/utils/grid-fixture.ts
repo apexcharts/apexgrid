@@ -1,15 +1,22 @@
-import { elementUpdated, fixture, fixtureCleanup, html, waitUntil } from '@open-wc/testing';
-import ApexGridHeaderRow from '../../src/components/header-row.js';
-import type { ColumnConfiguration, Keys } from '../../src/internal/types.js';
-import type { SortExpression } from '../../src/operations/sort/types.js';
-import type { FilterExpression } from '../../src/operations/filter/types.js';
+import {
+  elementUpdated,
+  fixture,
+  fixtureCleanup,
+  html,
+  nextFrame,
+  waitUntil,
+} from '@open-wc/testing';
 import { ApexGrid } from '../../src/components/grid.js';
+import ApexGridHeaderRow from '../../src/components/header-row.js';
 import ApexGridRow from '../../src/components/row.js';
+import type { ColumnConfiguration, Keys } from '../../src/internal/types.js';
+import type { FilterExpression } from '../../src/operations/filter/types.js';
+import type { SortExpression } from '../../src/operations/sort/types.js';
 import '../../src/index.js';
+import type CellTestFixture from './cell-fixture.js';
+import FilterRowFixture from './filter-row.fixture.js';
 import HeaderTestFixture from './header-fixture.js';
 import RowTestFixture from './row-fixture.js';
-import CellTestFixture from './cell-fixture.js';
-import FilterRowFixture from './filter-row.fixture.js';
 
 interface RowCollection<T extends object> {
   first: RowTestFixture<T>;
@@ -27,8 +34,11 @@ export default class GridTestFixture<T extends object> {
   public grid!: ApexGrid<T>;
   public columnConfig: ColumnConfiguration<T>[];
 
-  constructor(protected data: T[], protected parentStyle?: Partial<CSSStyleDeclaration>) {
-    this.columnConfig = Object.keys(data.at(0)!).map(key => ({ key } as ColumnConfiguration<T>));
+  constructor(
+    protected data: T[],
+    protected parentStyle?: Partial<CSSStyleDeclaration>
+  ) {
+    this.columnConfig = Object.keys(data.at(0)!).map(key => ({ key }) as ColumnConfiguration<T>);
   }
 
   public registerComponents() {
@@ -92,7 +102,7 @@ export default class GridTestFixture<T extends object> {
 
   public get headerRow() {
     return this.grid.shadowRoot!.querySelector(
-      ApexGridHeaderRow.is,
+      ApexGridHeaderRow.is
     )! as unknown as ApexGridHeaderRow<T>;
   }
 
@@ -120,7 +130,7 @@ export default class GridTestFixture<T extends object> {
     return new HeaderTestFixture(
       typeof id === 'number'
         ? this.headerRow.headers.at(id)!
-        : this.headerRow.headers.find(({ column }) => column.key === id)!,
+        : this.headerRow.headers.find(({ column }) => column.key === id)!
     );
   }
 
@@ -161,16 +171,14 @@ export default class GridTestFixture<T extends object> {
 
   public async fireNavigationEvent(options?: KeyboardEventInit) {
     this.gridBody.dispatchEvent(
-      new KeyboardEvent('keydown', Object.assign({ composed: true, bubbles: true }, options)),
+      new KeyboardEvent('keydown', Object.assign({ composed: true, bubbles: true }, options))
     );
     await elementUpdated(this.grid);
   }
 
   public async updateColumns(columns: ColumnConfiguration<T> | ColumnConfiguration<T>[]) {
     this.grid.updateColumns(columns);
-
-    await elementUpdated(this.grid);
-    await elementUpdated(this.grid);
+    await Promise.all([elementUpdated(this.grid), nextFrame()]);
     return this;
   }
 

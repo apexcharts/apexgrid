@@ -1,13 +1,12 @@
+import type { StyleInfo } from 'lit/directives/style-map.js';
 import { BooleanOperands } from '../operations/filter/operands/boolean.js';
 import { NumberOperands } from '../operations/filter/operands/number.js';
 import { StringOperands } from '../operations/filter/operands/string.js';
-
-import type { StyleInfo } from 'lit/directives/style-map.js';
 import type { ColumnConfiguration, DataType, GridHost } from './types.js';
 
 // TODO: Revise if this is needed
 export function applyColumnWidths<T extends object>(
-  columns: Array<ColumnConfiguration<T>>,
+  columns: Array<ColumnConfiguration<T>>
 ): StyleInfo {
   return {
     'grid-template-columns': columns

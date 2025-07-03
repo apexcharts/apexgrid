@@ -13,7 +13,7 @@ export type FilterCriteria = 'and' | 'or';
 export type FilterOperationLogic<T> = (
   target: T,
   searchTerm: T,
-  caseSensitive?: boolean,
+  caseSensitive?: boolean
 ) => boolean;
 
 export interface FilterOperation<T> {
@@ -71,7 +71,7 @@ export type FilterExpression<T, K extends Keys<T> = Keys<T>> = K extends Keys<T>
 export type OperandKeys<Type> = Type extends number
   ? keyof typeof NumberOperands
   : Type extends string
-  ? keyof typeof StringOperands
-  : Type extends boolean
-  ? keyof typeof BooleanOperands
-  : Type;
+    ? keyof typeof StringOperands
+    : Type extends boolean
+      ? keyof typeof BooleanOperands
+      : Type;

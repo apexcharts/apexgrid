@@ -1,16 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es2019",
-    "module": "NodeNext",
-    "lib": ["es2020", "DOM", "DOM.Iterable"],
-    "skipLibCheck": true,
+    "target": "es2021",
+    "module": "es2020",
+    "lib": ["es2023", "DOM", "DOM.Iterable"],
+    "outDir": "dist",
+    "rootDir": "./",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "inlineSources": true,
-    "esModuleInterop": true,
-    "outDir": "./dist",
-    "rootDirs": ["./src", ".test/"],
+    "useDefineForClassFields": false,
+    "skipLibCheck": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -18,17 +18,21 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
+    "noImplicitOverride": true,
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": false,
-    "noImplicitOverride": true,
     "plugins": [
       {
         "name": "ts-lit-plugin",
-        "strict": true
+        "strict": true,
+        "rules": {
+          "no-incompatible-type-binding": "warning"
+        }
       }
-    ]
+    ],
+    "types": ["mocha"]
   },
   "include": ["src/**/*.ts", "test/**/*.ts", "types/**/*.d.ts"],
   "exclude": ["node_modules/**"],

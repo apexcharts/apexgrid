@@ -52,12 +52,12 @@ export const NumberOperands = Object.freeze<FilterOperands<number, NumberKeys>>(
     name: 'empty',
     label: 'Empty',
     unary: true,
-    logic: target => !isDefined(target) || isNaN(target),
+    logic: target => !isDefined(target) || Number.isNaN(target),
   },
   notEmpty: {
     name: 'notEmpty',
     label: 'Not empty',
     unary: true,
-    logic: target => isDefined(target) && !isNaN(target),
+    logic: target => isDefined(target) && !Number.isNaN(target),
   },
 });

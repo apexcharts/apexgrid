@@ -1,14 +1,13 @@
-/* process.env.npm_lifecycle_event, process.env.npm_lifecycle_script, process.env.OUTDIR; */
-
-import { playwrightLauncher } from '@web/test-runner-playwright';
+import { fileURLToPath } from 'node:url';
+import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { defaultReporter } from '@web/test-runner';
-import { mochaStyleReporter } from '@blockquote/test-runner-mocha-style-reporter';
+import { playwrightLauncher } from '@web/test-runner-playwright';
 
 const filteredLogs = ['in dev mode'];
 
 export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
   /** Test files to run */
-  files: [`dist/test/**/*.test.js`, `!dist/test/utils/**/*`],
+  files: ['test/**/*.test.ts'],
 
   /** Resolve bare module imports */
   nodeResolve: {
@@ -16,15 +15,9 @@ export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
   },
 
   /** Browsers to run tests on */
-  browsers: [playwrightLauncher({ product: 'chromium' })],
+  browsers: [playwrightLauncher({ product: 'chromium', headless: true })],
 
-  /** Amount of browsers to run concurrently */
-  // concurrentBrowsers: 2,
-
-  /** Amount of test files per browser to test concurrently */
-  // concurrency: 1,
-
-  reporters: [defaultReporter(), mochaStyleReporter()],
+  reporters: [defaultReporter()],
 
   coverageConfig: {
     report: true,
@@ -54,8 +47,12 @@ export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
     return true;
   },
 
-  /** Compile JS for older browsers. Requires @web/dev-server-esbuild plugin */
-  // esbuildTarget: 'auto',
+  plugins: [
+    esbuildPlugin({
+      ts: true,
+      tsconfig: fileURLToPath(new URL('./tsconfig.json', import.meta.url)),
+    }),
+  ],
 
   // See documentation for all available options
 });

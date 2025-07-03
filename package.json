@@ -2,11 +2,7 @@
   "name": "apex-grid",
   "version": "0.0.0",
   "description": "Web component data grid following open-wc recommendations",
-  "keywords": [
-    "lit",
-    "web-component",
-    "lit-element"
-  ],
+  "keywords": ["lit", "web-component", "lit-element"],
   "license": "SEE LICENSE IN LICENSE.mds",
   "author": "apex-grid",
   "exports": {
@@ -25,76 +21,64 @@
     "custom-elements.json"
   ],
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "analyze": "cem analyze --litelement --globs \"src/**/*.{js,ts}\" --exclude \"src/styles/**/*\"",
     "build": "npm run build:tsc && npm run dev:vite && npm run typedoc",
     "build:tsc": "tsc",
     "dev:vite": "vite build",
-    "format": "npm run format:eslint && npm run format:prettier && npm run format:stylelint",
-    "format:eslint": "eslint \"**/*.{js,ts,html}\" --fix --ignore-path .eslintignore",
-    "format:prettier": "prettier \"**/*.{js,ts,json,html,md}\" --write --ignore-path .eslintignore",
-    "format:stylelint": "stylelint \"**/*.{scss,css}\" --fix --allow-empty-input --ignore-path .eslintignore",
-    "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:stylelint",
-    "lint:eslint": "eslint \"**/*.{js,ts,html}\" --ignore-path .eslintignore",
-    "lint:prettier": "prettier \"**/*.{js,ts,json,html,md}\" --check --ignore-path .eslintignore",
-    "lint:stylelint": "stylelint \"**/*.{scss,css}\" --allow-empty-input --ignore-path .eslintignore",
+    "format": "biome check --fix && npm run format:stylelint",
+    "format:stylelint": "stylelint \"src/**/*.{scss,css}\" --fix --allow-empty-input",
+    "lint": "biome lint && npm run lint:stylelint",
+    "lint:stylelint": "stylelint \"src/**/*.{scss,css}\" --allow-empty-input",
     "preview:vite": "vite preview",
     "sass:watch": "sass-style-template -j ts",
     "start": "concurrently -k -r \"npm:sass:watch\" \"npm:vite\"",
-    "start:wds": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"npm:sass:watch\" \"npm:wds\"",
-    "test": "tsc && wtr --coverage",
-    "test:watch": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wtr --watch\"",
+    "test": "wtr --coverage",
+    "test:watch": "wtr --watch",
     "typedoc": "typedoc",
     "vite": "vite",
-    "wds": "web-dev-server",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
+  "browserslist": [
+    "defaults"
+  ],
   "lint-staged": {
-    "**/*.{js,ts,html}": [
-      "npm run format:eslint"
-    ],
-    "**/*.{js,ts,json,html,md}": [
-      "npm run format:prettier"
-    ],
-    "**/*.{scss,css}": [
-      "npm run format:stylelint"
+    "*.{js,ts,cjs,mjs,jsx,tsx}": [
+      "biome check --fix --no-errors-on-unmatched"
     ]
   },
   "dependencies": {
-    "@lit-labs/context": "^0.3.1",
-    "@lit-labs/virtualizer": "^2.0.2",
-    "igniteui-theming": "^1.4.2",
-    "igniteui-webcomponents": "^4.2.3",
-    "lit": "^2.7.4"
+    "@lit-labs/virtualizer": "^2.1.0",
+    "@lit/context": "^1.1.5",
+    "igniteui-theming": "^19.1.0",
+    "igniteui-webcomponents": "^6.1.1",
+    "lit": "^3.3.0"
   },
   "devDependencies": {
-    "@blockquote/rollup-plugin-total-bundlesize": "^2.0.1",
-    "@blockquote/sass-style-template": "3.0.0",
-    "@blockquote/test-runner-mocha-style-reporter": "^1.5.1",
-    "@custom-elements-manifest/analyzer": "^0.8.1",
-    "@open-wc/eslint-config": "^10.0.0",
-    "@open-wc/testing": "^3.1.8",
-    "@typescript-eslint/eslint-plugin": "^5.59.2",
-    "@typescript-eslint/parser": "^5.59.2",
-    "@web/dev-server": "^0.2.1",
-    "@web/test-runner": "^0.16.1",
-    "@web/test-runner-playwright": "^0.10.0",
-    "concurrently": "^8.0.1",
-    "eslint": "^8.39.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-log-filenames": "^1.0.6",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.2.2",
-    "prettier": "^2.8.8",
-    "sinon": "^15.0.4",
-    "stylelint": "^15.6.0",
-    "stylelint-config-standard-scss": "^9.0.0",
-    "tslib": "^2.5.0",
-    "typedoc": "^0.24.6",
-    "typescript": "^5.0.4",
-    "vite": "^4.3.4"
+    "@biomejs/biome": "^2.0.6",
+    "@blockquote/rollup-plugin-total-bundlesize": "^2.2.0",
+    "@blockquote/sass-style-template": "^5.0.1",
+    "@custom-elements-manifest/analyzer": "^0.10.4",
+    "@open-wc/testing": "^4.0.0",
+    "@types/mocha": "^10.0.10",
+    "@web/dev-server-esbuild": "^1.0.4",
+    "@web/test-runner": "^0.20.2",
+    "@web/test-runner-playwright": "^0.11.1",
+    "concurrently": "^9.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "playwright": "^1.53.2",
+    "sinon": "^21.0.0",
+    "stylelint": "^16.21.0",
+    "stylelint-config-standard-scss": "^15.0.1",
+    "stylelint-prettier": "^5.0.3",
+    "stylelint-scss": "^6.12.1",
+    "tslib": "^2.8.1",
+    "typedoc": "^0.28.7",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0"
   },
   "customElements": "custom-elements.json"
 }

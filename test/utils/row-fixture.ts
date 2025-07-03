@@ -1,5 +1,5 @@
-import type { Keys } from '../../src/internal/types.js';
 import type ApexGridRow from '../../src/components/row.js';
+import type { Keys } from '../../src/internal/types.js';
 import CellTestFixture from './cell-fixture.js';
 
 interface CellCollection<T extends object> {
@@ -15,7 +15,7 @@ export default class RowTestFixture<T extends object> {
     return new CellTestFixture(
       typeof id === 'number'
         ? this.element.cells.at(id)!
-        : this.element.cells.find(({ column }) => column.key === id)!,
+        : this.element.cells.find(({ column }) => column.key === id)!
     );
   }
 

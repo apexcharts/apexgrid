@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
 import totalBundlesize from '@blockquote/rollup-plugin-total-bundlesize';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   server: {
