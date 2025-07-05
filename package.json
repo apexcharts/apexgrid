@@ -65,8 +65,8 @@
   "dependencies": {
     "@lit-labs/context": "^0.3.1",
     "@lit-labs/virtualizer": "^2.0.2",
-    "igniteui-theming": "^1.4.2",
-    "igniteui-webcomponents": "^4.2.3",
+    "igniteui-theming": "1.4.2",
+    "igniteui-webcomponents": "4.2.3",
     "lit": "^2.7.4"
   },
   "devDependencies": {
