@@ -17,7 +17,7 @@ import { getFilterOperandsFor } from '../internal/utils.js';
 import { watch } from '../internal/watch.js';
 import type { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { FilterExpression, FilterOperation, OperandKeys } from '../operations/filter/types.js';
-import { styles } from '../styles/filter-row/filter-row-styles.css.js';
+import { styles } from '../styles/filter-row/filter-row.css.js';
 
 type ExpressionChipProps<T> = {
   expression: FilterExpression<T>;
@@ -35,7 +35,7 @@ function prefixedIcon(icon?: string) {
 }
 
 export default class ApexFilterRow<T extends object> extends LitElement {
-  public static get is() {
+  public static get tagName() {
     return GRID_FILTER_ROW_TAG;
   }
 
@@ -377,6 +377,6 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    [ApexFilterRow.is]: ApexFilterRow<object>;
+    [ApexFilterRow.tagName]: ApexFilterRow<object>;
   }
 }

@@ -95,7 +95,7 @@ export default class GridTestFixture<T extends object> {
   }
 
   public get headerRow() {
-    return this.grid.renderRoot.querySelector<ApexGridHeaderRow<T>>(ApexGridHeaderRow.is)!;
+    return this.grid.renderRoot.querySelector<ApexGridHeaderRow<T>>(ApexGridHeaderRow.tagName)!;
   }
 
   public get rows(): RowCollection<T> {

@@ -7,20 +7,20 @@ import { partNameMap } from '../internal/part-map.js';
 import { registerComponent } from '../internal/register.js';
 import { GRID_HEADER_ROW_TAG } from '../internal/tags.js';
 import type { ColumnConfiguration } from '../internal/types.js';
-import { styles } from '../styles/header-row/header-row.base-styles.css.js';
+import { styles } from '../styles/header-row/header-row.base.css.js';
 import ApexGridHeader from './header.js';
 
 export default class ApexGridHeaderRow<T extends object> extends LitElement {
-  public static get is() {
+  public static get tagName() {
     return GRID_HEADER_ROW_TAG;
   }
   public static override styles = styles;
 
-  public static register() {
-    registerComponent(ApexGridHeaderRow, [ApexGridHeader]);
+  public static register(): void {
+    registerComponent(ApexGridHeaderRow, ApexGridHeader);
   }
 
-  @queryAll(ApexGridHeader.is)
+  @queryAll(ApexGridHeader.tagName)
   protected _headers!: NodeListOf<ApexGridHeader<T>>;
 
   @consume({ context: gridStateContext, subscribe: true })
@@ -79,6 +79,6 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    [ApexGridHeaderRow.is]: ApexGridHeaderRow<object>;
+    [ApexGridHeaderRow.tagName]: ApexGridHeaderRow<object>;
   }
 }

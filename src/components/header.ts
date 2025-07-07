@@ -1,4 +1,5 @@
 import { consume } from '@lit/context';
+import { IgcIconComponent } from 'igniteui-webcomponents';
 import { html, LitElement, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { gridStateContext, type StateController } from '../controllers/state.js';
@@ -11,17 +12,17 @@ import { partNameMap } from '../internal/part-map.js';
 import { registerComponent } from '../internal/register.js';
 import { GRID_HEADER_TAG } from '../internal/tags.js';
 import type { ApexHeaderContext, ColumnConfiguration } from '../internal/types.js';
-import { styles } from '../styles/header-cell/header-cell-styles.css.js';
+import { styles } from '../styles/header-cell/header-cell.css.js';
 
 export default class ApexGridHeader<T extends object> extends LitElement {
-  public static get is() {
+  public static get tagName() {
     return GRID_HEADER_TAG;
   }
 
   public static override styles = styles;
 
-  public static register() {
-    registerComponent(ApexGridHeader);
+  public static register(): void {
+    registerComponent(ApexGridHeader, IgcIconComponent);
   }
 
   protected get context(): ApexHeaderContext<T> {
@@ -162,6 +163,6 @@ export default class ApexGridHeader<T extends object> extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    [ApexGridHeader.is]: ApexGridHeader<object>;
+    [ApexGridHeader.tagName]: ApexGridHeader<object>;
   }
 }

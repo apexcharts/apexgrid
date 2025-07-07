@@ -5,11 +5,9 @@ import { ContextProvider } from '@lit/context';
 // import { styles as material } from '../styles/grid/themes/light/grid.material-styles.css.js';
 // import { themes } from 'igniteui-webcomponents/theming/theming-decorator.js';
 import {
-  defineComponents,
   IgcButtonComponent,
   IgcChipComponent,
   IgcDropdownComponent,
-  IgcIconComponent,
   IgcInputComponent,
 } from 'igniteui-webcomponents';
 import { html, nothing } from 'lit';
@@ -32,7 +30,7 @@ import { asArray, autoGenerateColumns, getFilterOperandsFor } from '../internal/
 import { watch } from '../internal/watch.js';
 import type { FilterExpression } from '../operations/filter/types.js';
 import type { SortExpression } from '../operations/sort/types.js';
-import { styles as bootstrap } from '../styles/grid/themes/light/grid.bootstrap-styles.css.js';
+import { styles as bootstrap } from '../styles/grid/themes/light/grid.bootstrap.css.js';
 import ApexGridCell from './cell.js';
 import ApexFilterRow from './filter-row.js';
 import ApexGridHeaderRow from './header-row.js';
@@ -141,20 +139,23 @@ export interface ApexGridEventMap<T extends object> {
 //   dark: { bootstrap, material, fluent, indigo },
 // })
 export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMap<T>> {
-  public static get is() {
+  public static get tagName() {
     return GRID_TAG;
   }
 
   public static override styles = bootstrap;
 
   public static register() {
-    registerComponent(ApexGrid, [ApexVirtualizer, ApexGridRow, ApexGridHeaderRow, ApexFilterRow]);
-    defineComponents(
+    registerComponent(
+      ApexGrid,
+      ApexVirtualizer,
+      ApexGridRow,
+      ApexGridHeaderRow,
+      ApexFilterRow,
       IgcButtonComponent,
       IgcChipComponent,
       IgcInputComponent,
-      IgcDropdownComponent,
-      IgcIconComponent
+      IgcDropdownComponent
     );
   }
 
@@ -167,19 +168,19 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
     initialValue: this.stateController,
   });
 
-  @query(ApexVirtualizer.is)
+  @query(ApexVirtualizer.tagName)
   protected scrollContainer!: ApexVirtualizer;
 
-  @query(ApexGridHeaderRow.is)
+  @query(ApexGridHeaderRow.tagName)
   protected headerRow!: ApexGridHeaderRow<T>;
 
-  @query(ApexFilterRow.is)
+  @query(ApexFilterRow.tagName)
   protected filterRow!: ApexFilterRow<T>;
 
   @state()
   protected dataState: Array<T> = [];
 
-  @queryAll(ApexGridRow.is)
+  @queryAll(ApexGridRow.tagName)
   protected _rows!: NodeListOf<ApexGridRow<T>>;
 
   /** Column configuration for the grid. */
@@ -430,6 +431,6 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
 
 declare global {
   interface HTMLElementTagNameMap {
-    [ApexGrid.is]: ApexGrid<object>;
+    [ApexGrid.tagName]: ApexGrid<object>;
   }
 }

@@ -49,7 +49,7 @@ export class NavigationController<T extends object> implements ReactiveControlle
   }
 
   protected scrollToCell(node: ActiveNode<T>) {
-    const row = Array.from(this.virtualizer.querySelectorAll(ApexGridRow.is)).find(
+    const row = Array.from(this.virtualizer.querySelectorAll(ApexGridRow.tagName)).find(
       (row) => row.index === node.row
     ) as unknown as ApexGridRow<T>;
 

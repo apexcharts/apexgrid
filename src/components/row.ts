@@ -4,23 +4,23 @@ import { map } from 'lit/directives/map.js';
 import { registerComponent } from '../internal/register.js';
 import { GRID_ROW_TAG } from '../internal/tags.js';
 import type { ActiveNode, ColumnConfiguration } from '../internal/types.js';
-import { styles } from '../styles/body-row/body-row-styles.css.js';
+import { styles } from '../styles/body-row/body-row.css.js';
 import ApexGridCell from './cell.js';
 
 /**
  * Component representing the DOM row in the Apex grid.
  */
 export default class ApexGridRow<T extends object> extends LitElement {
-  public static get is() {
+  public static get tagName() {
     return GRID_ROW_TAG;
   }
   public static override styles = styles;
 
-  public static register() {
-    registerComponent(ApexGridRow, [ApexGridCell]);
+  public static register(): void {
+    registerComponent(ApexGridRow, ApexGridCell);
   }
 
-  @queryAll(ApexGridCell.is)
+  @queryAll(ApexGridCell.tagName)
   protected _cells!: NodeListOf<ApexGridCell<T>>;
 
   @property({ attribute: false })
@@ -65,6 +65,6 @@ export default class ApexGridRow<T extends object> extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    [ApexGridRow.is]: ApexGridRow<object>;
+    [ApexGridRow.tagName]: ApexGridRow<object>;
   }
 }

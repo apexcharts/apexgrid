@@ -3,11 +3,11 @@ import { registerComponent } from '../internal/register.js';
 import { GRID_BODY } from '../internal/tags.js';
 
 export default class ApexVirtualizer extends LitVirtualizer {
-  public static get is() {
+  public static get tagName() {
     return GRID_BODY;
   }
 
-  public static register() {
+  public static register(): void {
     registerComponent(ApexVirtualizer);
   }
 
@@ -23,6 +23,6 @@ export default class ApexVirtualizer extends LitVirtualizer {
 
 declare global {
   interface HTMLElementTagNameMap {
-    [ApexVirtualizer.is]: ApexVirtualizer;
+    [ApexVirtualizer.tagName]: ApexVirtualizer;
   }
 }
