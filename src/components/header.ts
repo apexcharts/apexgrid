@@ -57,7 +57,7 @@ export default class ApexGridHeader<T extends object> extends LitElement {
       config
     );
     this.addEventListener('lostpointercapture', this.#handlePointerLost, config);
-    this.addEventListener('pointerup', e => this.releasePointerCapture(e.pointerId), config);
+    this.addEventListener('pointerup', (e) => this.releasePointerCapture(e.pointerId), config);
     this.addEventListener('pointermove', this.#handleResize);
   }
 

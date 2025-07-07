@@ -62,7 +62,7 @@ export default class FilterRowFixture<T extends object> {
   }
 
   public getInactiveChip(key: Keys<T>) {
-    return this.inactiveStateChips.find(chip => chip.dataset.column === key)!;
+    return this.inactiveStateChips.find((chip) => chip.dataset.column === key)!;
   }
 
   public open(key: Keys<T>) {
@@ -74,7 +74,7 @@ export default class FilterRowFixture<T extends object> {
   }
 
   public selectDropdownCondition(name: OperandKeys<T[keyof T]>) {
-    this.dropdownItems.find(item => item.value === name)?.click();
+    this.dropdownItems.find((item) => item.value === name)?.click();
   }
 
   public fireInputEvent(value: string) {

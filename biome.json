@@ -68,7 +68,7 @@
       "quoteProperties": "asNeeded",
       "trailingCommas": "es5",
       "semicolons": "always",
-      "arrowParentheses": "asNeeded",
+      "arrowParentheses": "always",
       "bracketSameLine": false,
       "quoteStyle": "single",
       "attributePosition": "auto",

@@ -1,4 +1,4 @@
-import { assert } from '@open-wc/testing';
+import { expect } from '@open-wc/testing';
 import sinon from 'sinon';
 import { SORT_ICON_ASCENDING, SORT_ICON_DESCENDING } from '../../src/internal/constants.js';
 import type { Keys } from '../../src/internal/types.js';
@@ -7,50 +7,55 @@ import data, { importanceComparer } from '../utils/test-data.js';
 
 class SortFixture<T extends object> extends GridTestFixture<T> {
   public override updateConfig(): void {
-    this.columnConfig = this.columnConfig.map(config => ({ ...config, sort: true }));
+    this.columnConfig = this.columnConfig.map((config) => ({ ...config, sort: true }));
   }
 
   public sortDOMExists(key: Keys<T>) {
-    assert.exists(this.headers.get(key).sortPart);
+    expect(this.headers.get(key).sortPart).to.exist;
   }
 
   public sortDOMDoesNotExist(key: Keys<T>) {
-    assert.notExists(this.headers.get(key).sortPart);
+    expect(this.headers.get(key).sortPart).to.not.exist;
   }
 
   public columnIsSorted(key: Keys<T>) {
-    assert.isTrue(this.headers.get(key).isSorted);
+    expect(this.headers.get(key).isSorted).to.be.true;
   }
 
   public columnIsNotSorted(key: Keys<T>) {
-    assert.isFalse(this.headers.get(key).isSorted);
+    expect(this.headers.get(key).isSorted).to.be.false;
   }
 
   public indicatorExists(key: Keys<T>) {
-    assert.exists(this.headers.get(key).sortIcon);
+    expect(this.headers.get(key).sortIcon).to.exist;
   }
 
   public indicatorDoesNotExist(key: Keys<T>) {
-    assert.notExists(this.headers.get(key).sortIcon);
+    expect(this.headers.get(key).sortIcon).to.not.exist;
   }
 
   public indicatorIsAscending(key: Keys<T>) {
-    assert.strictEqual(this.headers.get(key).sortIcon.name, SORT_ICON_ASCENDING);
+    expect(this.headers.get(key).sortIcon.name).to.equal(SORT_ICON_ASCENDING);
   }
 
   public indicatorIsDescending(key: Keys<T>) {
-    assert.strictEqual(this.headers.get(key).sortIcon.name, SORT_ICON_DESCENDING);
+    expect(this.headers.get(key).sortIcon.name).to.equal(SORT_ICON_DESCENDING);
   }
 }
 
 const TDD = new SortFixture(data);
 
-suite('Grid UI sort', () => {
-  setup(async () => await TDD.setUp());
-  teardown(() => TDD.tearDown());
+describe('Grid UI sort', () => {
+  beforeEach(async () => {
+    await TDD.setUp();
+  });
 
-  suite('Default UI', () => {
-    test('Sort icons state', async () => {
+  afterEach(() => {
+    TDD.tearDown();
+  });
+
+  describe('Default UI', () => {
+    it('Sort icons state', async () => {
       const key = 'id';
 
       // Default sort DOM state
@@ -68,37 +73,37 @@ suite('Grid UI sort', () => {
       TDD.columnIsSorted(key);
     });
 
-    test('Non-sortable columns have no sort DOM', async () => {
+    it('Non-sortable columns have no sort DOM', async () => {
       await TDD.updateColumns({ key: 'id', sort: false });
       TDD.sortDOMDoesNotExist('id');
     });
 
-    test('Single sort by clicking', async () => {
+    it('Single sort by clicking', async () => {
       // Ascending
       await TDD.sortHeader('id');
-      assert.strictEqual(TDD.rows.first.data.id, 1);
+      expect(TDD.rows.first.data.id).to.equal(1);
 
       // Descending
       await TDD.sortHeader('id');
-      assert.strictEqual(TDD.rows.first.data.id, 8);
+      expect(TDD.rows.first.data.id).to.equal(8);
     });
 
-    test('Multiple sort by clicking', async () => {
+    it('Multiple sort by clicking', async () => {
       // Ascending `active` & ascending `id`
       await TDD.sortHeader('active');
       await TDD.sortHeader('id');
-      assert.strictEqual(TDD.rows.first.data.active, false);
-      assert.strictEqual(TDD.rows.first.data.id, 1);
+      expect(TDD.rows.first.data.active).to.equal(false);
+      expect(TDD.rows.first.data.id).to.equal(1);
 
       // Ascending `active` & descending `id`
       await TDD.sortHeader('id');
-      assert.strictEqual(TDD.rows.first.data.active, false);
-      assert.strictEqual(TDD.rows.first.data.id, 6);
+      expect(TDD.rows.first.data.active).to.equal(false);
+      expect(TDD.rows.first.data.id).to.equal(6);
     });
   });
 
-  suite('Grid sorting configuration', () => {
-    test('Single sort with tri-state', async () => {
+  describe('Grid sorting configuration', () => {
+    it('Single sort with tri-state', async () => {
       await TDD.updateProperty('sortConfiguration', { multiple: false, triState: true });
 
       // ASC
@@ -122,7 +127,7 @@ suite('Grid UI sort', () => {
       TDD.columnIsNotSorted('active');
     });
 
-    test('Single sort without tri-state', async () => {
+    it('Single sort without tri-state', async () => {
       await TDD.updateProperty('sortConfiguration', { multiple: false, triState: false });
 
       // ASC
@@ -149,7 +154,7 @@ suite('Grid UI sort', () => {
       TDD.indicatorIsAscending('active');
     });
 
-    test('Multiple sort with tri-state', async () => {
+    it('Multiple sort with tri-state', async () => {
       // ASC
       await TDD.sortHeader('id');
 
@@ -169,7 +174,7 @@ suite('Grid UI sort', () => {
       TDD.columnIsNotSorted('active');
     });
 
-    test('Multiple sort without tri-state', async () => {
+    it('Multiple sort without tri-state', async () => {
       await TDD.updateProperty('sortConfiguration', { multiple: true, triState: false });
 
       // ASC
@@ -190,148 +195,127 @@ suite('Grid UI sort', () => {
     });
   });
 
-  suite('Events', () => {
-    test('Event sequence', async () => {
+  describe('Events', () => {
+    it('Event sequence', async () => {
       const spy = sinon.spy(TDD.grid, 'emitEvent');
 
       await TDD.sortHeader('id');
-      assert.strictEqual(spy.callCount, 2);
-      assert.strictEqual(TDD.rows.first.data.id, 1);
+      expect(spy.callCount).to.equal(2);
+      expect(TDD.rows.first.data.id).to.equal(1);
 
-      assert.strictEqual(spy.firstCall.firstArg, 'sorting');
-      assert.sameDeepMembers(
-        [spy.firstCall.lastArg],
-        [
-          {
-            detail: {
-              key: 'id',
-              direction: 'ascending',
-              comparer: undefined,
-              caseSensitive: false,
-            },
-            cancelable: true,
-          },
-        ]
-      );
+      expect(spy.firstCall.firstArg).to.equal('sorting');
+      expect(spy.firstCall.lastArg).to.eql({
+        detail: {
+          key: 'id',
+          direction: 'ascending',
+          comparer: undefined,
+          caseSensitive: false,
+        },
+        cancelable: true,
+      });
 
-      assert.strictEqual(spy.lastCall.firstArg, 'sorted');
-      assert.sameDeepMembers(
-        [spy.lastCall.lastArg],
-        [
-          {
-            detail: {
-              key: 'id',
-              direction: 'ascending',
-              comparer: undefined,
-              caseSensitive: false,
-            },
-          },
-        ]
-      );
+      expect(spy.lastCall.firstArg).to.equal('sorted');
+      expect(spy.lastCall.lastArg).to.eql({
+        detail: {
+          key: 'id',
+          direction: 'ascending',
+          comparer: undefined,
+          caseSensitive: false,
+        },
+      });
 
       spy.resetHistory();
 
       await TDD.sortHeader('id');
 
-      assert.strictEqual(spy.callCount, 2);
-      assert.strictEqual(TDD.rows.first.data.id, 8);
+      expect(spy.callCount).to.equal(2);
+      expect(TDD.rows.first.data.id).to.equal(8);
 
-      assert.strictEqual(spy.firstCall.firstArg, 'sorting');
-      assert.sameDeepMembers(
-        [spy.firstCall.lastArg],
-        [
-          {
-            detail: {
-              key: 'id',
-              direction: 'descending',
-              comparer: undefined,
-              caseSensitive: false,
-            },
-            cancelable: true,
-          },
-        ]
-      );
+      expect(spy.firstCall.firstArg).to.equal('sorting');
+      expect(spy.firstCall.lastArg).to.eql({
+        detail: {
+          key: 'id',
+          direction: 'descending',
+          comparer: undefined,
+          caseSensitive: false,
+        },
+        cancelable: true,
+      });
 
-      assert.strictEqual(spy.lastCall.firstArg, 'sorted');
-      assert.sameDeepMembers(
-        [spy.lastCall.lastArg],
-        [
-          {
-            detail: {
-              key: 'id',
-              direction: 'descending',
-              comparer: undefined,
-              caseSensitive: false,
-            },
-          },
-        ]
-      );
+      expect(spy.lastCall.firstArg).to.equal('sorted');
+      expect(spy.lastCall.lastArg).to.eql({
+        detail: {
+          key: 'id',
+          direction: 'descending',
+          comparer: undefined,
+          caseSensitive: false,
+        },
+      });
     });
 
-    test('Cancellable sorting event', async () => {
+    it('Cancellable sorting event', async () => {
       // ASC sort
       await TDD.sortHeader('id');
 
-      TDD.grid.addEventListener('sorting', e => e.preventDefault());
+      TDD.grid.addEventListener('sorting', (e) => e.preventDefault(), { once: true });
       const spy = sinon.spy(TDD.grid, 'emitEvent');
 
       // DESC sort
       await TDD.sortHeader('id');
 
-      assert.strictEqual(spy.callCount, 1);
-      assert.strictEqual(TDD.rows.first.data.id, 1);
+      expect(spy.callCount).to.equal(1);
+      expect(TDD.rows.first.data.id).to.equal(1);
     });
 
-    test('Modify event arguments mid-flight', async () => {
+    it('Modify event arguments mid-flight', async () => {
       const spy = sinon.spy(TDD.grid, 'emitEvent');
-      TDD.grid.addEventListener('sorting', e => {
-        e.detail.direction = 'descending';
-      });
+      TDD.grid.addEventListener(
+        'sorting',
+        (e) => {
+          e.detail.direction = 'descending';
+        },
+        { once: true }
+      );
 
       // Click for ASC sort, but modify to DESC in the handler
       await TDD.sortHeader('id');
 
-      assert.strictEqual(TDD.rows.first.data.id, 8);
-      assert.strictEqual(spy.callCount, 2);
-      assert.sameDeepMembers(
-        [spy.firstCall.lastArg],
-        [
-          {
-            detail: {
-              key: 'id',
-              direction: 'descending',
-              caseSensitive: false,
-              comparer: undefined,
-            },
-            cancelable: true,
-          },
-        ]
-      );
+      expect(TDD.rows.first.data.id).to.equal(8);
+      expect(spy.callCount).to.equal(2);
+      expect(spy.firstCall.lastArg).to.eql({
+        detail: {
+          key: 'id',
+          direction: 'descending',
+          caseSensitive: false,
+          comparer: undefined,
+        },
+        cancelable: true,
+      });
     });
   });
 
-  suite('API', () => {
-    test('Default', async () => {
+  describe('API', () => {
+    it('Default', async () => {
       await TDD.sort({ key: 'id', direction: 'descending' });
-      assert.strictEqual(TDD.rows.first.data.id, 8);
+      expect(TDD.rows.first.data.id).to.equal(8);
     });
 
-    test('Sort works on non-sortable columns', async () => {
+    it('Sort works on non-sortable columns', async () => {
       await TDD.updateColumns({ key: 'id', sort: false });
       await TDD.sort({ key: 'id', direction: 'descending' });
 
-      assert.strictEqual(TDD.rows.first.data.id, 8);
+      expect(TDD.rows.first.data.id).to.equal(8);
     });
 
-    test('Config object', async () => {
+    it('Config object', async () => {
       await TDD.sort({ key: 'importance', direction: 'descending', comparer: importanceComparer });
-      assert.strictEqual(TDD.rows.first.data.importance, 'high');
+      expect(TDD.rows.first.data.importance).to.equal('high');
 
       await TDD.sort({ key: 'importance', direction: 'ascending', comparer: importanceComparer });
-      assert.strictEqual(TDD.rows.first.data.importance, 'low');
+      expect(TDD.rows.first.data.importance).to.equal('low');
     });
 
-    test('Multiple expressions', async () => {
+    it('Multiple expressions', async () => {
       await TDD.sort([
         {
           key: 'importance',
@@ -344,12 +328,12 @@ suite('Grid UI sort', () => {
         },
       ]);
 
-      assert.strictEqual(TDD.rows.first.data.importance, 'low');
+      expect(TDD.rows.first.data.importance).to.equal('low');
       TDD.columnIsSorted('importance');
       TDD.columnIsSorted('active');
     });
 
-    test('Expressions with direction `none`', async () => {
+    it('Expressions with direction `none`', async () => {
       await TDD.sort([
         {
           key: 'importance',
@@ -362,40 +346,40 @@ suite('Grid UI sort', () => {
         },
       ]);
 
-      assert.strictEqual(TDD.rows.first.data.importance, 'low');
+      expect(TDD.rows.first.data.importance).to.equal('low');
       TDD.columnIsSorted('importance');
       TDD.columnIsSorted('active');
 
       await TDD.sort({ key: 'active', direction: 'none' });
       TDD.columnIsSorted('importance');
       TDD.columnIsNotSorted('active');
-      assert.strictEqual(TDD.grid.sortExpressions.length, 1);
+      expect(TDD.grid.sortExpressions).lengthOf(1);
 
       await TDD.clearSort();
       await TDD.sort({ key: 'importance', direction: 'none', comparer: importanceComparer });
 
       TDD.columnIsNotSorted('importance');
-      assert.strictEqual(TDD.grid.sortExpressions.length, 0);
+      expect(TDD.grid.sortExpressions).to.be.empty;
     });
 
-    test('API clear state', async () => {
+    it('API clear state', async () => {
       await TDD.sort({ key: 'importance', direction: 'descending', comparer: importanceComparer });
-      assert.strictEqual(TDD.rows.first.data.importance, 'high');
+      expect(TDD.rows.first.data.importance).to.equal('high');
       TDD.columnIsSorted('importance');
 
       await TDD.clearSort();
       TDD.columnIsNotSorted('importance');
     });
 
-    test('API clear state (by key)', async () => {
+    it('API clear state (by key)', async () => {
       await TDD.sort([
         { key: 'importance', direction: 'descending', comparer: importanceComparer },
         { key: 'name', direction: 'ascending' },
       ]);
-      assert.strictEqual(TDD.grid.sortExpressions.length, 2);
+      expect(TDD.grid.sortExpressions).lengthOf(2);
 
       await TDD.clearSort('importance');
-      assert.strictEqual(TDD.grid.sortExpressions.length, 1);
+      expect(TDD.grid.sortExpressions).lengthOf(1);
     });
   });
 });

@@ -18,18 +18,18 @@ export default class FilterDataOperation<T extends object> extends DataOperation
       if (this.resolveFilter(record, or)) {
         return this.match(
           record,
-          ands.filter(f => f.key !== or.key),
+          ands.filter((f) => f.key !== or.key),
           []
         );
       }
     }
-    return ands.every(f => this.resolveFilter(record, f));
+    return ands.every((f) => this.resolveFilter(record, f));
   }
 
   public apply(data: T[], state: FilterState<T>): T[] {
     if (state.empty) return data;
 
     const { ands, ors } = state;
-    return data.filter(record => this.match(record, ands, ors));
+    return data.filter((record) => this.match(record, ands, ors));
   }
 }

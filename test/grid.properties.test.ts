@@ -1,5 +1,4 @@
-import { assert } from '@open-wc/testing';
-import { html } from 'lit';
+import { expect, html } from '@open-wc/testing';
 import type { FilterExpression } from '../src/operations/filter/types.js';
 import type { SortExpression } from '../src/operations/sort/types.js';
 import GridTestFixture from './utils/grid-fixture.js';
@@ -39,68 +38,68 @@ const TDD = new GridTestFixture(data);
 const dataStateTDD = new InitialDataStateFixture(data);
 const autoGenerateTDD = new AutoGenerateFixture(data);
 
-suite('Grid auto-generate column configuration', () => {
+describe('Grid auto-generate column configuration', () => {
   const keys = new Set(Object.keys(testData[0]));
-  setup(async () => await autoGenerateTDD.setUp());
-  teardown(() => autoGenerateTDD.tearDown());
+  beforeEach(async () => await autoGenerateTDD.setUp());
+  afterEach(() => autoGenerateTDD.tearDown());
 
-  test('Default', async () => {
+  it('Default', async () => {
     for (const { key } of autoGenerateTDD.grid.columns) {
-      assert.isTrue(keys.has(key));
+      expect(keys.has(key)).to.be.true;
     }
 
-    assert.strictEqual(autoGenerateTDD.grid.rows.length, testData.length);
+    expect(autoGenerateTDD.grid.rows).lengthOf(testData.length);
   });
 });
 
-suite('Grid properties (initial bindings)', () => {
-  setup(async () => await dataStateTDD.setUp());
-  teardown(() => dataStateTDD.tearDown());
+describe('Grid properties (initial bindings)', () => {
+  beforeEach(async () => await dataStateTDD.setUp());
+  afterEach(() => dataStateTDD.tearDown());
 
-  test('Initial data state applied', async () => {
-    assert.strictEqual(dataStateTDD.rows.first.data.id, 8);
-    assert.strictEqual(dataStateTDD.rows.last.data.id, 2);
+  it('Initial data state applied', async () => {
+    expect(dataStateTDD.rows.first.data.id).to.equal(8);
+    expect(dataStateTDD.rows.last.data.id).to.equal(2);
 
-    assert.strictEqual(dataStateTDD.rows.first.data.active, true);
-    assert.strictEqual(dataStateTDD.rows.last.data.active, false);
+    expect(dataStateTDD.rows.first.data.active).to.equal(true);
+    expect(dataStateTDD.rows.last.data.active).to.equal(false);
 
     const importanceValues = new Set(['low', 'high']);
 
     for (const row of dataStateTDD.grid.rows) {
-      assert.isTrue(importanceValues.has(row.data.importance));
+      expect(importanceValues.has(row.data.importance)).to.be.true;
     }
   });
 });
 
-suite('Grid properties', () => {
-  setup(async () => await TDD.setUp());
-  teardown(() => TDD.tearDown());
+describe('Grid properties', () => {
+  beforeEach(async () => await TDD.setUp());
+  afterEach(() => TDD.tearDown());
 
-  test('Sort expressions late binding (set)', async () => {
+  it('Sort expressions late binding (set)', async () => {
     await TDD.updateProperty('sortExpressions', [{ key: 'id', direction: 'descending' }]);
-    assert.strictEqual(TDD.rows.first.data.id, 8);
+    expect(TDD.rows.first.data.id).to.equal(8);
   });
 
-  test('Filter expressions late binding (set)', async () => {
+  it('Filter expressions late binding (set)', async () => {
     await TDD.updateColumns({ key: 'id', type: 'number' });
     await TDD.updateProperty('filterExpressions', [
       { key: 'id', condition: 'greaterThanOrEqual', searchTerm: 8 },
     ]);
 
-    assert.strictEqual(TDD.grid.totalItems, 1);
-    assert.strictEqual(TDD.rows.first.data.id, 8);
+    expect(TDD.grid.totalItems).to.equal(1);
+    expect(TDD.rows.first.data.id).to.equal(8);
   });
 
-  test('Sort expressions (get)', async () => {
+  it('Sort expressions (get)', async () => {
     await TDD.sort([
       { key: 'name', direction: 'descending' },
       { key: 'id', direction: 'ascending' },
     ]);
 
-    assert.strictEqual(TDD.grid.sortExpressions.length, 2);
+    expect(TDD.grid.sortExpressions).lengthOf(2);
   });
 
-  test('Filter expressions (get)', async () => {
+  it('Filter expressions (get)', async () => {
     await TDD.updateColumns({ key: 'id', type: 'number' });
     await TDD.filter([
       { key: 'name', condition: 'startsWith', searchTerm: 'a' },
@@ -108,6 +107,6 @@ suite('Grid properties', () => {
       { key: 'id', condition: 'greaterThan', searchTerm: 3 },
     ]);
 
-    assert.strictEqual(TDD.grid.filterExpressions.length, 3);
+    expect(TDD.grid.filterExpressions).lengthOf(3);
   });
 });

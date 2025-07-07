@@ -18,11 +18,11 @@ export class FilterState<T> {
   }
 
   public get ands() {
-    return this.values.flatMap(each => each.ands);
+    return this.values.flatMap((each) => each.ands);
   }
 
   public get ors() {
-    return this.values.flatMap(each => each.ors);
+    return this.values.flatMap((each) => each.ors);
   }
 
   public has(key: Keys<T>) {

@@ -361,7 +361,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   }
 
   protected renderInactiveState() {
-    return this.state.host.columns.map(column =>
+    return this.state.host.columns.map((column) =>
       column.hidden
         ? nothing
         : html`<div part="filter-row-preview">

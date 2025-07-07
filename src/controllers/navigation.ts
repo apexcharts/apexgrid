@@ -50,11 +50,13 @@ export class NavigationController<T extends object> implements ReactiveControlle
 
   protected scrollToCell(node: ActiveNode<T>) {
     const row = Array.from(this.virtualizer.querySelectorAll(ApexGridRow.is)).find(
-      row => row.index === node.row
+      (row) => row.index === node.row
     ) as unknown as ApexGridRow<T>;
 
     if (row) {
-      row.cells.find(cell => cell.column.key === node.column)?.scrollIntoView({ block: 'nearest' });
+      row.cells
+        .find((cell) => cell.column.key === node.column)
+        ?.scrollIntoView({ block: 'nearest' });
     }
   }
 

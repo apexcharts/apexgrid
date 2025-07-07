@@ -298,7 +298,7 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
 
   @watch('columns')
   protected watchColumns(_: ColumnConfiguration<T>[], newConfig: ColumnConfiguration<T>[] = []) {
-    this.columns = newConfig.map(config => ({ ...DEFAULT_COLUMN_CONFIG, ...config }));
+    this.columns = newConfig.map((config) => ({ ...DEFAULT_COLUMN_CONFIG, ...config }));
   }
 
   @watch('data')
@@ -324,7 +324,7 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
    */
   public filter(config: FilterExpression<T> | FilterExpression<T>[]) {
     this.stateController.filtering.filter(
-      asArray(config).map(each =>
+      asArray(config).map((each) =>
         typeof each.condition === 'string'
           ? // XXX: Types
             Object.assign(each, {
@@ -372,7 +372,7 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
    */
   public updateColumns(columns: ColumnConfiguration<T> | ColumnConfiguration<T>[]) {
     for (const column of asArray(columns)) {
-      const instance = this.columns.find(curr => curr.key === column.key);
+      const instance = this.columns.find((curr) => curr.key === column.key);
       if (instance) {
         Object.assign(instance, column);
       }
@@ -383,7 +383,7 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
 
   @eventOptions({ capture: true })
   protected bodyClickHandler(event: MouseEvent) {
-    const target = event.composedPath().find(el => el instanceof ApexGridCell) as ApexGridCell<T>;
+    const target = event.composedPath().find((el) => el instanceof ApexGridCell) as ApexGridCell<T>;
     if (target) {
       this.stateController.active = {
         column: target.column.key,
@@ -417,7 +417,7 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
   }
 
   protected renderFilterRow() {
-    return this.columns.some(column => column.filter)
+    return this.columns.some((column) => column.filter)
       ? html`<apex-filter-row style=${styleMap(this.DOM.columnSizes)}></apex-filter-row>`
       : nothing;
   }

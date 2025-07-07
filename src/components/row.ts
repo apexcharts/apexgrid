@@ -48,7 +48,7 @@ export default class ApexGridRow<T extends object> extends LitElement {
     const { column: key, row: index } = this.activeNode;
 
     return html`
-      ${map(this.columns, column =>
+      ${map(this.columns, (column) =>
         column.hidden
           ? nothing
           : html`<apex-grid-cell

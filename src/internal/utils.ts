@@ -10,7 +10,7 @@ export function applyColumnWidths<T extends object>(
 ): StyleInfo {
   return {
     'grid-template-columns': columns
-      .filter(each => !each.hidden)
+      .filter((each) => !each.hidden)
       .map(({ width }) => width ?? 'minmax(136px, 1fr)')
       .join(' '),
   };

@@ -47,7 +47,7 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
   #activeFilterColumn(event: MouseEvent) {
     const header = event
       .composedPath()
-      .filter(target => target instanceof ApexGridHeader)
+      .filter((target) => target instanceof ApexGridHeader)
       .at(0) as ApexGridHeader<T>;
 
     this.state.filtering.setActiveColumn(header?.column);
@@ -64,7 +64,7 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
   protected override render() {
     const filterRow = this.state.filtering.filterRow;
 
-    return html`${map(this.columns, column =>
+    return html`${map(this.columns, (column) =>
       column.hidden
         ? nothing
         : html`<apex-grid-header

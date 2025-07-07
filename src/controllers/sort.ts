@@ -121,7 +121,7 @@ export class SortController<T extends object> implements ReactiveController {
 
   public sort(expressions: SortExpression<T> | SortExpression<T>[]) {
     this._sort(
-      asArray(expressions).map(expr =>
+      asArray(expressions).map((expr) =>
         Object.assign(this.state.get(expr.key) ?? this.#createDefaultExpression(expr.key), expr)
       )
     );
