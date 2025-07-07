@@ -20,6 +20,8 @@ __snapshots__
 screenshots/.current
 screenshots/.diff
 
+## CEM metadata
+custom-elements.json
 
 ## build
 _site
