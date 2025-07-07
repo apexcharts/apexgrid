@@ -1,28 +1,26 @@
-import { html, LitElement, nothing, PropertyValueMap } from 'lit';
-import { consume } from '@lit-labs/context';
+import { consume } from '@lit/context';
+import { html, LitElement, nothing, type PropertyValueMap } from 'lit';
 import { property, queryAll } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import { gridStateContext, StateController } from '../controllers/state.js';
+import { gridStateContext, type StateController } from '../controllers/state.js';
 import { partNameMap } from '../internal/part-map.js';
-import { GRID_HEADER_ROW_TAG } from '../internal/tags.js';
 import { registerComponent } from '../internal/register.js';
-
-import ApexGridHeader from './header.js';
-import { styles } from '../styles/header-row/header-row.base-styles.css.js';
-
+import { GRID_HEADER_ROW_TAG } from '../internal/tags.js';
 import type { ColumnConfiguration } from '../internal/types.js';
+import { styles } from '../styles/header-row/header-row.base.css.js';
+import ApexGridHeader from './header.js';
 
 export default class ApexGridHeaderRow<T extends object> extends LitElement {
-  public static get is() {
+  public static get tagName() {
     return GRID_HEADER_ROW_TAG;
   }
   public static override styles = styles;
 
-  public static register() {
-    registerComponent(this, [ApexGridHeader]);
+  public static register(): void {
+    registerComponent(ApexGridHeaderRow, ApexGridHeader);
   }
 
-  @queryAll(ApexGridHeader.is)
+  @queryAll(ApexGridHeader.tagName)
   protected _headers!: NodeListOf<ApexGridHeader<T>>;
 
   @consume({ context: gridStateContext, subscribe: true })
@@ -49,21 +47,24 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
   #activeFilterColumn(event: MouseEvent) {
     const header = event
       .composedPath()
-      .filter(target => target instanceof ApexGridHeader)
+      .filter((target) => target instanceof ApexGridHeader)
       .at(0) as ApexGridHeader<T>;
 
     this.state.filtering.setActiveColumn(header?.column);
   }
 
   protected override shouldUpdate(props: PropertyValueMap<this> | Map<PropertyKey, this>): boolean {
-    this.headers.forEach(header => header.requestUpdate());
+    for (const header of this.headers) {
+      header.requestUpdate();
+    }
+
     return super.shouldUpdate(props);
   }
 
   protected override render() {
     const filterRow = this.state.filtering.filterRow;
 
-    return html`${map(this.columns, column =>
+    return html`${map(this.columns, (column) =>
       column.hidden
         ? nothing
         : html`<apex-grid-header
@@ -71,13 +72,13 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
               filtered: column === filterRow?.column,
             })}
             .column=${column}
-          ></apex-grid-header>`,
+          ></apex-grid-header>`
     )}`;
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    [ApexGridHeaderRow.is]: ApexGridHeaderRow<object>;
+    [ApexGridHeaderRow.tagName]: ApexGridHeaderRow<object>;
   }
 }

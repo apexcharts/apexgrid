@@ -1,15 +1,13 @@
-import { elementUpdated, fixture, fixtureCleanup, html, waitUntil } from '@open-wc/testing';
+import { elementUpdated, fixture, fixtureCleanup, html, nextFrame } from '@open-wc/testing';
+import { ApexGrid } from '../../src/components/grid.js';
 import ApexGridHeaderRow from '../../src/components/header-row.js';
 import type { ColumnConfiguration, Keys } from '../../src/internal/types.js';
-import type { SortExpression } from '../../src/operations/sort/types.js';
 import type { FilterExpression } from '../../src/operations/filter/types.js';
-import { ApexGrid } from '../../src/components/grid.js';
-import ApexGridRow from '../../src/components/row.js';
-import '../../src/index.js';
+import type { SortExpression } from '../../src/operations/sort/types.js';
+import type CellTestFixture from './cell-fixture.js';
+import FilterRowFixture from './filter-row.fixture.js';
 import HeaderTestFixture from './header-fixture.js';
 import RowTestFixture from './row-fixture.js';
-import CellTestFixture from './cell-fixture.js';
-import FilterRowFixture from './filter-row.fixture.js';
 
 interface RowCollection<T extends object> {
   first: RowTestFixture<T>;
@@ -27,8 +25,16 @@ export default class GridTestFixture<T extends object> {
   public grid!: ApexGrid<T>;
   public columnConfig: ColumnConfiguration<T>[];
 
-  constructor(protected data: T[], protected parentStyle?: Partial<CSSStyleDeclaration>) {
-    this.columnConfig = Object.keys(data.at(0)!).map(key => ({ key } as ColumnConfiguration<T>));
+  constructor(
+    protected data: T[],
+    protected parentStyle?: Partial<CSSStyleDeclaration>
+  ) {
+    this.columnConfig = Object.keys(data.at(0)!).map((key) => ({ key }) as ColumnConfiguration<T>);
+  }
+
+  protected async waitForUpdate() {
+    await Promise.all([elementUpdated(this.grid), nextFrame]);
+    await nextFrame();
   }
 
   public registerComponents() {
@@ -57,9 +63,7 @@ export default class GridTestFixture<T extends object> {
     this.updateConfig();
 
     this.grid = await fixture(this.setupTemplate(), { parentNode: this.setupParentNode() });
-
-    // TODO: Still not good but better than arbitrary condition
-    await waitUntil(() => this.gridBody.querySelector(ApexGridRow.is));
+    await this.gridBody.layoutComplete;
   }
 
   public tearDown() {
@@ -68,7 +72,7 @@ export default class GridTestFixture<T extends object> {
 
   public async updateProperty<K extends keyof ApexGrid<T>>(prop: K, value: ApexGrid<T>[K]) {
     Object.assign(this.grid, { [prop]: value });
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
   }
 
   public get filterRow() {
@@ -87,13 +91,11 @@ export default class GridTestFixture<T extends object> {
   }
 
   public get resizePart() {
-    return this.grid.shadowRoot!.querySelector('[part~="resize-indicator"]') as HTMLElement;
+    return this.grid.renderRoot.querySelector('[part~="resize-indicator"]') as HTMLElement;
   }
 
   public get headerRow() {
-    return this.grid.shadowRoot!.querySelector(
-      ApexGridHeaderRow.is,
-    )! as unknown as ApexGridHeaderRow<T>;
+    return this.grid.renderRoot.querySelector<ApexGridHeaderRow<T>>(ApexGridHeaderRow.tagName)!;
   }
 
   public get rows(): RowCollection<T> {
@@ -108,7 +110,7 @@ export default class GridTestFixture<T extends object> {
     return {
       first: this.getHeader(0),
       last: this.getHeader(-1),
-      get: id => this.getHeader(id),
+      get: (id) => this.getHeader(id),
     };
   }
 
@@ -120,81 +122,79 @@ export default class GridTestFixture<T extends object> {
     return new HeaderTestFixture(
       typeof id === 'number'
         ? this.headerRow.headers.at(id)!
-        : this.headerRow.headers.find(({ column }) => column.key === id)!,
+        : this.headerRow.headers.find(({ column }) => column.key === id)!
     );
   }
 
   public async sortHeader(key: Keys<T>) {
     this.getHeader(key).sort();
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
   }
 
   public async startResizeHeader(key: Keys<T>) {
     this.getHeader(key).startResize();
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
   }
 
   public async stopResizeHeader(key: Keys<T>) {
     this.getHeader(key).stopResize();
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
   }
 
   public async resizeHeader(key: Keys<T>, x: number) {
     this.getHeader(key).resize(x);
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
   }
 
   public async autoSizeHeader(key: Keys<T>) {
     this.getHeader(key).autosize();
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
   }
 
   public async clickCell(cell: CellTestFixture<T>) {
     cell.click();
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
   }
 
   public async clickHeader(name: Keys<T>) {
     this.headers.get(name).element.click();
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
   }
 
   public async fireNavigationEvent(options?: KeyboardEventInit) {
     this.gridBody.dispatchEvent(
-      new KeyboardEvent('keydown', Object.assign({ composed: true, bubbles: true }, options)),
+      new KeyboardEvent('keydown', Object.assign({ composed: true, bubbles: true }, options))
     );
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
   }
 
   public async updateColumns(columns: ColumnConfiguration<T> | ColumnConfiguration<T>[]) {
     this.grid.updateColumns(columns);
-
-    await elementUpdated(this.grid);
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
     return this;
   }
 
   public async sort(config: SortExpression<T> | SortExpression<T>[]) {
     this.grid.sort(config);
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
     return this;
   }
 
   public async filter(config: FilterExpression<T> | FilterExpression<T>[]) {
     this.grid.filter(config);
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
     return this;
   }
 
   public async clearSort(key?: Keys<T>) {
     this.grid.clearSort(key);
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
     return this;
   }
 
   public async clearFilter(key?: Keys<T>) {
     this.grid.clearFilter(key);
-    await elementUpdated(this.grid);
+    await this.waitForUpdate();
     return this;
   }
 }

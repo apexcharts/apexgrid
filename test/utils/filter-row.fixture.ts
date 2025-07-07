@@ -1,6 +1,6 @@
 import type ApexFilterRow from '../../src/components/filter-row.js';
-import type { OperandKeys } from '../../src/operations/filter/types.js';
 import type { Keys } from '../../src/internal/types.js';
+import type { OperandKeys } from '../../src/operations/filter/types.js';
 
 export default class FilterRowFixture<T extends object> {
   constructor(public element: ApexFilterRow<T>) {}
@@ -11,25 +11,25 @@ export default class FilterRowFixture<T extends object> {
 
   public get inactiveStateChips(): HTMLElement[] {
     return Array.from(
-      this.element.shadowRoot!.querySelectorAll('[part~="filter-row-preview"] igc-chip'),
+      this.element.shadowRoot!.querySelectorAll('[part~="filter-row-preview"] igc-chip')
     );
   }
 
   public get activeStateChips(): HTMLElement[] {
     return Array.from(
-      this.element.shadowRoot!.querySelectorAll('[part~="filter-row-filters"] igc-chip'),
+      this.element.shadowRoot!.querySelectorAll('[part~="filter-row-filters"] igc-chip')
     );
   }
 
   public get activeCriteriaButtons(): HTMLElement[] {
     return Array.from(
-      this.element.shadowRoot!.querySelectorAll('[part~="filter-row-filters"] igc-button'),
+      this.element.shadowRoot!.querySelectorAll('[part~="filter-row-filters"] igc-button')
     );
   }
 
   public get inactiveCriteriaButtons(): HTMLElement[] {
     return Array.from(
-      this.element.shadowRoot!.querySelectorAll('[part~="filter-row-preview"] igc-button'),
+      this.element.shadowRoot!.querySelectorAll('[part~="filter-row-preview"] igc-button')
     );
   }
 
@@ -62,7 +62,7 @@ export default class FilterRowFixture<T extends object> {
   }
 
   public getInactiveChip(key: Keys<T>) {
-    return this.inactiveStateChips.find(chip => chip.dataset.column === key)!;
+    return this.inactiveStateChips.find((chip) => chip.dataset.column === key)!;
   }
 
   public open(key: Keys<T>) {
@@ -74,7 +74,7 @@ export default class FilterRowFixture<T extends object> {
   }
 
   public selectDropdownCondition(name: OperandKeys<T[keyof T]>) {
-    this.dropdownItems.find(item => item.value === name)?.click();
+    this.dropdownItems.find((item) => item.value === name)?.click();
   }
 
   public fireInputEvent(value: string) {

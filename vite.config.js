@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import totalBundlesize from '@blockquote/rollup-plugin-total-bundlesize';
 
 export default defineConfig({
   server: {
@@ -14,9 +13,9 @@ export default defineConfig({
       fileName: 'bundle',
       formats: ['es'],
     },
+    reportCompressedSize: true,
     rollupOptions: {
-      external: /^lit|^@lit-labs|^igniteui/,
-      plugins: [totalBundlesize()],
+      external: /^lit|^@lit|^@lit-labs|^igniteui/,
     },
   },
 });

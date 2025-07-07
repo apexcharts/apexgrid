@@ -19,11 +19,11 @@ export class FilterExpressionTree<T> {
   }
 
   public get ands() {
-    return this.operands.filter(each => each.criteria === 'and');
+    return this.operands.filter((each) => each.criteria === 'and');
   }
 
   public get ors() {
-    return this.operands.filter(each => each.criteria === 'or');
+    return this.operands.filter((each) => each.criteria === 'or');
   }
 
   public has(expression: FilterExpression<T>) {
@@ -35,16 +35,15 @@ export class FilterExpressionTree<T> {
       expression.criteria = 'and';
     }
 
-    if (this.operands.includes(expression)) {
-      return this;
+    if (!this.has(expression)) {
+      this.operands.push(expression);
     }
 
-    this.operands.push(expression);
     return this;
   }
 
   public remove(expression: FilterExpression<T>) {
-    this.operands = this.operands.filter(each => each !== expression);
+    this.operands = this.operands.filter((each) => each !== expression);
     return this;
   }
 

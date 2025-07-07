@@ -1,27 +1,28 @@
+import { consume } from '@lit/context';
+import { IgcIconComponent } from 'igniteui-webcomponents';
 import { html, LitElement, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
-import { consume } from '@lit-labs/context';
-import { partNameMap } from '../internal/part-map.js';
-import { GRID_HEADER_TAG } from '../internal/tags.js';
-import { registerComponent } from '../internal/register.js';
+import { gridStateContext, type StateController } from '../controllers/state.js';
 import {
   MIN_COL_RESIZE_WIDTH,
   SORT_ICON_ASCENDING,
   SORT_ICON_DESCENDING,
 } from '../internal/constants.js';
-import type { ColumnConfiguration, ApexHeaderContext } from '../internal/types.js';
-import { StateController, gridStateContext } from '../controllers/state.js';
-import { styles } from '../styles/header-cell/header-cell-styles.css.js';
+import { partNameMap } from '../internal/part-map.js';
+import { registerComponent } from '../internal/register.js';
+import { GRID_HEADER_TAG } from '../internal/tags.js';
+import type { ApexHeaderContext, ColumnConfiguration } from '../internal/types.js';
+import { styles } from '../styles/header-cell/header-cell.css.js';
 
 export default class ApexGridHeader<T extends object> extends LitElement {
-  public static get is() {
+  public static get tagName() {
     return GRID_HEADER_TAG;
   }
 
   public static override styles = styles;
 
-  public static register() {
-    registerComponent(this);
+  public static register(): void {
+    registerComponent(ApexGridHeader, IgcIconComponent);
   }
 
   protected get context(): ApexHeaderContext<T> {
@@ -51,11 +52,13 @@ export default class ApexGridHeader<T extends object> extends LitElement {
 
     this.addEventListener(
       'gotpointercapture',
-      () => (this.resizeController.indicatorActive = true),
-      config,
+      () => {
+        this.resizeController.indicatorActive = true;
+      },
+      config
     );
     this.addEventListener('lostpointercapture', this.#handlePointerLost, config);
-    this.addEventListener('pointerup', e => this.releasePointerCapture(e.pointerId), config);
+    this.addEventListener('pointerup', (e) => this.releasePointerCapture(e.pointerId), config);
     this.addEventListener('pointermove', this.#handleResize);
   }
 
@@ -160,6 +163,6 @@ export default class ApexGridHeader<T extends object> extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    [ApexGridHeader.is]: ApexGridHeader<object>;
+    [ApexGridHeader.tagName]: ApexGridHeader<object>;
   }
 }

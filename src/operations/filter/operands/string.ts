@@ -61,13 +61,13 @@ export const StringOperands = Object.freeze<FilterOperands<string, StringKeys>>(
     name: 'empty',
     label: 'Empty',
     unary: true,
-    logic: target => !isDefined(target) || target.length < 1,
+    logic: (target) => !isDefined(target) || target.length < 1,
   },
 
   notEmpty: {
     name: 'notEmpty',
     label: 'Not empty',
     unary: true,
-    logic: target => isDefined(target) && target.length > 0,
+    logic: (target) => isDefined(target) && target.length > 0,
   },
 });

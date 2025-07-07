@@ -59,7 +59,7 @@ export default class HeaderTestFixture<T extends object> {
       new PointerEvent('pointermove', {
         ...DEFAULT_ARGS,
         clientX: this.element.getBoundingClientRect().left + this.element.offsetWidth + x,
-      }),
+      })
     );
   }
 

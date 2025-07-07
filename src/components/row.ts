@@ -1,26 +1,26 @@
 import { html, LitElement, nothing } from 'lit';
 import { property, queryAll } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import { GRID_ROW_TAG } from '../internal/tags.js';
 import { registerComponent } from '../internal/register.js';
+import { GRID_ROW_TAG } from '../internal/tags.js';
 import type { ActiveNode, ColumnConfiguration } from '../internal/types.js';
+import { styles } from '../styles/body-row/body-row.css.js';
 import ApexGridCell from './cell.js';
-import { styles } from '../styles/body-row/body-row-styles.css.js';
 
 /**
  * Component representing the DOM row in the Apex grid.
  */
 export default class ApexGridRow<T extends object> extends LitElement {
-  public static get is() {
+  public static get tagName() {
     return GRID_ROW_TAG;
   }
   public static override styles = styles;
 
-  public static register() {
-    registerComponent(this, [ApexGridCell]);
+  public static register(): void {
+    registerComponent(ApexGridRow, ApexGridCell);
   }
 
-  @queryAll(ApexGridCell.is)
+  @queryAll(ApexGridCell.tagName)
   protected _cells!: NodeListOf<ApexGridCell<T>>;
 
   @property({ attribute: false })
@@ -48,7 +48,7 @@ export default class ApexGridRow<T extends object> extends LitElement {
     const { column: key, row: index } = this.activeNode;
 
     return html`
-      ${map(this.columns, column =>
+      ${map(this.columns, (column) =>
         column.hidden
           ? nothing
           : html`<apex-grid-cell
@@ -57,7 +57,7 @@ export default class ApexGridRow<T extends object> extends LitElement {
               .column=${column}
               .row=${this as ApexGridRow<T>}
               .value=${this.data[column.key]}
-            ></apex-grid-cell>`,
+            ></apex-grid-cell>`
       )}
     `;
   }
@@ -65,6 +65,6 @@ export default class ApexGridRow<T extends object> extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    [ApexGridRow.is]: ApexGridRow<object>;
+    [ApexGridRow.tagName]: ApexGridRow<object>;
   }
 }

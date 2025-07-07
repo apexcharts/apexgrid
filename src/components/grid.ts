@@ -1,48 +1,40 @@
+import { ContextProvider } from '@lit/context';
+import {
+  IgcButtonComponent,
+  IgcChipComponent,
+  IgcDropdownComponent,
+  IgcInputComponent,
+} from 'igniteui-webcomponents';
 import { html, nothing } from 'lit';
-import { ContextProvider } from '@lit-labs/context';
 import { eventOptions, property, query, queryAll, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
-
-import { GRID_TAG } from '../internal/tags.js';
-import { StateController, gridStateContext } from '../controllers/state.js';
 import { DataOperationsController } from '../controllers/data-operation.js';
 import { GridDOMController } from '../controllers/dom.js';
-import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
-import { watch } from '../internal/watch.js';
+import { gridStateContext, StateController } from '../controllers/state.js';
 import { DEFAULT_COLUMN_CONFIG, PIPELINE } from '../internal/constants.js';
-import { asArray, autoGenerateColumns, getFilterOperandsFor } from '../internal/utils.js';
-
+import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
+import { registerComponent } from '../internal/register.js';
+import { GRID_TAG } from '../internal/tags.js';
+import { addThemingController } from '../internal/theming.js';
 import type {
   ColumnConfiguration,
   DataPipelineConfiguration,
   GridSortConfiguration,
   Keys,
 } from '../internal/types.js';
+import { asArray, autoGenerateColumns, getFilterOperandsFor } from '../internal/utils.js';
+import { watch } from '../internal/watch.js';
 import type { FilterExpression } from '../operations/filter/types.js';
 import type { SortExpression } from '../operations/sort/types.js';
-
-import { registerComponent } from '../internal/register.js';
-
-import { styles as bootstrap } from '../styles/grid/themes/light/grid.bootstrap-styles.css.js';
-import { styles as fluent } from '../styles/grid/themes/light/grid.fluent-styles.css.js';
-import { styles as indigo } from '../styles/grid/themes/light/grid.indigo-styles.css.js';
-import { styles as material } from '../styles/grid/themes/light/grid.material-styles.css.js';
-
-import ApexVirtualizer from './virtualizer.js';
-import ApexGridHeaderRow from './header-row.js';
-import ApexGridRow from './row.js';
+import { styles as bootstrap } from '../styles/grid/themes/light/grid.bootstrap.css.js';
+import { styles as fluent } from '../styles/grid/themes/light/grid.fluent.css.js';
+import { styles as indigo } from '../styles/grid/themes/light/grid.indigo.css.js';
+import { styles as material } from '../styles/grid/themes/light/grid.material.css.js';
 import ApexGridCell from './cell.js';
 import ApexFilterRow from './filter-row.js';
-
-import { themes } from 'igniteui-webcomponents/theming/theming-decorator.js';
-import {
-  defineComponents,
-  IgcButtonComponent,
-  IgcChipComponent,
-  IgcDropdownComponent,
-  IgcInputComponent,
-  IgcIconComponent,
-} from 'igniteui-webcomponents';
+import ApexGridHeaderRow from './header-row.js';
+import ApexGridRow from './row.js';
+import ApexVirtualizer from './virtualizer.js';
 
 /**
  * Event object for the filtering event of the grid.
@@ -140,27 +132,24 @@ export interface ApexGridEventMap<T extends object> {
  * @fires filtered - Emitted when a filter operation initiated through the UI has completed.
  *
  */
-@themes({
-  bootstrap,
-  fluent,
-  indigo,
-  material,
-})
 export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMap<T>> {
-  public static get is() {
+  public static get tagName() {
     return GRID_TAG;
   }
 
   public static override styles = bootstrap;
 
   public static register() {
-    registerComponent(this, [ApexVirtualizer, ApexGridRow, ApexGridHeaderRow, ApexFilterRow]);
-    defineComponents(
+    registerComponent(
+      ApexGrid,
+      ApexVirtualizer,
+      ApexGridRow,
+      ApexGridHeaderRow,
+      ApexFilterRow,
       IgcButtonComponent,
       IgcChipComponent,
       IgcInputComponent,
-      IgcDropdownComponent,
-      IgcIconComponent,
+      IgcDropdownComponent
     );
   }
 
@@ -173,19 +162,19 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
     initialValue: this.stateController,
   });
 
-  @query(ApexVirtualizer.is)
+  @query(ApexVirtualizer.tagName)
   protected scrollContainer!: ApexVirtualizer;
 
-  @query(ApexGridHeaderRow.is)
+  @query(ApexGridHeaderRow.tagName)
   protected headerRow!: ApexGridHeaderRow<T>;
 
-  @query(ApexFilterRow.is)
+  @query(ApexFilterRow.tagName)
   protected filterRow!: ApexFilterRow<T>;
 
   @state()
   protected dataState: Array<T> = [];
 
-  @queryAll(ApexGridRow.is)
+  @queryAll(ApexGridRow.tagName)
   protected _rows!: NodeListOf<ApexGridRow<T>>;
 
   /** Column configuration for the grid. */
@@ -267,10 +256,13 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
    */
   @property({ attribute: false })
   public get filterExpressions(): FilterExpression<T>[] {
-    return this.stateController.filtering.state.values.reduce<FilterExpression<T>[]>(
-      (prev, curr) => [...prev, ...curr.all],
-      [],
-    );
+    const expressions: FilterExpression<T>[] = [];
+
+    for (const each of this.stateController.filtering.state.values) {
+      expressions.push(...each.all);
+    }
+
+    return expressions;
   }
 
   /**
@@ -301,7 +293,7 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
 
   @watch('columns')
   protected watchColumns(_: ColumnConfiguration<T>[], newConfig: ColumnConfiguration<T>[] = []) {
-    this.columns = newConfig.map(config => ({ ...DEFAULT_COLUMN_CONFIG, ...config }));
+    this.columns = newConfig.map((config) => ({ ...DEFAULT_COLUMN_CONFIG, ...config }));
   }
 
   @watch('data')
@@ -318,8 +310,17 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
   protected async pipeline() {
     this.dataState = await this.dataController.apply(
       structuredClone(this.data),
-      this.stateController,
+      this.stateController
     );
+  }
+
+  constructor() {
+    super();
+
+    addThemingController(this, {
+      light: { bootstrap, material, fluent, indigo },
+      dark: { bootstrap, material, fluent, indigo },
+    });
   }
 
   /**
@@ -327,14 +328,14 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
    */
   public filter(config: FilterExpression<T> | FilterExpression<T>[]) {
     this.stateController.filtering.filter(
-      asArray(config).map(each =>
+      asArray(config).map((each) =>
         typeof each.condition === 'string'
           ? // XXX: Types
             Object.assign(each, {
               condition: (getFilterOperandsFor(this.getColumn(each.key)!) as any)[each.condition],
             })
-          : each,
-      ),
+          : each
+      )
     );
   }
 
@@ -374,16 +375,19 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
    * Updates the column configuration of the grid.
    */
   public updateColumns(columns: ColumnConfiguration<T> | ColumnConfiguration<T>[]) {
-    asArray(columns).forEach(column => {
-      const idx = this.columns.findIndex(original => original.key === column.key);
-      this.columns[idx] = { ...this.columns[idx], ...column };
-    });
+    for (const column of asArray(columns)) {
+      const instance = this.columns.find((curr) => curr.key === column.key);
+      if (instance) {
+        Object.assign(instance, column);
+      }
+    }
+
     this.requestUpdate(PIPELINE);
   }
 
   @eventOptions({ capture: true })
   protected bodyClickHandler(event: MouseEvent) {
-    const target = event.composedPath().find(el => el instanceof ApexGridCell) as ApexGridCell<T>;
+    const target = event.composedPath().find((el) => el instanceof ApexGridCell) as ApexGridCell<T>;
     if (target) {
       this.stateController.active = {
         column: target.column.key,
@@ -399,10 +403,12 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
   }
 
   protected renderHeaderRow() {
-    return html`<apex-grid-header-row
+    return html`
+      <apex-grid-header-row
       style=${styleMap(this.DOM.columnSizes)}
       .columns=${this.columns}
-    ></apex-grid-header-row>`;
+      ></apex-grid-header-row>
+    `;
   }
 
   protected renderBody() {
@@ -417,19 +423,23 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
   }
 
   protected renderFilterRow() {
-    return this.columns.some(column => column.filter)
+    return this.columns.some((column) => column.filter)
       ? html`<apex-filter-row style=${styleMap(this.DOM.columnSizes)}></apex-filter-row>`
       : nothing;
   }
 
   protected override render() {
-    return html` ${this.stateController.resizing.renderIndicator()} ${this.renderHeaderRow()}
-    ${this.renderFilterRow()} ${this.renderBody()}`;
+    return html`
+      ${this.stateController.resizing.renderIndicator()}
+      ${this.renderHeaderRow()}
+      ${this.renderFilterRow()}
+      ${this.renderBody()}
+    `;
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    [ApexGrid.is]: ApexGrid<object>;
+    [ApexGrid.tagName]: ApexGrid<object>;
   }
 }

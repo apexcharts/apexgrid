@@ -4,6 +4,6 @@ export interface PartNameInfo {
 
 export function partNameMap(parts: PartNameInfo) {
   return Object.keys(parts)
-    .filter(key => parts[key])
+    .filter((key) => parts[key])
     .join(' ');
 }

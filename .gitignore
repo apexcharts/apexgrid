@@ -20,7 +20,6 @@ __snapshots__
 screenshots/.current
 screenshots/.diff
 
-
 ## build
 _site
 dist
@@ -30,3 +29,6 @@ build
 *.tgz
 *.tsbuildinfo
 storybook-static
+
+custom-elements.json
+*.css.ts

@@ -6,7 +6,7 @@ export default class SortDataOperation<T> extends DataOperation<T> {
     Object.entries({
       ascending: 1,
       descending: -1,
-    }),
+    })
   );
 
   protected compareValues<U>(first: U, second: U) {
@@ -29,12 +29,12 @@ export default class SortDataOperation<T> extends DataOperation<T> {
   }
 
   public apply(data: T[], state: SortState<T>) {
-    const expressions = Array.from(state.values()),
-      length = expressions.length;
+    const expressions = Array.from(state.values());
+    const length = expressions.length;
 
     data.sort((a, b) => {
-      let i = 0,
-        result = 0;
+      let i = 0;
+      let result = 0;
 
       while (i < length && !result) {
         result = this.compareObjects(a, b, expressions[i]);

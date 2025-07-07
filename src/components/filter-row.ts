@@ -1,32 +1,29 @@
+import { consume } from '@lit/context';
+import {
+  IgcDropdownComponent,
+  type IgcDropdownItemComponent,
+  type IgcIconComponent,
+  IgcInputComponent,
+} from 'igniteui-webcomponents';
 import { html, LitElement, nothing } from 'lit';
-import { consume } from '@lit-labs/context';
 import { property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-
-import { StateController, gridStateContext } from '../controllers/state.js';
+import { gridStateContext, type StateController } from '../controllers/state.js';
 import { DEFAULT_COLUMN_CONFIG } from '../internal/constants.js';
-import { GRID_FILTER_ROW_TAG } from '../internal/tags.js';
-import { getFilterOperandsFor } from '../internal/utils.js';
 import { registerComponent } from '../internal/register.js';
+import { GRID_FILTER_ROW_TAG } from '../internal/tags.js';
+import type { ColumnConfiguration } from '../internal/types.js';
+import { getFilterOperandsFor } from '../internal/utils.js';
 import { watch } from '../internal/watch.js';
-
-import { styles } from '../styles/filter-row/filter-row-styles.css.js';
-
 import type { FilterExpressionTree } from '../operations/filter/tree.js';
 import type { FilterExpression, FilterOperation, OperandKeys } from '../operations/filter/types.js';
-import type { ColumnConfiguration } from '../internal/types.js';
-import {
-  IgcInputComponent,
-  IgcDropdownComponent,
-  IgcDropdownItemComponent,
-  IgcIconComponent,
-} from 'igniteui-webcomponents';
+import { styles } from '../styles/filter-row/filter-row.css.js';
 
 type ExpressionChipProps<T> = {
   expression: FilterExpression<T>;
   selected: boolean;
-  onRemove: Function;
-  onSelect: Function;
+  onRemove: (e: Event) => Promise<void>;
+  onSelect: (e: Event) => Promise<void>;
 };
 
 function prefixedIcon(icon?: string) {
@@ -38,14 +35,14 @@ function prefixedIcon(icon?: string) {
 }
 
 export default class ApexFilterRow<T extends object> extends LitElement {
-  public static get is() {
+  public static get tagName() {
     return GRID_FILTER_ROW_TAG;
   }
 
   public static override styles = styles;
 
   public static register() {
-    registerComponent(this);
+    registerComponent(ApexFilterRow);
   }
 
   @consume({ context: gridStateContext, subscribe: true })
@@ -116,8 +113,8 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   #handleInput(event: CustomEvent<string>) {
     event.stopPropagation();
 
-    const value = this.isNumeric ? parseFloat(event.detail) : event.detail;
-    const shouldUpdate = this.isNumeric ? !isNaN(value as number) : !!value;
+    const value = this.isNumeric ? Number.parseFloat(event.detail) : event.detail;
+    const shouldUpdate = this.isNumeric ? !Number.isNaN(value as number) : !!value;
     const type = this.filterController.get(this.expression.key)?.has(this.expression)
       ? 'modify'
       : 'add';
@@ -245,7 +242,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
           };
 
           return html`${this.renderCriteriaButton(expression, idx)}${this.renderExpressionChip(
-            props,
+            props
           )}`;
         });
   }
@@ -262,7 +259,9 @@ export default class ApexFilterRow<T extends object> extends LitElement {
       <igc-button
         id="close"
         variant="flat"
-        @click=${() => (this.active = false)}
+        @click=${() => {
+          this.active = false;
+        }}
       >
         ${prefixedIcon('close')} Close
       </igc-button>
@@ -283,7 +282,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
           >
             ${prefixedIcon(key)}${operand?.label ?? key}
           </igc-dropdown-item>
-        `,
+        `
       )}
     </igc-dropdown>`;
   }
@@ -327,7 +326,7 @@ export default class ApexFilterRow<T extends object> extends LitElement {
         expression,
         selected: false,
         onRemove: this.#chipRemoveFor(expression),
-        onSelect: (e: Event) => {
+        onSelect: async (e: Event) => {
           e.stopPropagation();
           this.column = column;
           this.expression = expression;
@@ -362,12 +361,12 @@ export default class ApexFilterRow<T extends object> extends LitElement {
   }
 
   protected renderInactiveState() {
-    return this.state.host.columns.map(column =>
+    return this.state.host.columns.map((column) =>
       column.hidden
         ? nothing
         : html`<div part="filter-row-preview">
             ${column.filter ? this.renderFilterState(column) : nothing}
-          </div>`,
+          </div>`
     );
   }
 
@@ -378,6 +377,6 @@ export default class ApexFilterRow<T extends object> extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    [ApexFilterRow.is]: ApexFilterRow<object>;
+    [ApexFilterRow.tagName]: ApexFilterRow<object>;
   }
 }

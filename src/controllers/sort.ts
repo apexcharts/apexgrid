@@ -1,12 +1,12 @@
-import { ReactiveController } from 'lit';
+import type { ReactiveController } from 'lit';
 import { PIPELINE } from '../internal/constants.js';
-import { asArray } from '../internal/utils.js';
 import type {
   ColumnConfiguration,
   ColumnSortConfiguration,
   GridHost,
   Keys,
 } from '../internal/types.js';
+import { asArray } from '../internal/utils.js';
 import type { SortExpression, SortingDirection, SortState } from '../operations/sort/types.js';
 
 export class SortController<T extends object> implements ReactiveController {
@@ -55,11 +55,11 @@ export class SortController<T extends object> implements ReactiveController {
       ? dir === 'ascending'
         ? 'descending'
         : dir === 'descending'
-        ? 'none'
-        : 'ascending'
+          ? 'none'
+          : 'ascending'
       : dir === 'ascending'
-      ? 'descending'
-      : 'ascending';
+        ? 'descending'
+        : 'ascending';
   }
 
   #emitSortingEvent(detail: SortExpression<T>) {
@@ -112,15 +112,18 @@ export class SortController<T extends object> implements ReactiveController {
   }
 
   protected _sort(expressions: SortExpression<T> | SortExpression<T>[]) {
-    asArray(expressions).forEach(expr => this.#setExpression(expr));
+    for (const expr of asArray(expressions)) {
+      this.#setExpression(expr);
+    }
+
     this.host.requestUpdate(PIPELINE);
   }
 
   public sort(expressions: SortExpression<T> | SortExpression<T>[]) {
     this._sort(
-      asArray(expressions).map(expr =>
-        Object.assign(this.state.get(expr.key) ?? this.#createDefaultExpression(expr.key), expr),
-      ),
+      asArray(expressions).map((expr) =>
+        Object.assign(this.state.get(expr.key) ?? this.#createDefaultExpression(expr.key), expr)
+      )
     );
   }
 

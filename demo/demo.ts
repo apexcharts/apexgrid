@@ -1,17 +1,23 @@
-import { html, render } from 'lit';
 import {
   configureTheme,
+  defineComponents,
   IgcAvatarComponent,
+  IgcCheckboxComponent,
   IgcRatingComponent,
   IgcSelectComponent,
   IgcSwitchComponent,
-  defineComponents,
 } from 'igniteui-webcomponents';
-import { ApexGrid } from '../src/index.js';
+import { html, render } from 'lit';
 import { ColumnConfiguration } from '../src/index';
-import { Theme } from 'igniteui-webcomponents/theming/types';
+import { ApexGrid } from '../src/index.js';
 
-defineComponents(IgcAvatarComponent, IgcRatingComponent, IgcSelectComponent, IgcSwitchComponent);
+defineComponents(
+  IgcAvatarComponent,
+  IgcCheckboxComponent,
+  IgcRatingComponent,
+  IgcSelectComponent,
+  IgcSwitchComponent,
+);
 
 type User = {
   id: number;
@@ -25,7 +31,7 @@ type User = {
 };
 
 const choices = ['low', 'standard', 'high'];
-const themes: Theme[] = ['bootstrap', 'material', 'fluent', 'indigo'];
+const themes = ['bootstrap', 'material', 'fluent', 'indigo'];
 
 function getElement<T>(qs: string): T {
   return document.querySelector(qs) as T;
@@ -44,7 +50,7 @@ function generateData(length: number): User[] {
         priority: oneOf(choices),
         email: `user${idx}@org.com`,
         avatar: getAvatar(),
-      } as User),
+      }) as User,
   );
 }
 
@@ -61,8 +67,8 @@ function getAvatar() {
   return `https://static.infragistics.com/xplatform/images/people/${type}/${idx}.jpg`;
 }
 
-async function setTheme(theme?: Theme) {
-  theme = theme ?? (getElement<IgcSelectComponent>(IgcSelectComponent.tagName).value as Theme);
+async function setTheme(theme?: string) {
+  theme = theme ?? (getElement<IgcSelectComponent>(IgcSelectComponent.tagName).value);
   const variant = getElement<IgcSwitchComponent>(IgcSwitchComponent.tagName).checked
     ? 'dark'
     : 'light';
@@ -76,7 +82,7 @@ async function setTheme(theme?: Theme) {
     .slice(0, -1)
     .forEach(s => s.remove());
 
-  configureTheme(theme);
+  configureTheme(theme as any);
 }
 
 const themeChoose = html`
@@ -85,8 +91,6 @@ const themeChoose = html`
       value="bootstrap"
       outlined
       label="Choose theme"
-      same-width
-      flip
       @igcChange=${({ detail }) => setTheme(detail.value)}
     >
       ${themes.map(theme => html`<igc-select-item .value=${theme}>${theme}</igc-select-item>`)}
@@ -123,7 +127,7 @@ const columns: ColumnConfiguration<User>[] = [
     cellTemplate: params =>
       html`<igc-rating
         readonly
-        style="--component-size: 2"
+        style="--ig-size: 1"
         .value=${params.value}
       ></igc-rating>`,
   },
@@ -133,8 +137,7 @@ const columns: ColumnConfiguration<User>[] = [
       html`<igc-select
         outlined
         .value=${params.value}
-        flip
-        style="--component-size: 1"
+        style="--ig-size: 1"
         >${choices.map(
           choice => html`<igc-select-item .value=${choice}>${choice}</igc-select-item>`,
         )}</igc-select
@@ -154,10 +157,11 @@ const columns: ColumnConfiguration<User>[] = [
     type: 'boolean',
     sort: true,
     filter: true,
-    cellTemplate: params => html`<igc-checkbox
-      label-position="before"
-      ?checked=${params.value}
-    ></igc-checkbox>`,
+    cellTemplate: params =>
+      html`<igc-checkbox
+        label-position="before"
+        ?checked=${params.value}
+      ></igc-checkbox>`,
   },
 ];
 

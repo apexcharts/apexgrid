@@ -6,7 +6,7 @@ export function watch(propName: string, options?: WatchOptions) {
   return (protoOrDescriptor: any, name: string): any => {
     const { willUpdate } = protoOrDescriptor;
 
-    options = Object.assign({ waitUntilFirstUpdate: false }, options) as WatchOptions;
+    const _options = Object.assign({ waitUntilFirstUpdate: false }, options) as WatchOptions;
 
     protoOrDescriptor.willUpdate = function (changedProps: Map<string, any>) {
       willUpdate.call(this, changedProps);
@@ -16,7 +16,7 @@ export function watch(propName: string, options?: WatchOptions) {
         const newValue = this[propName];
 
         if (oldValue !== newValue) {
-          if (!options?.waitUntilFirstUpdate || this.hasUpdated) {
+          if (!_options?.waitUntilFirstUpdate || this.hasUpdated) {
             this[name].call(this, oldValue, newValue);
           }
         }

@@ -3,21 +3,21 @@ import { property } from 'lit/decorators.js';
 import { registerComponent } from '../internal/register.js';
 import { GRID_CELL_TAG } from '../internal/tags.js';
 import type { ApexCellContext, ColumnConfiguration, PropertyType } from '../internal/types.js';
-import { styles } from '../styles/body-cell/body-cell-styles.css.js';
+import { styles } from '../styles/body-cell/body-cell.css.js';
 import type ApexGridRow from './row.js';
 
 /**
  * Component representing a DOM cell of the Apex grid.
  */
 export default class ApexGridCell<T extends object> extends LitElement {
-  public static get is() {
+  public static get tagName() {
     return GRID_CELL_TAG;
   }
 
   public static override styles = styles;
 
-  public static register() {
-    registerComponent(this);
+  public static register(): void {
+    registerComponent(ApexGridCell);
   }
 
   /**
@@ -62,6 +62,6 @@ export default class ApexGridCell<T extends object> extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    [ApexGridCell.is]: ApexGridCell<object>;
+    [ApexGridCell.tagName]: ApexGridCell<object>;
   }
 }

@@ -1,6 +1,6 @@
-import { html, nothing, ReactiveController } from 'lit';
+import { html, nothing, type ReactiveController } from 'lit';
 import { styleMap } from 'lit/directives/style-map.js';
-import ApexGridHeader from '../components/header.js';
+import type ApexGridHeader from '../components/header.js';
 import { MIN_COL_RESIZE_WIDTH } from '../internal/constants.js';
 import type { ColumnConfiguration, GridHost, Keys } from '../internal/types.js';
 
@@ -14,7 +14,7 @@ export class ResizeController<T extends object> implements ReactiveController {
 
   #maxSize(key: Keys<T>, headerWidth: number) {
     const max = this.host.rows
-      .map(row => row.cells.find(cell => cell.column.key === key)!)
+      .map((row) => row.cells.find((cell) => cell.column.key === key)!)
       .reduce((prev, current) => (current.offsetWidth > prev ? current.offsetWidth : prev), 0);
 
     return Math.max(...[MIN_COL_RESIZE_WIDTH, max, headerWidth]);
@@ -49,7 +49,7 @@ export class ResizeController<T extends object> implements ReactiveController {
   }
 
   public async autosize(column: ColumnConfiguration<T>, header: ApexGridHeader<T>) {
-    column.width = `max-content`;
+    column.width = 'max-content';
 
     this.host.requestUpdate();
     await this.host.updateComplete;

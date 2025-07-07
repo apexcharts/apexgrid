@@ -1,10 +1,10 @@
-import { ReactiveController } from 'lit';
-import { createContext } from '@lit-labs/context';
+import { createContext } from '@lit/context';
+import type { ReactiveController } from 'lit';
+import type { ActiveNode, GridHost } from '../internal/types.js';
 import { FilterController } from './filter.js';
 import { NavigationController } from './navigation.js';
-import { SortController } from './sort.js';
 import { ResizeController } from './resize.js';
-import type { ActiveNode, GridHost } from '../internal/types.js';
+import { SortController } from './sort.js';
 
 export class StateController<T extends object> implements ReactiveController {
   public sorting!: SortController<T>;

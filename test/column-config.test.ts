@@ -1,101 +1,100 @@
-import { assert, elementUpdated, html } from '@open-wc/testing';
+import { elementUpdated, expect, html } from '@open-wc/testing';
 import type { ApexCellContext, Keys } from '../src/internal/types.js';
 import GridTestFixture from './utils/grid-fixture.js';
-import data, { TestData } from './utils/test-data.js';
+import data, { type TestData } from './utils/test-data.js';
 
 const TDD = new GridTestFixture(data, { width: '1000px' });
 const defaultKeys = Object.keys(data[0]) as Array<Keys<TestData>>;
 
-suite('Column configuration', () => {
-  setup(async () => await TDD.setUp());
-  teardown(() => TDD.tearDown());
+describe('Column configuration', () => {
+  beforeEach(async () => await TDD.setUp());
+  afterEach(() => TDD.tearDown());
 
-  suite('Binding', () => {
-    test('Through attribute', async () => {
-      assert.strictEqual(TDD.grid.columns.length, defaultKeys.length);
-      defaultKeys.forEach(key => {
-        assert.exists(TDD.grid.getColumn(key));
-        assert.exists(TDD.headers.get(key).element);
-      });
+  describe('Binding', () => {
+    it('Through attribute', async () => {
+      expect(TDD.grid.columns).lengthOf(defaultKeys.length);
+
+      for (const key of defaultKeys) {
+        expect(TDD.grid.getColumn(key)).to.exist;
+        expect(TDD.headers.get(key).element).to.exist;
+      }
     });
 
-    test('After initial render', async () => {
+    it('After initial render', async () => {
       const newKeys: Array<Keys<TestData>> = ['id', 'name'];
-      TDD.grid.columns = newKeys.map(key => ({ key }));
+      TDD.grid.columns = newKeys.map((key) => ({ key }));
       await elementUpdated(TDD.grid);
 
-      newKeys.forEach(key => {
-        assert.exists(TDD.grid.getColumn(key));
-        assert.exists(TDD.headers.get(key).element);
-      });
+      for (const key of newKeys) {
+        expect(TDD.grid.getColumn(key)).to.exist;
+        expect(TDD.headers.get(key).element).to.exist;
+      }
     });
 
-    test('Updating configuration', async () => {
+    it('Updating configuration', async () => {
       await TDD.updateColumns([
         { key: 'id', headerText: 'Primary' },
         { key: 'name', headerText: 'Username' },
       ]);
-      assert.strictEqual(TDD.grid.getColumn('id')?.headerText, 'Primary');
-      assert.strictEqual(TDD.grid.getColumn('name')?.headerText, 'Username');
+
+      expect(TDD.grid.getColumn('id')?.headerText).to.equal('Primary');
+      expect(TDD.grid.getColumn('name')?.headerText).to.equal('Username');
     });
   });
 
-  suite('Properties', () => {
-    test('Header text', async () => {
+  describe('Properties', () => {
+    it('Header text', async () => {
       const headerText = 'Primary key';
-      assert.strictEqual(TDD.headers.first.text, 'id');
+      expect(TDD.headers.first.text).to.equal('id');
 
       await TDD.updateColumns({ key: 'id', headerText });
-      assert.strictEqual(TDD.headers.first.text, headerText);
+      expect(TDD.headers.first.text).to.equal(headerText);
     });
 
-    test('Visibility', async () => {
-      assert.exists(TDD.headers.first.element);
+    it('Visibility', async () => {
+      expect(TDD.headers.first.element).to.exist;
 
       await TDD.updateColumns({ key: 'id', hidden: true });
-      assert.notExists(TDD.headers.get('id').element);
+      expect(TDD.headers.get('id').element).to.not.exist;
 
       await TDD.updateColumns({ key: 'id', hidden: false });
-      assert.exists(TDD.headers.first.element);
+      expect(TDD.headers.first.element).to.exist;
     });
 
-    test('Header template', async () => {
+    it('Header template', async () => {
       await TDD.updateColumns({
         key: 'id',
-        headerTemplate: props => html`<h3>Custom template for ${props.column.key}</h3>`,
+        headerTemplate: (props) => html`<h3>Custom template for ${props.column.key}</h3>`,
       });
-      assert.strictEqual(TDD.headers.first.text, 'Custom template for id');
-      assert.dom.equal(
-        TDD.headers.first.titlePart,
+      expect(TDD.headers.first.text).to.equal('Custom template for id');
+      expect(TDD.headers.first.titlePart).dom.equal(
         `<span part="title">
             <span>
               <h3>Custom template for id</h3>
             </span>
-          </span>`,
+          </span>`
       );
     });
 
-    test('Cell template', async () => {
+    it('Cell template', async () => {
       await TDD.updateColumns({
         key: 'name',
         cellTemplate: (props: ApexCellContext<TestData, 'name'>) =>
           html`<input value=${props.value} />`,
       });
 
-      assert.shadowDom.equal(
-        TDD.rows.first.cells.get('name').element,
-        `<input value="${data[0].name}" />`,
+      expect(TDD.rows.first.cells.get('name').element).shadowDom.equal(
+        `<input value="${data[0].name}" />`
       );
     });
 
-    test('Width', async () => {
+    it('Width', async () => {
       const headerWidthEquals = (expected: number) =>
-        assert.strictEqual(TDD.headers.first.element.getBoundingClientRect().width, expected);
+        expect(TDD.headers.first.element.getBoundingClientRect().width).to.equal(expected);
 
       const cellWidthEquals = (expected: number) =>
-        assert.strictEqual(
-          TDD.rows.first.cells.get('id').element.getBoundingClientRect().width,
-          expected,
+        expect(TDD.rows.first.cells.get('id').element.getBoundingClientRect().width).to.equal(
+          expected
         );
 
       // 4 columns * 1fr out of 1000px = 250px
@@ -113,13 +112,13 @@ suite('Column configuration', () => {
       cellWidthEquals(200);
     });
 
-    test('Resize', async () => {
-      assert.isFalse(TDD.grid.getColumn('name')?.resizable);
+    it('Resize', async () => {
+      expect(TDD.grid.getColumn('name')?.resizable).to.be.false;
 
       await TDD.updateColumns({ key: 'name', resizable: true });
 
-      assert.strictEqual(TDD.grid.getColumn('name')?.resizable, true);
-      assert.exists(TDD.headers.get('name').resizePart);
+      expect(TDD.grid.getColumn('name')?.resizable).to.be.true;
+      expect(TDD.headers.get('name').resizePart).to.exist;
     });
   });
 });
