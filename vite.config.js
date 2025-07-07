@@ -15,7 +15,7 @@ export default defineConfig({
     },
     reportCompressedSize: true,
     rollupOptions: {
-      external: /^lit|^@lit-labs|^igniteui/,
+      external: /^lit|^@lit|^@lit-labs|^igniteui/,
     },
   },
 });

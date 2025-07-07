@@ -24,17 +24,9 @@
       "exports": [
         {
           "kind": "js",
-          "name": "ApexGrid",
+          "name": "ApexFilteredEvent",
           "declaration": {
-            "name": "ApexGrid",
-            "module": "./components/grid.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "ApexGridEventMap",
-          "declaration": {
-            "name": "ApexGridEventMap",
+            "name": "ApexFilteredEvent",
             "module": "./components/grid.js"
           }
         },
@@ -48,130 +40,18 @@
         },
         {
           "kind": "js",
-          "name": "ApexFilteredEvent",
+          "name": "ApexGridEventMap",
           "declaration": {
-            "name": "ApexFilteredEvent",
+            "name": "ApexGridEventMap",
             "module": "./components/grid.js"
           }
         },
         {
           "kind": "js",
-          "name": "BooleanOperands",
+          "name": "ApexGrid",
           "declaration": {
-            "name": "BooleanOperands",
-            "module": "./operations/filter/operands/boolean.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "NumberOperands",
-          "declaration": {
-            "name": "NumberOperands",
-            "module": "./operations/filter/operands/number.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "StringOperands",
-          "declaration": {
-            "name": "StringOperands",
-            "module": "./operations/filter/operands/string.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "BaseSortComparer",
-          "declaration": {
-            "name": "BaseSortComparer",
-            "module": "./operations/sort/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "BaseSortExpression",
-          "declaration": {
-            "name": "BaseSortExpression",
-            "module": "./operations/sort/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "SortExpression",
-          "declaration": {
-            "name": "SortExpression",
-            "module": "./operations/sort/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "SortingDirection",
-          "declaration": {
-            "name": "SortingDirection",
-            "module": "./operations/sort/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "SortState",
-          "declaration": {
-            "name": "SortState",
-            "module": "./operations/sort/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "SortComparer",
-          "declaration": {
-            "name": "SortComparer",
-            "module": "./operations/sort/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "BaseFilterExpression",
-          "declaration": {
-            "name": "BaseFilterExpression",
-            "module": "./operations/filter/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "FilterCriteria",
-          "declaration": {
-            "name": "FilterCriteria",
-            "module": "./operations/filter/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "FilterExpression",
-          "declaration": {
-            "name": "FilterExpression",
-            "module": "./operations/filter/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "OperandKeys",
-          "declaration": {
-            "name": "OperandKeys",
-            "module": "./operations/filter/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "FilterOperation",
-          "declaration": {
-            "name": "FilterOperation",
-            "module": "./operations/filter/types.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "FilterOperationLogic",
-          "declaration": {
-            "name": "FilterOperationLogic",
-            "module": "./operations/filter/types.js"
+            "name": "ApexGrid",
+            "module": "./components/grid.js"
           }
         },
         {
@@ -301,6 +181,126 @@
             "name": "PropertyType",
             "module": "./internal/types.js"
           }
+        },
+        {
+          "kind": "js",
+          "name": "BooleanOperands",
+          "declaration": {
+            "name": "BooleanOperands",
+            "module": "./operations/filter/operands/boolean.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NumberOperands",
+          "declaration": {
+            "name": "NumberOperands",
+            "module": "./operations/filter/operands/number.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "StringOperands",
+          "declaration": {
+            "name": "StringOperands",
+            "module": "./operations/filter/operands/string.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "BaseFilterExpression",
+          "declaration": {
+            "name": "BaseFilterExpression",
+            "module": "./operations/filter/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FilterCriteria",
+          "declaration": {
+            "name": "FilterCriteria",
+            "module": "./operations/filter/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FilterExpression",
+          "declaration": {
+            "name": "FilterExpression",
+            "module": "./operations/filter/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FilterOperation",
+          "declaration": {
+            "name": "FilterOperation",
+            "module": "./operations/filter/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FilterOperationLogic",
+          "declaration": {
+            "name": "FilterOperationLogic",
+            "module": "./operations/filter/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "OperandKeys",
+          "declaration": {
+            "name": "OperandKeys",
+            "module": "./operations/filter/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "BaseSortComparer",
+          "declaration": {
+            "name": "BaseSortComparer",
+            "module": "./operations/sort/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "BaseSortExpression",
+          "declaration": {
+            "name": "BaseSortExpression",
+            "module": "./operations/sort/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SortComparer",
+          "declaration": {
+            "name": "SortComparer",
+            "module": "./operations/sort/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SortExpression",
+          "declaration": {
+            "name": "SortExpression",
+            "module": "./operations/sort/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SortingDirection",
+          "declaration": {
+            "name": "SortingDirection",
+            "module": "./operations/sort/types.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SortState",
+          "declaration": {
+            "name": "SortState",
+            "module": "./operations/sort/types.js"
+          }
         }
       ]
     },
@@ -315,7 +315,7 @@
           "members": [
             {
               "kind": "field",
-              "name": "is",
+              "name": "tagName",
               "privacy": "public",
               "static": true,
               "readonly": true
@@ -324,7 +324,12 @@
               "kind": "method",
               "name": "register",
               "privacy": "public",
-              "static": true
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "field",
@@ -415,7 +420,7 @@
           "members": [
             {
               "kind": "field",
-              "name": "is",
+              "name": "tagName",
               "privacy": "public",
               "static": true,
               "readonly": true
@@ -504,11 +509,13 @@
             },
             {
               "kind": "method",
-              "name": "#setDefaultExpression"
+              "name": "#setDefaultExpression",
+              "privacy": "private"
             },
             {
               "kind": "method",
               "name": "#removeExpression",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "expression",
@@ -520,11 +527,13 @@
             },
             {
               "kind": "method",
-              "name": "#show"
+              "name": "#show",
+              "privacy": "private"
             },
             {
               "kind": "method",
               "name": "#handleConditionChanged",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "event",
@@ -537,6 +546,7 @@
             {
               "kind": "method",
               "name": "#handleInput",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "event",
@@ -549,6 +559,7 @@
             {
               "kind": "method",
               "name": "#handleKeydown",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "event",
@@ -560,11 +571,13 @@
             },
             {
               "kind": "method",
-              "name": "#handleResetClick"
+              "name": "#handleResetClick",
+              "privacy": "private"
             },
             {
               "kind": "method",
-              "name": "#openDropdownList"
+              "name": "#openDropdownList",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -574,6 +587,7 @@
             {
               "kind": "method",
               "name": "#chipCriteriaFor",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "expression",
@@ -586,6 +600,7 @@
             {
               "kind": "method",
               "name": "#chipSelectFor",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "expression",
@@ -598,6 +613,7 @@
             {
               "kind": "method",
               "name": "#chipRemoveFor",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "expression",
@@ -736,7 +752,7 @@
           "members": [
             {
               "kind": "field",
-              "name": "is",
+              "name": "tagName",
               "privacy": "public",
               "static": true,
               "readonly": true
@@ -769,7 +785,7 @@
               "kind": "field",
               "name": "stateProvider",
               "privacy": "protected",
-              "default": "new ContextProvider(this, {\n    context: gridStateContext,\n    initialValue: this.stateController,\n  })"
+              "default": "new ContextProvider(this, { context: gridStateContext, initialValue: this.stateController, })"
             },
             {
               "kind": "field",
@@ -850,7 +866,7 @@
                 "text": "GridSortConfiguration"
               },
               "privacy": "public",
-              "default": "{\n    multiple: true,\n    triState: true,\n  }",
+              "default": "{ multiple: true, triState: true, }",
               "description": "Sort configuration property for the grid."
             },
             {
@@ -1230,7 +1246,7 @@
           "members": [
             {
               "kind": "field",
-              "name": "is",
+              "name": "tagName",
               "privacy": "public",
               "static": true,
               "readonly": true
@@ -1239,7 +1255,12 @@
               "kind": "method",
               "name": "register",
               "privacy": "public",
-              "static": true
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "field",
@@ -1275,6 +1296,7 @@
             {
               "kind": "method",
               "name": "#activeFilterColumn",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "event",
@@ -1314,7 +1336,7 @@
           "members": [
             {
               "kind": "field",
-              "name": "is",
+              "name": "tagName",
               "privacy": "public",
               "static": true,
               "readonly": true
@@ -1323,7 +1345,12 @@
               "kind": "method",
               "name": "register",
               "privacy": "public",
-              "static": true
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "field",
@@ -1364,11 +1391,13 @@
             },
             {
               "kind": "method",
-              "name": "#addResizeEventHandlers"
+              "name": "#addResizeEventHandlers",
+              "privacy": "private"
             },
             {
               "kind": "method",
               "name": "#handleClick",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "e",
@@ -1386,6 +1415,7 @@
             {
               "kind": "method",
               "name": "#handleResizeStart",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "ev",
@@ -1450,7 +1480,7 @@
           "members": [
             {
               "kind": "field",
-              "name": "is",
+              "name": "tagName",
               "privacy": "public",
               "static": true,
               "readonly": true
@@ -1459,7 +1489,12 @@
               "kind": "method",
               "name": "register",
               "privacy": "public",
-              "static": true
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "field",
@@ -1539,7 +1574,7 @@
           "members": [
             {
               "kind": "field",
-              "name": "is",
+              "name": "tagName",
               "privacy": "public",
               "static": true,
               "readonly": true
@@ -1548,7 +1583,12 @@
               "kind": "method",
               "name": "register",
               "privacy": "public",
-              "static": true
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "field",
@@ -1787,6 +1827,7 @@
             {
               "kind": "method",
               "name": "#emitFilteringEvent",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "expression",
@@ -1805,6 +1846,7 @@
             {
               "kind": "method",
               "name": "#emitFilteredEvent",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "detail",
@@ -1818,6 +1860,7 @@
             {
               "kind": "method",
               "name": "#filter",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "expression",
@@ -1981,7 +2024,7 @@
               "kind": "field",
               "name": "handlers",
               "privacy": "protected",
-              "default": "new Map(\n    Object.entries({\n      ArrowDown: this.arrowDown,\n      ArrowUp: this.arrowUp,\n      ArrowLeft: this.arrowLeft,\n      ArrowRight: this.arrowRight,\n      Home: this.home,\n      End: this.end,\n    }),\n  )"
+              "default": "new Map( Object.entries({ ArrowDown: this.arrowDown, ArrowUp: this.arrowUp, ArrowLeft: this.arrowLeft, ArrowRight: this.arrowRight, Home: this.home, End: this.end, }) )"
             },
             {
               "kind": "field",
@@ -2160,6 +2203,7 @@
             {
               "kind": "method",
               "name": "#maxSize",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "key",
@@ -2299,6 +2343,7 @@
             {
               "kind": "method",
               "name": "#resolveSortOptions",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "options",
@@ -2312,6 +2357,7 @@
             {
               "kind": "method",
               "name": "#createDefaultExpression",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "key",
@@ -2324,6 +2370,7 @@
             {
               "kind": "method",
               "name": "#orderBy",
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "SortingDirection"
@@ -2342,6 +2389,7 @@
             {
               "kind": "method",
               "name": "#emitSortingEvent",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "detail",
@@ -2354,6 +2402,7 @@
             {
               "kind": "method",
               "name": "#emitSortedEvent",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "detail",
@@ -2366,6 +2415,7 @@
             {
               "kind": "method",
               "name": "#setExpression",
+              "privacy": "private",
               "parameters": [
                 {
                   "name": "expression",
@@ -2565,533 +2615,6 @@
           "declaration": {
             "name": "gridStateContext",
             "module": "src/controllers/state.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/constants.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "PIPELINE",
-          "type": {
-            "text": "string"
-          },
-          "default": "'pipeline'"
-        },
-        {
-          "kind": "variable",
-          "name": "SORT_ICON_ASCENDING",
-          "type": {
-            "text": "'arrow-upward'"
-          },
-          "default": "'arrow-upward'"
-        },
-        {
-          "kind": "variable",
-          "name": "SORT_ICON_DESCENDING",
-          "type": {
-            "text": "'arrow-downward'"
-          },
-          "default": "'arrow-downward'"
-        },
-        {
-          "kind": "variable",
-          "name": "MIN_COL_RESIZE_WIDTH",
-          "type": {
-            "text": "number"
-          },
-          "default": "80"
-        },
-        {
-          "kind": "variable",
-          "name": "SENTINEL_NODE",
-          "type": {
-            "text": "Readonly<ActiveNode<any>>"
-          }
-        },
-        {
-          "kind": "variable",
-          "name": "DEFAULT_COLUMN_CONFIG"
-        },
-        {
-          "kind": "variable",
-          "name": "NAVIGATION_STATE",
-          "type": {
-            "text": "Map<NavigationState, ActiveNode<any>>"
-          },
-          "default": "new Map([\n  ['previous', SENTINEL_NODE],\n  ['current', SENTINEL_NODE],\n])"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "PIPELINE",
-          "declaration": {
-            "name": "PIPELINE",
-            "module": "src/internal/constants.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "SORT_ICON_ASCENDING",
-          "declaration": {
-            "name": "SORT_ICON_ASCENDING",
-            "module": "src/internal/constants.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "SORT_ICON_DESCENDING",
-          "declaration": {
-            "name": "SORT_ICON_DESCENDING",
-            "module": "src/internal/constants.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "MIN_COL_RESIZE_WIDTH",
-          "declaration": {
-            "name": "MIN_COL_RESIZE_WIDTH",
-            "module": "src/internal/constants.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "SENTINEL_NODE",
-          "declaration": {
-            "name": "SENTINEL_NODE",
-            "module": "src/internal/constants.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "DEFAULT_COLUMN_CONFIG",
-          "declaration": {
-            "name": "DEFAULT_COLUMN_CONFIG",
-            "module": "src/internal/constants.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "NAVIGATION_STATE",
-          "declaration": {
-            "name": "NAVIGATION_STATE",
-            "module": "src/internal/constants.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/icon-registry.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "registerGridIcons"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "registerGridIcons",
-          "declaration": {
-            "name": "registerGridIcons",
-            "module": "src/internal/icon-registry.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/is-defined.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "isDefined",
-          "return": {
-            "type": {
-              "text": "value is NonNullable<T>"
-            }
-          },
-          "parameters": [
-            {
-              "name": "value",
-              "type": {
-                "text": "T | null | undefined"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "isDefined",
-          "declaration": {
-            "name": "isDefined",
-            "module": "src/internal/is-defined.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/normalize-case.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "normalizeCase",
-          "parameters": [
-            {
-              "name": "string",
-              "type": {
-                "text": "string"
-              }
-            },
-            {
-              "name": "caseSensitive",
-              "optional": true,
-              "type": {
-                "text": "boolean"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "normalizeCase",
-          "declaration": {
-            "name": "normalizeCase",
-            "module": "src/internal/normalize-case.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/part-map.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "partNameMap",
-          "parameters": [
-            {
-              "name": "parts",
-              "type": {
-                "text": "PartNameInfo"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "partNameMap",
-          "declaration": {
-            "name": "partNameMap",
-            "module": "src/internal/part-map.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/register.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "registerComponent",
-          "parameters": [
-            {
-              "name": "component",
-              "type": {
-                "text": "ApexComponent"
-              }
-            },
-            {
-              "name": "dependencies",
-              "default": "[]",
-              "type": {
-                "text": "ApexComponent[]"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "registerComponent",
-          "declaration": {
-            "name": "registerComponent",
-            "module": "src/internal/register.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "declaration": {
-            "name": "component",
-            "module": "src/internal/register.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/tags.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "GRID_TAG",
-          "type": {
-            "text": "'apex-grid'"
-          },
-          "default": "'apex-grid'"
-        },
-        {
-          "kind": "variable",
-          "name": "GRID_BODY",
-          "type": {
-            "text": "'apex-virtualizer'"
-          },
-          "default": "'apex-virtualizer'"
-        },
-        {
-          "kind": "variable",
-          "name": "GRID_HEADER_ROW_TAG",
-          "type": {
-            "text": "'apex-grid-header-row'"
-          },
-          "default": "'apex-grid-header-row'"
-        },
-        {
-          "kind": "variable",
-          "name": "GRID_HEADER_TAG",
-          "type": {
-            "text": "'apex-grid-header'"
-          },
-          "default": "'apex-grid-header'"
-        },
-        {
-          "kind": "variable",
-          "name": "GRID_ROW_TAG",
-          "type": {
-            "text": "'apex-grid-row'"
-          },
-          "default": "'apex-grid-row'"
-        },
-        {
-          "kind": "variable",
-          "name": "GRID_CELL_TAG",
-          "type": {
-            "text": "'apex-grid-cell'"
-          },
-          "default": "'apex-grid-cell'"
-        },
-        {
-          "kind": "variable",
-          "name": "GRID_FILTER_ROW_TAG",
-          "type": {
-            "text": "'apex-filter-row'"
-          },
-          "default": "'apex-filter-row'"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "GRID_TAG",
-          "declaration": {
-            "name": "GRID_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GRID_BODY",
-          "declaration": {
-            "name": "GRID_BODY",
-            "module": "src/internal/tags.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GRID_HEADER_ROW_TAG",
-          "declaration": {
-            "name": "GRID_HEADER_ROW_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GRID_HEADER_TAG",
-          "declaration": {
-            "name": "GRID_HEADER_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GRID_ROW_TAG",
-          "declaration": {
-            "name": "GRID_ROW_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GRID_CELL_TAG",
-          "declaration": {
-            "name": "GRID_CELL_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "GRID_FILTER_ROW_TAG",
-          "declaration": {
-            "name": "GRID_FILTER_ROW_TAG",
-            "module": "src/internal/tags.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/types.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/utils.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "applyColumnWidths",
-          "return": {
-            "type": {
-              "text": "StyleInfo"
-            }
-          },
-          "parameters": [
-            {
-              "name": "columns",
-              "type": {
-                "text": "Array<ColumnConfiguration<T>>"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "autoGenerateColumns",
-          "parameters": [
-            {
-              "name": "grid",
-              "type": {
-                "text": "GridHost<T>"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "asArray",
-          "parameters": [
-            {
-              "name": "value",
-              "type": {
-                "text": "T | T[]"
-              }
-            }
-          ]
-        },
-        {
-          "kind": "function",
-          "name": "getFilterOperandsFor",
-          "parameters": [
-            {
-              "name": "column",
-              "type": {
-                "text": "ColumnConfiguration<T>"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "applyColumnWidths",
-          "declaration": {
-            "name": "applyColumnWidths",
-            "module": "src/internal/utils.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "autoGenerateColumns",
-          "declaration": {
-            "name": "autoGenerateColumns",
-            "module": "src/internal/utils.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "asArray",
-          "declaration": {
-            "name": "asArray",
-            "module": "src/internal/utils.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "getFilterOperandsFor",
-          "declaration": {
-            "name": "getFilterOperandsFor",
-            "module": "src/internal/utils.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/internal/watch.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "watch",
-          "parameters": [
-            {
-              "name": "propName",
-              "type": {
-                "text": "string"
-              }
-            },
-            {
-              "name": "options",
-              "optional": true,
-              "type": {
-                "text": "WatchOptions"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "watch",
-          "declaration": {
-            "name": "watch",
-            "module": "src/internal/watch.ts"
           }
         }
       ]
@@ -3340,7 +2863,7 @@
               "kind": "field",
               "name": "orderBy",
               "privacy": "protected",
-              "default": "new Map(\n    Object.entries({\n      ascending: 1,\n      descending: -1,\n    }),\n  )"
+              "default": "new Map( Object.entries({ ascending: 1, descending: -1, }) )"
             },
             {
               "kind": "method",
@@ -3481,184 +3004,674 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/internal/mixins/event-emitter.ts",
+      "path": "src/internal/constants.ts",
       "declarations": [
         {
-          "kind": "class",
-          "description": "",
-          "name": "EventEmitterBase",
-          "members": [
-            {
-              "kind": "method",
-              "name": "addEventListener",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "type",
-                  "type": {
-                    "text": "K"
-                  }
-                },
-                {
-                  "name": "listener",
-                  "type": {
-                    "text": "(this: HTMLElement, ev: M[K]) => any"
-                  }
-                },
-                {
-                  "name": "options",
-                  "optional": true,
-                  "type": {
-                    "text": "boolean | AddEventListenerOptions"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "addEventListener",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "type",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "listener",
-                  "type": {
-                    "text": "EventListenerOrEventListenerObject"
-                  }
-                },
-                {
-                  "name": "options",
-                  "optional": true,
-                  "type": {
-                    "text": "boolean | AddEventListenerOptions"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "removeEventListener",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "type",
-                  "type": {
-                    "text": "K"
-                  }
-                },
-                {
-                  "name": "listener",
-                  "type": {
-                    "text": "(this: HTMLElement, ev: M[K]) => any"
-                  }
-                },
-                {
-                  "name": "options",
-                  "optional": true,
-                  "type": {
-                    "text": "boolean | EventListenerOptions"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "removeEventListener",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "type",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "listener",
-                  "type": {
-                    "text": "EventListenerOrEventListenerObject"
-                  }
-                },
-                {
-                  "name": "options",
-                  "optional": true,
-                  "type": {
-                    "text": "boolean | EventListenerOptions"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "emitEvent",
-              "privacy": "public",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "type",
-                  "type": {
-                    "text": "K"
-                  }
-                },
-                {
-                  "name": "eventInitDict",
-                  "optional": true,
-                  "type": {
-                    "text": "CustomEventInit<D>"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "type": {
-                "text": "CustomEvent"
-              }
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
+          "kind": "variable",
+          "name": "PIPELINE",
+          "type": {
+            "text": "string"
           },
-          "customElement": true
+          "default": "'pipeline'"
+        },
+        {
+          "kind": "variable",
+          "name": "SORT_ICON_ASCENDING",
+          "type": {
+            "text": "'arrow-upward'"
+          },
+          "default": "'arrow-upward'"
+        },
+        {
+          "kind": "variable",
+          "name": "SORT_ICON_DESCENDING",
+          "type": {
+            "text": "'arrow-downward'"
+          },
+          "default": "'arrow-downward'"
+        },
+        {
+          "kind": "variable",
+          "name": "MIN_COL_RESIZE_WIDTH",
+          "type": {
+            "text": "number"
+          },
+          "default": "80"
+        },
+        {
+          "kind": "variable",
+          "name": "SENTINEL_NODE",
+          "type": {
+            "text": "Readonly<ActiveNode<any>>"
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "DEFAULT_COLUMN_CONFIG"
+        },
+        {
+          "kind": "variable",
+          "name": "NAVIGATION_STATE",
+          "type": {
+            "text": "Map<NavigationState, ActiveNode<any>>"
+          },
+          "default": "new Map([ ['previous', SENTINEL_NODE], ['current', SENTINEL_NODE], ])"
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "EventEmitterBase",
+          "name": "PIPELINE",
           "declaration": {
-            "name": "EventEmitterBase",
-            "module": "src/internal/mixins/event-emitter.ts"
+            "name": "PIPELINE",
+            "module": "src/internal/constants.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SORT_ICON_ASCENDING",
+          "declaration": {
+            "name": "SORT_ICON_ASCENDING",
+            "module": "src/internal/constants.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SORT_ICON_DESCENDING",
+          "declaration": {
+            "name": "SORT_ICON_DESCENDING",
+            "module": "src/internal/constants.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "MIN_COL_RESIZE_WIDTH",
+          "declaration": {
+            "name": "MIN_COL_RESIZE_WIDTH",
+            "module": "src/internal/constants.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "SENTINEL_NODE",
+          "declaration": {
+            "name": "SENTINEL_NODE",
+            "module": "src/internal/constants.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DEFAULT_COLUMN_CONFIG",
+          "declaration": {
+            "name": "DEFAULT_COLUMN_CONFIG",
+            "module": "src/internal/constants.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "NAVIGATION_STATE",
+          "declaration": {
+            "name": "NAVIGATION_STATE",
+            "module": "src/internal/constants.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/icon-registry.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "registerGridIcons"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "registerGridIcons",
+          "declaration": {
+            "name": "registerGridIcons",
+            "module": "src/internal/icon-registry.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/is-defined.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "isDefined",
+          "return": {
+            "type": {
+              "text": "value is NonNullable<T>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "T | null | undefined"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "isDefined",
+          "declaration": {
+            "name": "isDefined",
+            "module": "src/internal/is-defined.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/normalize-case.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "normalizeCase",
+          "parameters": [
+            {
+              "name": "string",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "caseSensitive",
+              "optional": true,
+              "type": {
+                "text": "boolean"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "normalizeCase",
+          "declaration": {
+            "name": "normalizeCase",
+            "module": "src/internal/normalize-case.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/part-map.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "partNameMap",
+          "parameters": [
+            {
+              "name": "parts",
+              "type": {
+                "text": "PartNameInfo"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "partNameMap",
+          "declaration": {
+            "name": "partNameMap",
+            "module": "src/internal/part-map.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/register.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "registerComponent",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "component",
+              "type": {
+                "text": "ApexComponent"
+              }
+            },
+            {
+              "name": "dependencies",
+              "type": {
+                "text": "ApexComponent[]"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "registerComponent",
+          "declaration": {
+            "name": "registerComponent",
+            "module": "src/internal/register.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "declaration": {
+            "name": "component",
+            "module": "src/internal/register.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/tags.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "GRID_TAG",
+          "type": {
+            "text": "'apex-grid'"
+          },
+          "default": "'apex-grid'"
+        },
+        {
+          "kind": "variable",
+          "name": "GRID_BODY",
+          "type": {
+            "text": "'apex-virtualizer'"
+          },
+          "default": "'apex-virtualizer'"
+        },
+        {
+          "kind": "variable",
+          "name": "GRID_HEADER_ROW_TAG",
+          "type": {
+            "text": "'apex-grid-header-row'"
+          },
+          "default": "'apex-grid-header-row'"
+        },
+        {
+          "kind": "variable",
+          "name": "GRID_HEADER_TAG",
+          "type": {
+            "text": "'apex-grid-header'"
+          },
+          "default": "'apex-grid-header'"
+        },
+        {
+          "kind": "variable",
+          "name": "GRID_ROW_TAG",
+          "type": {
+            "text": "'apex-grid-row'"
+          },
+          "default": "'apex-grid-row'"
+        },
+        {
+          "kind": "variable",
+          "name": "GRID_CELL_TAG",
+          "type": {
+            "text": "'apex-grid-cell'"
+          },
+          "default": "'apex-grid-cell'"
+        },
+        {
+          "kind": "variable",
+          "name": "GRID_FILTER_ROW_TAG",
+          "type": {
+            "text": "'apex-filter-row'"
+          },
+          "default": "'apex-filter-row'"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GRID_TAG",
+          "declaration": {
+            "name": "GRID_TAG",
+            "module": "src/internal/tags.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GRID_BODY",
+          "declaration": {
+            "name": "GRID_BODY",
+            "module": "src/internal/tags.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GRID_HEADER_ROW_TAG",
+          "declaration": {
+            "name": "GRID_HEADER_ROW_TAG",
+            "module": "src/internal/tags.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GRID_HEADER_TAG",
+          "declaration": {
+            "name": "GRID_HEADER_TAG",
+            "module": "src/internal/tags.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GRID_ROW_TAG",
+          "declaration": {
+            "name": "GRID_ROW_TAG",
+            "module": "src/internal/tags.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GRID_CELL_TAG",
+          "declaration": {
+            "name": "GRID_CELL_TAG",
+            "module": "src/internal/tags.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GRID_FILTER_ROW_TAG",
+          "declaration": {
+            "name": "GRID_FILTER_ROW_TAG",
+            "module": "src/internal/tags.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/theming.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ThemingController",
+          "members": [
+            {
+              "kind": "field",
+              "name": "_host",
+              "type": {
+                "text": "ReactiveControllerHost & ReactiveElement"
+              },
+              "privacy": "private",
+              "readonly": true,
+              "default": "host"
+            },
+            {
+              "kind": "field",
+              "name": "_themes",
+              "type": {
+                "text": "Themes"
+              },
+              "privacy": "private",
+              "readonly": true,
+              "default": "themes"
+            },
+            {
+              "kind": "field",
+              "name": "_options",
+              "type": {
+                "text": "ThemingControllerConfig | undefined"
+              },
+              "privacy": "private",
+              "readonly": true,
+              "default": "config"
+            },
+            {
+              "kind": "field",
+              "name": "_theme",
+              "type": {
+                "text": "Theme"
+              },
+              "privacy": "private",
+              "default": "'bootstrap'"
+            },
+            {
+              "kind": "field",
+              "name": "_variant",
+              "type": {
+                "text": "ThemeVariant"
+              },
+              "privacy": "private",
+              "default": "'light'"
+            },
+            {
+              "kind": "field",
+              "name": "theme",
+              "type": {
+                "text": "Theme"
+              },
+              "privacy": "public",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_getStyles",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_adoptStyles",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleThemeChanged",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "addThemingController",
+          "return": {
+            "type": {
+              "text": "ThemingController"
+            }
+          },
+          "parameters": [
+            {
+              "name": "host",
+              "type": {
+                "text": "ReactiveControllerHost & ReactiveElement"
+              }
+            },
+            {
+              "name": "themes",
+              "type": {
+                "text": "Themes"
+              }
+            },
+            {
+              "name": "config",
+              "optional": true,
+              "type": {
+                "text": "ThemingControllerConfig"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "addThemingController",
+          "declaration": {
+            "name": "addThemingController",
+            "module": "src/internal/theming.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "ThemingController",
+          "declaration": {
+            "name": "ThemingController",
+            "module": "src/internal/theming.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/utils.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "applyColumnWidths",
+          "return": {
+            "type": {
+              "text": "StyleInfo"
+            }
+          },
+          "parameters": [
+            {
+              "name": "columns",
+              "type": {
+                "text": "Array<ColumnConfiguration<T>>"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "autoGenerateColumns",
+          "parameters": [
+            {
+              "name": "grid",
+              "type": {
+                "text": "GridHost<T>"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "asArray",
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "T | T[]"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getFilterOperandsFor",
+          "parameters": [
+            {
+              "name": "column",
+              "type": {
+                "text": "ColumnConfiguration<T>"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "applyColumnWidths",
+          "declaration": {
+            "name": "applyColumnWidths",
+            "module": "src/internal/utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "autoGenerateColumns",
+          "declaration": {
+            "name": "autoGenerateColumns",
+            "module": "src/internal/utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "asArray",
+          "declaration": {
+            "name": "asArray",
+            "module": "src/internal/utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getFilterOperandsFor",
+          "declaration": {
+            "name": "getFilterOperandsFor",
+            "module": "src/internal/utils.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/watch.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "watch",
+          "parameters": [
+            {
+              "name": "propName",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "options",
+              "optional": true,
+              "type": {
+                "text": "WatchOptions"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "watch",
+          "declaration": {
+            "name": "watch",
+            "module": "src/internal/watch.ts"
           }
         }
       ]
@@ -3904,6 +3917,190 @@
       "path": "src/operations/sort/types.ts",
       "declarations": [],
       "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/internal/mixins/event-emitter.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "EventEmitterBase",
+          "members": [
+            {
+              "kind": "method",
+              "name": "addEventListener",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "K"
+                  }
+                },
+                {
+                  "name": "listener",
+                  "type": {
+                    "text": "(this: HTMLElement, ev: M[K]) => any"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean | AddEventListenerOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "addEventListener",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "listener",
+                  "type": {
+                    "text": "EventListenerOrEventListenerObject"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean | AddEventListenerOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeEventListener",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "K"
+                  }
+                },
+                {
+                  "name": "listener",
+                  "type": {
+                    "text": "(this: HTMLElement, ev: M[K]) => any"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean | EventListenerOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeEventListener",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "listener",
+                  "type": {
+                    "text": "EventListenerOrEventListenerObject"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean | EventListenerOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "K"
+                  }
+                },
+                {
+                  "name": "eventInitDict",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<D>"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "EventEmitterBase",
+          "declaration": {
+            "name": "EventEmitterBase",
+            "module": "src/internal/mixins/event-emitter.ts"
+          }
+        }
+      ]
     },
     {
       "kind": "javascript-module",

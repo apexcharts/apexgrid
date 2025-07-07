@@ -1,9 +1,4 @@
 import { ContextProvider } from '@lit/context';
-// FIXME
-// import { styles as fluent } from '../styles/grid/themes/light/grid.fluent-styles.css.js';
-// import { styles as indigo } from '../styles/grid/themes/light/grid.indigo-styles.css.js';
-// import { styles as material } from '../styles/grid/themes/light/grid.material-styles.css.js';
-// import { themes } from 'igniteui-webcomponents/theming/theming-decorator.js';
 import {
   IgcButtonComponent,
   IgcChipComponent,
@@ -20,6 +15,7 @@ import { DEFAULT_COLUMN_CONFIG, PIPELINE } from '../internal/constants.js';
 import { EventEmitterBase } from '../internal/mixins/event-emitter.js';
 import { registerComponent } from '../internal/register.js';
 import { GRID_TAG } from '../internal/tags.js';
+import { addThemingController } from '../internal/theming.js';
 import type {
   ColumnConfiguration,
   DataPipelineConfiguration,
@@ -31,6 +27,9 @@ import { watch } from '../internal/watch.js';
 import type { FilterExpression } from '../operations/filter/types.js';
 import type { SortExpression } from '../operations/sort/types.js';
 import { styles as bootstrap } from '../styles/grid/themes/light/grid.bootstrap.css.js';
+import { styles as fluent } from '../styles/grid/themes/light/grid.fluent.css.js';
+import { styles as indigo } from '../styles/grid/themes/light/grid.indigo.css.js';
+import { styles as material } from '../styles/grid/themes/light/grid.material.css.js';
 import ApexGridCell from './cell.js';
 import ApexFilterRow from './filter-row.js';
 import ApexGridHeaderRow from './header-row.js';
@@ -119,7 +118,6 @@ export interface ApexGridEventMap<T extends object> {
   filtered: CustomEvent<ApexFilteredEvent<T>>;
 }
 
-// FIXME
 /**
  * Apex grid is a web component for displaying data in a tabular format quick and easy.
  *
@@ -134,10 +132,6 @@ export interface ApexGridEventMap<T extends object> {
  * @fires filtered - Emitted when a filter operation initiated through the UI has completed.
  *
  */
-// @themes({
-//   light: { bootstrap, material, fluent, indigo },
-//   dark: { bootstrap, material, fluent, indigo },
-// })
 export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMap<T>> {
   public static get tagName() {
     return GRID_TAG;
@@ -320,6 +314,15 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
     );
   }
 
+  constructor() {
+    super();
+
+    addThemingController(this, {
+      light: { bootstrap, material, fluent, indigo },
+      dark: { bootstrap, material, fluent, indigo },
+    });
+  }
+
   /**
    * Performs a filter operation in the grid based on the passed expression(s).
    */
@@ -400,10 +403,12 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
   }
 
   protected renderHeaderRow() {
-    return html`<apex-grid-header-row
+    return html`
+      <apex-grid-header-row
       style=${styleMap(this.DOM.columnSizes)}
       .columns=${this.columns}
-    ></apex-grid-header-row>`;
+      ></apex-grid-header-row>
+    `;
   }
 
   protected renderBody() {
@@ -424,8 +429,12 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
   }
 
   protected override render() {
-    return html` ${this.stateController.resizing.renderIndicator()} ${this.renderHeaderRow()}
-    ${this.renderFilterRow()} ${this.renderBody()}`;
+    return html`
+      ${this.stateController.resizing.renderIndicator()}
+      ${this.renderHeaderRow()}
+      ${this.renderFilterRow()}
+      ${this.renderBody()}
+    `;
   }
 }
 

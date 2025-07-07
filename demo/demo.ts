@@ -7,7 +7,6 @@ import {
   IgcSelectComponent,
   IgcSwitchComponent,
 } from 'igniteui-webcomponents';
-import { Theme } from 'igniteui-webcomponents/theming/types';
 import { html, render } from 'lit';
 import { ColumnConfiguration } from '../src/index';
 import { ApexGrid } from '../src/index.js';
@@ -32,7 +31,7 @@ type User = {
 };
 
 const choices = ['low', 'standard', 'high'];
-const themes: Theme[] = ['bootstrap', 'material', 'fluent', 'indigo'];
+const themes = ['bootstrap', 'material', 'fluent', 'indigo'];
 
 function getElement<T>(qs: string): T {
   return document.querySelector(qs) as T;
@@ -68,8 +67,8 @@ function getAvatar() {
   return `https://static.infragistics.com/xplatform/images/people/${type}/${idx}.jpg`;
 }
 
-async function setTheme(theme?: Theme) {
-  theme = theme ?? (getElement<IgcSelectComponent>(IgcSelectComponent.tagName).value as Theme);
+async function setTheme(theme?: string) {
+  theme = theme ?? (getElement<IgcSelectComponent>(IgcSelectComponent.tagName).value);
   const variant = getElement<IgcSwitchComponent>(IgcSwitchComponent.tagName).checked
     ? 'dark'
     : 'light';
@@ -83,7 +82,7 @@ async function setTheme(theme?: Theme) {
     .slice(0, -1)
     .forEach(s => s.remove());
 
-  configureTheme(theme);
+  configureTheme(theme as any);
 }
 
 const themeChoose = html`
