@@ -25,8 +25,13 @@ jobs:
         run: |
             if [[ ${VERSION} == *"alpha"* || ${VERSION} == *"beta"* || ${VERSION} == *"rc"* ]]; then echo "NPM_TAG=next"; else echo "NPM_TAG=latest"; fi >> $GITHUB_ENV
             echo ${NPM_TAG}
-      - name: Create apexgrid version
+
+      - name: Version the package
         run: npm version ${VERSION} --no-git-tag-version --save --verbose
-      - run: npm publish --tag ${NPM_TAG}
+        working-directory: dist
+
+      - name: Publish the package
+        run: npm publish --tag ${NPM_TAG}
+        working-directory: dist
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
