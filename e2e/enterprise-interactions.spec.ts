@@ -1017,3 +1017,79 @@ test.describe('server-side-grouping-enterprise', () => {
     expect(deepLoaded).toBe(true);
   });
 });
+
+test.describe('in-grid chart range handle', () => {
+  test('charting a selection leaves a linked, draggable source-range overlay', async ({ page }) => {
+    await openDemo(page, 'integrated-charts-enterprise.html');
+
+    // Select a 4-row x 1-measure range, then chart it via Alt+F1 (opens a floating dialog).
+    const selected = await page.evaluate(() => {
+      const g = document.getElementById('grid') as any;
+      const rc = g.stateController.module('range-selection');
+      const measure = g.columns.find((c: any) => c.type === 'number');
+      const category = g.columns.find((c: any) => c.type !== 'number') ?? g.columns[0];
+      const rows = Math.min(4, g.pageItems.length) - 1;
+      rc.selectRange({ row: 0, column: String(category.key) }, { row: rows, column: String(measure.key) });
+      return { ok: rows >= 1 };
+    });
+    expect(selected.ok).toBe(true);
+    await settle(page);
+
+    await page.evaluate(() => {
+      const g = document.getElementById('grid') as any;
+      g.dispatchEvent(new KeyboardEvent('keydown', { key: 'F1', altKey: true, bubbles: true }));
+    });
+    await settle(page);
+
+    // A linked charted-range overlay + handle now live on document.body.
+    const outline = page.locator('[part="chart-range-outline"]');
+    const handle = page.locator('[part="chart-range-handle"]');
+    await expect(outline).toBeVisible();
+    await expect(handle).toBeVisible();
+
+    // The floating dialog chart holds a snapshot model with one series (single measure column).
+    const before = await page.evaluate(() => {
+      const chart = document.querySelector('apex-grid-chart[mode="dialog"]') as any;
+      return chart?.staticModel?.series?.length ?? 0;
+    });
+    expect(before).toBe(1);
+
+    // Drag the handle to the last measure column of the deepest selected row → the range grows
+    // (more measure columns become series).
+    const targetPoint = await page.evaluate(() => {
+      const g = document.getElementById('grid') as any;
+      const numeric = g.columns.filter((c: any) => c.type === 'number');
+      const lastMeasure = numeric[numeric.length - 1];
+      const deepest = g.rows.reduce((a: any, b: any) => (b.index > a.index ? b : a));
+      const cell = deepest.cells.find((c: any) => String(c.column.key) === String(lastMeasure.key));
+      const box = cell.getBoundingClientRect();
+      return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+    });
+    expect(targetPoint).not.toBeNull();
+
+    await page.evaluate((pt) => {
+      const handleEl = document.querySelector('[part="chart-range-handle"]') as HTMLElement;
+      const box = handleEl.getBoundingClientRect();
+      handleEl.dispatchEvent(
+        new PointerEvent('pointerdown', {
+          button: 0,
+          pointerId: 1,
+          clientX: box.left + 6,
+          clientY: box.top + 6,
+          bubbles: true,
+        })
+      );
+      handleEl.dispatchEvent(
+        new PointerEvent('pointermove', { pointerId: 1, clientX: pt!.x, clientY: pt!.y, bubbles: true })
+      );
+      handleEl.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1, bubbles: true }));
+    }, targetPoint);
+    await settle(page);
+
+    const after = await page.evaluate(() => {
+      const chart = document.querySelector('apex-grid-chart[mode="dialog"]') as any;
+      return chart?.staticModel?.series?.length ?? 0;
+    });
+    expect(after).toBeGreaterThan(before);
+  });
+});

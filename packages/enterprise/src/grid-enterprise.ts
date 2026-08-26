@@ -66,6 +66,7 @@ import {
   renderApexChart,
 } from './features/chart.js';
 import { computeCalculatedSeries } from './features/chart-calc.js';
+import { ChartRangeManager } from './features/chart-range.js';
 import {
   CONTEXT_MENU_MODULE_ID,
   type ContextMenuConfig,
@@ -638,9 +639,21 @@ export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
     // the grid's typed event map, so listen via the EventTarget interface.
     (this as EventTarget).addEventListener(RANGE_CHANGED_EVENT, this.#updateChartAffordance);
     this.addEventListener('keydown', this.#onChartShortcut);
-    window.addEventListener('scroll', this.#updateChartAffordance, true);
-    window.addEventListener('resize', this.#updateChartAffordance);
+    window.addEventListener('scroll', this.#onChartViewportChange, true);
+    window.addEventListener('resize', this.#onChartViewportChange);
+    // A charted range's outline tracks the rows under it as the view changes.
+    (this as EventTarget).addEventListener(VIEW_CHANGED_EVENT, this.#repositionChartRanges);
   }
+
+  /** Keep both the selection affordance and any charted-range overlays anchored on scroll/resize. */
+  #onChartViewportChange = (): void => {
+    this.#updateChartAffordance();
+    this.#chartRangeManagerInstance?.reposition();
+  };
+
+  #repositionChartRanges = (): void => {
+    this.#chartRangeManagerInstance?.reposition();
+  };
 
   #onCellValueChanged = (): void => {
     this.#dataEpoch += 1;
@@ -654,11 +667,13 @@ export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
     this.removeEventListener('cellValueChanged', this.#onCellValueChanged);
     (this as EventTarget).removeEventListener(RANGE_CHANGED_EVENT, this.#updateChartAffordance);
     this.removeEventListener('keydown', this.#onChartShortcut);
-    window.removeEventListener('scroll', this.#updateChartAffordance, true);
-    window.removeEventListener('resize', this.#updateChartAffordance);
+    window.removeEventListener('scroll', this.#onChartViewportChange, true);
+    window.removeEventListener('resize', this.#onChartViewportChange);
+    (this as EventTarget).removeEventListener(VIEW_CHANGED_EVENT, this.#repositionChartRanges);
     this.#chartAffordance?.remove();
     this.#chartAffordance = null;
-    // Floating chart dialogs live on document.body, not under the grid, so tear them down here.
+    // Floating chart dialogs + charted-range overlays live on document.body, not under the grid.
+    this.#chartRangeManagerInstance?.destroy();
     for (const chart of this.#chartDialogs) chart.remove();
     this.#chartDialogs.clear();
     super.disconnectedCallback();
@@ -1653,10 +1668,13 @@ export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
    * Returns an empty model when there is no selection or no numeric series. Uses the active
    * (primary) range under a multi-range selection.
    */
-  public getRangeChartModel(definition?: ChartDefinition): ChartModel {
-    const active = this.#rangeController()?.getActiveGrid();
-    if (!active || active.rows.length === 0) return { categories: [], series: [] };
-    return buildCategoryModel(active.columns, active.rows, definition);
+  public getRangeChartModel(definition?: ChartDefinition, bounds?: RangeBounds): ChartModel {
+    const controller = this.#rangeController();
+    // An explicit `bounds` (the chart-range handle re-driving a linked chart) wins over the live
+    // selection; otherwise chart the active selection exactly as before.
+    const grid = bounds ? controller?.gridForBounds(bounds) : controller?.getActiveGrid();
+    if (!grid || grid.rows.length === 0) return { categories: [], series: [] };
+    return buildCategoryModel(grid.columns, grid.rows, definition);
   }
 
   /**
@@ -1710,6 +1728,21 @@ export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
 
   /** Every open floating chart dialog. A collection (not a singleton) so charts are independent. */
   #chartDialogs = new Set<ApexGridChart>();
+
+  /** Manages the in-grid charted-range overlays + resize handles (lazily created). */
+  #chartRangeManagerInstance: ChartRangeManager | null = null;
+  #chartRangeManager(): ChartRangeManager {
+    if (!this.#chartRangeManagerInstance) {
+      this.#chartRangeManagerInstance = new ChartRangeManager({
+        gridElement: this as unknown as HTMLElement,
+        localize: (key, params, fallback) => this.localize(key as GridLocaleKey, params, fallback),
+        boundsClientRect: (bounds) => this.#rangeController()?.boundsClientRect(bounds) ?? null,
+        cellAtPoint: (x, y) => this.#rangeController()?.cellAtPoint(x, y) ?? null,
+        modelForBounds: (bounds, definition) => this.getRangeChartModel(definition, bounds),
+      });
+    }
+    return this.#chartRangeManagerInstance;
+  }
 
   /**
    * Adds a "Create chart" button to the toolbar (on top of the community grid's none). Clicking it
@@ -1778,13 +1811,19 @@ export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
     // Freeze the current model so this chart is independent of later selection / data changes.
     chart.staticModel =
       options.source === 'selection' ? this.getRangeChartModel() : this.getChartModel();
+    // Link the source range so it stays outlined in the grid with a resize handle that live-drives
+    // this chart (the in-grid range handle). Only selection charts have a source range to link.
+    const linkedBounds =
+      options.source === 'selection' ? this.#rangeController()?.getSelectionBounds() : null;
     chart.addEventListener('apex-chart-closed', () => {
+      this.#chartRangeManagerInstance?.unlink(chart);
       chart.remove();
       this.#chartDialogs.delete(chart);
     });
     document.body.appendChild(chart);
     this.#chartDialogs.add(chart);
     chart.show();
+    if (linkedBounds) this.#chartRangeManager().link(chart, linkedBounds);
   }
 
   /**

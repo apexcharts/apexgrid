@@ -44,6 +44,7 @@ export {
   recommendChartType,
 } from './features/chart.js';
 export { computeCalculatedSeries, isValidChartFormula } from './features/chart-calc.js';
+export { type ChartRangeHost, ChartRangeManager } from './features/chart-range.js';
 export {
   CONTEXT_MENU_OPENING_EVENT,
   type ContextMenuConfig,

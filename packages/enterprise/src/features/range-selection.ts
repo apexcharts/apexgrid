@@ -374,6 +374,104 @@ export class RangeSelectionController<T extends object>
     };
   }
 
+  /**
+   * The labeled grid (in-range columns + per-row values) for **arbitrary** bounds, like
+   * {@link getActiveGrid} but for a caller-supplied rectangle. Used by the in-grid chart-range
+   * handle to recompute a linked chart from a resized source range.
+   */
+  public gridForBounds(bounds: RangeBounds): {
+    columns: ColumnConfiguration<T>[];
+    rows: unknown[][];
+  } {
+    return {
+      columns: this.#visibleColumns().slice(bounds.left, bounds.right + 1),
+      rows: this.#matrix(bounds),
+    };
+  }
+
+  /**
+   * The union client rect of a range's **currently rendered** cells, or `null` when none is rendered
+   * (the range is fully scrolled out of the virtualized body). Used to position the chart-range
+   * overlay. Traverses each rendered `apex-grid-row`'s shadow root for its `apex-grid-cell`s and
+   * matches them against the in-range visible columns by key.
+   */
+  public boundsClientRect(bounds: RangeBounds): DOMRectReadOnly | null {
+    const inRangeKeys = new Set(
+      this.#visibleColumns()
+        .slice(bounds.left, bounds.right + 1)
+        .map((column) => String(column.key))
+    );
+    let top = Number.POSITIVE_INFINITY;
+    let left = Number.POSITIVE_INFINITY;
+    let bottom = Number.NEGATIVE_INFINITY;
+    let right = Number.NEGATIVE_INFINITY;
+    let found = false;
+    for (const { index, el } of this.#bodyRows()) {
+      if (index < bounds.top || index > bounds.bottom) continue;
+      const cells = el.shadowRoot?.querySelectorAll('apex-grid-cell');
+      if (!cells) continue;
+      for (const cell of cells) {
+        const key = (cell as unknown as { column?: { key?: unknown } }).column?.key;
+        if (key === undefined || !inRangeKeys.has(String(key))) continue;
+        const rect = cell.getBoundingClientRect();
+        if (rect.width === 0 && rect.height === 0) continue;
+        top = Math.min(top, rect.top);
+        left = Math.min(left, rect.left);
+        bottom = Math.max(bottom, rect.bottom);
+        right = Math.max(right, rect.right);
+        found = true;
+      }
+    }
+    if (!found) return null;
+    return new DOMRectReadOnly(left, top, right - left, bottom - top);
+  }
+
+  /**
+   * Hit-test a client point to the nearest rendered cell, returned in **view coordinates** (row =
+   * `pageItems` index, col = index into the visible columns). Clamps to the nearest row/col when the
+   * pointer is past the rendered edge, so a handle drag past the last row still extends. `null` only
+   * when no rows are rendered. Used by the chart-range handle drag.
+   */
+  public cellAtPoint(clientX: number, clientY: number): { row: number; col: number } | null {
+    const rows = this.#bodyRows();
+    if (!rows.length) return null;
+    // Nearest row by vertical distance to the row box.
+    let row = rows[0];
+    let rowDist = Number.POSITIVE_INFINITY;
+    let sampleEl: HTMLElement | null = null;
+    for (const candidate of rows) {
+      const rect = candidate.el.getBoundingClientRect();
+      const dist =
+        clientY < rect.top ? rect.top - clientY : clientY > rect.bottom ? clientY - rect.bottom : 0;
+      if (dist < rowDist) {
+        rowDist = dist;
+        row = candidate;
+      }
+      if (dist === 0) sampleEl = candidate.el;
+    }
+    sampleEl = sampleEl ?? row.el;
+    // Nearest visible column by horizontal distance to its rendered cell.
+    const visible = this.#visibleColumns();
+    const keyToIndex = new Map(visible.map((column, i) => [String(column.key), i]));
+    let col = 0;
+    let colDist = Number.POSITIVE_INFINITY;
+    const cells = sampleEl.shadowRoot?.querySelectorAll('apex-grid-cell');
+    for (const cell of cells ?? []) {
+      const key = (cell as unknown as { column?: { key?: unknown } }).column?.key;
+      if (key === undefined) continue;
+      const index = keyToIndex.get(String(key));
+      if (index === undefined) continue;
+      const rect = cell.getBoundingClientRect();
+      const dist =
+        clientX < rect.left ? rect.left - clientX : clientX > rect.right ? clientX - rect.right : 0;
+      if (dist < colDist) {
+        colDist = dist;
+        col = index;
+      }
+    }
+    return { row: row.index, col };
+  }
+
   /** Clears the selection and refreshes decoration. */
   public clearSelection(): void {
     if (!this.hasSelection()) return;
