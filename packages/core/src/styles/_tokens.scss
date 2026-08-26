@@ -7,16 +7,18 @@
 // This is the single rebrand surface: override ~12 values on `apex-grid` and
 // the whole grid re-skins. Values fall back to self-contained literals, so a
 // grid mounted with zero consumer CSS already looks premium; the brand tokens
-// additionally re-tint from the igniteui palette when it is present.
+// additionally re-tint from an Ignite UI palette when one is present.
 // No `!important`, no downstream hardcoded numerics — every rule resolves here.
 // ─────────────────────────────────────────────────────────────────────────
 
 :host {
     // ── Brand ────────────────────────────────────────────────────────────
-    // Re-tints from the igniteui palette when its CSS is loaded (so the grid
-    // auto-matches an igniteui host app), and falls back to the self-contained
-    // premium blue otherwise. This igniteui hook used to live in the per-theme
-    // files; folding it here keeps that integration without named themes.
+    // Re-tints from an Ignite UI palette when its CSS is loaded (so the grid
+    // auto-matches such a host app), and falls back to the self-contained
+    // premium blue otherwise. `--ig-primary-*` is the whole integration: it is
+    // what an Ignite UI theme actually defines, and reading it costs nothing
+    // when absent. This hook used to live in the per-theme files; folding it
+    // here keeps the integration without named themes.
     --ag-brand: var(--ig-primary-500, #0d6fd3); /* primary blue */
     --ag-brand-strong: var(--ig-primary-700, #0a56b8); /* hover / pressed */
 
@@ -111,14 +113,14 @@
 // Built-in dark theme. Opt in with `<apex-grid theme="dark">`.
 // Only color/surface tokens are flipped to a neutral slate palette; geometry,
 // typography, motion, and the brand hue (which still auto-tints from the
-// igniteui palette when present) are inherited from the light block above.
+// Ignite UI palette when present) are inherited from the light block above.
 // `theme~='dark'` matches a space-separated word so `theme="dark compact"`
 // style stacking keeps working. These tokens inherit across the shadow
 // boundary to every child component, so the whole grid re-skins from here.
 // ─────────────────────────────────────────────────────────────────────────
 :host([theme~='dark']) {
     // ── Brand ── brighter fallbacks so the accent reads on a dark surface;
-    // still re-tints from the igniteui palette first when it is present.
+    // still re-tints from an Ignite UI palette first when it is present.
     --ag-brand: var(--ig-primary-500, #3b82f6);
     --ag-brand-strong: var(--ig-primary-400, #60a5fa);
 
@@ -169,7 +171,7 @@
 // little brand into the surfaces/gridlines so the grid wears its brand even
 // at rest, a brand-tinted variant. Because every value is `color-mix(... var
 // (--ag-brand) ...)`, it follows whatever brand is in effect (including the
-// igniteui auto-tint) with no per-brand CSS.
+// Ignite UI auto-tint) with no per-brand CSS.
 // The light variant mixes into the white neutrals; the dark variant (higher
 // specificity, so it wins under `theme="dark tinted"`) mixes the SAME token
 // set into the slate neutrals. Body row surface stays untinted for legibility.

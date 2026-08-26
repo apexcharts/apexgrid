@@ -1,24 +1,24 @@
 @use '../common' as *;
 @use '../checkbox' as *;
 
-// Resolution chain: igniteui override → current semantic var → premium default.
-$row-border-color: var(--igx-row-border-color, var(--row-border-color, var(--ag-border)));
-$row-odd-background: var(--igx-row-odd-background, var(--row-odd-background, var(--ag-surface)));
-$row-odd-text-color: var(--igx-row-odd-text-color, var(--row-odd-text-color, var(--ag-text-body)));
-$row-even-background: var(--igx-row-even-background, var(--row-even-background, var(--ag-surface-alt)));
-$row-even-text-color: var(--igx-row-even-text-color, var(--row-even-text-color, var(--ag-text-body)));
+// Resolution chain: consumer semantic var → `--ag-*` premium default.
+$row-border-color: var(--row-border-color, var(--ag-border));
+$row-odd-background: var(--row-odd-background, var(--ag-surface));
+$row-odd-text-color: var(--row-odd-text-color, var(--ag-text-body));
+$row-even-background: var(--row-even-background, var(--ag-surface-alt));
+$row-even-text-color: var(--row-even-text-color, var(--ag-text-body));
 
 // Row state washes are OPAQUE (mixed over the surface, not over transparent):
 // the selection/expansion/pinned cells are sticky and paint
 // `background: inherit`, so a translucent row background would let
 // horizontally-scrolled content bleed through the frozen column. Hover is a
 // neutral gray wash (the grid recedes); only selection carries the brand tint.
-$row-hover-background: var(--igx-row-hover-background, var(--row-hover-background, var(--ag-row-hover)));
-$row-hover-text-color: var(--igx-row-hover-text-color, var(--row-hover-text-color, var(--ag-text-body)));
+$row-hover-background: var(--row-hover-background, var(--ag-row-hover));
+$row-hover-text-color: var(--row-hover-text-color, var(--ag-text-body));
 
 // The selected/hover accent bar + checkbox accent come from the theme accent
 // token (Material → secondary, others → primary), falling back to brand.
-$accent: var(--igx-cell-active-border-color, var(--cell-active-border-color, var(--ag-brand)));
+$accent: var(--cell-active-border-color, var(--ag-brand));
 
 :host {
     display: grid;

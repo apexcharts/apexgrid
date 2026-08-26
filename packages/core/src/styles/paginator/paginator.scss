@@ -1,8 +1,8 @@
 @use '../common' as *;
 
-// Resolution chain: igniteui override → current semantic var → premium default.
-$header-text-color: var(--igx-header-text-color, var(--header-text-color, var(--ag-text-muted)));
-$header-border-color: var(--igx-header-border-color, var(--header-border-color, var(--ag-hairline)));
+// Resolution chain: consumer semantic var → `--ag-*` premium default.
+$header-text-color: var(--header-text-color, var(--ag-text-muted));
+$header-border-color: var(--header-border-color, var(--ag-hairline));
 
 :host {
     --ig-size: 1;

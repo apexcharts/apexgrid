@@ -1,12 +1,12 @@
 @use '../common' as *;
 @use '../checkbox' as *;
 
-// Resolution chain: igniteui override → current semantic var → premium default.
-$header-background: var(--igx-header-background, var(--header-background, var(--ag-surface-elevated)));
-$header-text-color: var(--igx-header-text-color, var(--header-text-color, var(--ag-text-muted)));
-$header-border-color: var(--igx-header-border-color, var(--header-border-color, var(--ag-hairline)));
-$filtering-header-background: var(--igx-filtering-header-background, var(--filtering-header-background, transparent));
-$accent: var(--igx-cell-active-border-color, var(--cell-active-border-color, var(--ag-brand)));
+// Resolution chain: consumer semantic var → `--ag-*` premium default.
+$header-background: var(--header-background, var(--ag-surface-elevated));
+$header-text-color: var(--header-text-color, var(--ag-text-muted));
+$header-border-color: var(--header-border-color, var(--ag-hairline));
+$filtering-header-background: var(--filtering-header-background, transparent);
+$accent: var(--cell-active-border-color, var(--ag-brand));
 
 :host {
     display: grid;
@@ -126,7 +126,7 @@ $accent: var(--igx-cell-active-border-color, var(--cell-active-border-color, var
 // `position: fixed` (viewport-relative) so it follows the cursor across
 // the entire grid regardless of the header row's sticky positioning. A
 // subtle tilt gives the user a "lifted" cue.
-$drag-ghost-bg: var(--igx-cell-editor-background, var(--ag-surface));
+$drag-ghost-bg: var(--ag-surface);
 
 [part='drag-ghost'] {
     position: fixed;

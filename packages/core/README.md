@@ -279,7 +279,7 @@ A persistent vertical divider on each column header's trailing edge, on by defau
 grid.columnSeparator = false;                     // hide the dividers
 ```
 
-Theme the line with `--ag-header-separator` (or the `--header-separator-color` / `--igx-header-separator-color` override hooks) and set its vertical inset with `--apex-header-separator-inset`. Because the default is `true`, disable it through the property rather than markup (a default-on boolean attribute cannot be turned off by attribute alone). Attribute: `column-separator`.
+Theme the line with `--ag-header-separator` (or the `--header-separator-color` override hook) and set its vertical inset with `--apex-header-separator-inset`. Because the default is `true`, disable it through the property rather than markup (a default-on boolean attribute cannot be turned off by attribute alone). Attribute: `column-separator`.
 
 ### Column groups (spanning headers)
 

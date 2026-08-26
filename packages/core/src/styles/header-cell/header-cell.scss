@@ -1,12 +1,12 @@
 @use '../common' as *;
 
-// Resolution chain: igniteui override → current semantic var → premium default.
-$filtering-header-background: var(--igx-filtering-header-background, var(--filtering-header-background, transparent));
-$header-border-color: var(--igx-header-border-color, var(--header-border-color, var(--ag-hairline)));
-$header-text-color: var(--igx-header-text-color, var(--header-text-color, var(--ag-text-body)));
-$active-header-icon-color: var(--igx-sorted-header-icon-color, var(--sorted-header-icon-color, var(--ag-brand)));
+// Resolution chain: consumer semantic var → `--ag-*` premium default.
+$filtering-header-background: var(--filtering-header-background, transparent);
+$header-border-color: var(--header-border-color, var(--ag-hairline));
+$header-text-color: var(--header-text-color, var(--ag-text-body));
+$active-header-icon-color: var(--sorted-header-icon-color, var(--ag-brand));
 $header-hover: color-mix(in srgb, var(--ag-brand) 4%, transparent);
-$header-separator-color: var(--igx-header-separator-color, var(--header-separator-color, var(--ag-header-separator)));
+$header-separator-color: var(--header-separator-color, var(--ag-header-separator));
 
 :host {
     display: flex;
@@ -346,8 +346,8 @@ $header-separator-color: var(--igx-header-separator-color, var(--header-separato
     inset-block-start: 100%;
     inset-inline-end: 0;
     z-index: calc(var(--z-index-base) + 15);
-    background: var(--igx-header-background, var(--header-background, var(--ag-surface-elevated)));
-    border: rem(1px) solid var(--igx-header-border-color, var(--header-border-color, var(--ag-hairline)));
+    background: var(--header-background, var(--ag-surface-elevated));
+    border: rem(1px) solid var(--header-border-color, var(--ag-hairline));
     border-radius: rem(6px);
     box-shadow: 0 rem(4px) rem(12px) rgb(0 0 0 / 12%);
     min-inline-size: rem(180px);
@@ -385,7 +385,7 @@ $header-separator-color: var(--igx-header-separator-color, var(--header-separato
     }
 
     &:focus-visible {
-        outline: rem(2px) solid var(--igx-sorted-header-icon-color, var(--sorted-header-icon-color, var(--ag-brand)));
+        outline: rem(2px) solid var(--sorted-header-icon-color, var(--ag-brand));
         outline-offset: rem(-2px);
     }
 }

@@ -1,10 +1,10 @@
 @use '../common' as *;
 
-// Resolution chain: igniteui override → current semantic var → premium default.
-$header-background: var(--igx-header-background, var(--header-background, var(--ag-surface-elevated)));
-$header-text-color: var(--igx-header-text-color, var(--header-text-color, var(--ag-text-muted)));
-$header-border-color: var(--igx-header-border-color, var(--header-border-color, var(--ag-hairline)));
-$accent: var(--igx-cell-active-border-color, var(--cell-active-border-color, var(--ag-brand)));
+// Resolution chain: consumer semantic var → `--ag-*` premium default.
+$header-background: var(--header-background, var(--ag-surface-elevated));
+$header-text-color: var(--header-text-color, var(--ag-text-muted));
+$header-border-color: var(--header-border-color, var(--ag-hairline));
+$accent: var(--cell-active-border-color, var(--ag-brand));
 
 :host {
     --ig-size: 1;
@@ -229,7 +229,7 @@ $accent: var(--igx-cell-active-border-color, var(--cell-active-border-color, var
     margin: 0;
     padding: rem(4px) 0;
     min-inline-size: rem(180px);
-    background: var(--igx-cell-editor-background, var(--ag-surface));
+    background: var(--ag-surface);
     color: var(--ag-text-body);
     border: rem(1px) solid var(--ag-brand-line);
     border-radius: var(--ag-radius-sm);

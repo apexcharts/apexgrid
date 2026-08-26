@@ -1,9 +1,9 @@
 @use '../common' as *;
 
 // Resolution chain mirrors the column header row so the two read as one unit.
-$header-background: var(--igx-header-background, var(--header-background, var(--ag-surface-elevated)));
-$header-text-color: var(--igx-header-text-color, var(--header-text-color, var(--ag-text-muted)));
-$header-border-color: var(--igx-header-border-color, var(--header-border-color, var(--ag-hairline)));
+$header-background: var(--header-background, var(--ag-surface-elevated));
+$header-text-color: var(--header-text-color, var(--ag-text-muted));
+$header-border-color: var(--header-border-color, var(--ag-hairline));
 
 :host {
     display: grid;

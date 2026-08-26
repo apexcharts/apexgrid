@@ -2,14 +2,14 @@
 @use '../checkbox' as *;
 @use 'cell-renderers';
 
-// Resolution chain: igniteui override → current semantic var → premium default.
-$cell-active-border-color: var(--igx-cell-active-border-color, var(--cell-active-border-color, var(--ag-brand)));
+// Resolution chain: consumer semantic var → `--ag-*` premium default.
+$cell-active-border-color: var(--cell-active-border-color, var(--ag-brand));
 $inset-shadow-width: 1px;
 
 // Anchor the editor accent to the active-cell color so the caret, focus
 // outline, and highlighted option all match the cell's active outline.
-$editor-accent: var(--igx-cell-editor-accent-color, var(--cell-active-border-color, var(--ag-brand)));
-$editor-background: var(--igx-cell-editor-background, var(--ag-surface));
+$editor-accent: var(--cell-active-border-color, var(--ag-brand));
+$editor-background: var(--ag-surface);
 
 :host {
     position: relative;
@@ -142,7 +142,7 @@ input[part~='boolean-mark'][aria-readonly='true'] {
 }
 
 // Built-in rating display + editor (column `type: 'rating'`).
-$rating-color: var(--igx-rating-color, var(--ag-watch, #f5a623));
+$rating-color: var(--ag-watch, #f5a623);
 $star-size: #{rem(14px)};
 
 [part~='rating'] {
@@ -343,7 +343,7 @@ $star-size: #{rem(14px)};
 // Driven by `data-invalid` on the host (set by the cell when its column's
 // validators reject the candidate value). Reuses the `--ag-risk` palette so the
 // look follows the theme. Inert until a value fails validation.
-$invalid-color: var(--igx-cell-invalid-border-color, var(--ag-risk, #ef4444));
+$invalid-color: var(--ag-risk, #ef4444);
 
 :host([data-invalid]) {
     box-shadow: inset 0 0 0 1px #{$invalid-color};
