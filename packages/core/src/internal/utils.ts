@@ -137,3 +137,21 @@ export function getFilterOperandsFor<T extends object>(column: ColumnConfigurati
       return StringOperands;
   }
 }
+
+/**
+ * Whether an element renders right-to-left.
+ *
+ * The grid's stylesheets are written entirely in logical properties
+ * (`inline-size`, `inset-inline-start`, `border-inline-end`, …), so layout
+ * mirrors under `dir="rtl"` with no extra CSS. What does *not* mirror by itself
+ * is code that reasons in physical pixels or physical key names: resizing from
+ * a `clientX` delta, deciding a drop side from a midpoint, and mapping
+ * ArrowLeft/ArrowRight onto previous/next column. Those read this.
+ *
+ * Resolved from the computed style rather than the `dir` attribute so an
+ * inherited direction (the common case: `dir` on `<html>`) is honoured.
+ */
+export function isRTL(element: Element): boolean {
+  if (typeof getComputedStyle !== 'function') return false;
+  return getComputedStyle(element).direction === 'rtl';
+}

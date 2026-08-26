@@ -504,6 +504,28 @@ apex-grid::part(paginator) { background: var(--surface-2); }
 apex-grid-toolbar::part(search-input) { font-family: var(--font-mono); }
 ```
 
+### Right-to-left
+
+Set `dir="rtl"` on the grid or any ancestor and the whole grid mirrors — no
+separate stylesheet, build flag, or option:
+
+```html
+<html dir="rtl">
+  <apex-grid id="grid"></apex-grid>
+</html>
+```
+
+The stylesheets are written entirely in logical properties (`inline-size`,
+`inset-inline-start`, `border-inline-end`, …), so layout, pinning, and the fill
+handle follow the text direction on their own. The direction is read from the
+*computed* style, so inheriting it from `<html>` or a wrapper works as well as
+setting it on the grid.
+
+Behaviour that reasons in physical directions mirrors too: ArrowLeft moves to the
+next column rather than the previous one, column resize grows the column as the
+pointer moves toward the (now left-hand) inline-end edge, and a column drag drops
+on the side the cursor actually crossed.
+
 ### Spreadsheet coordinates
 
 ```ts

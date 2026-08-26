@@ -1,6 +1,7 @@
 import type { ReactiveController } from 'lit';
 import { awaitChildUpdates, captureRect, type FlipEntry, playFlip } from '../internal/flip.js';
 import type { ColumnConfiguration, GridHost, Keys } from '../internal/types.js';
+import { isRTL } from '../internal/utils.js';
 
 /**
  * Live drag state surfaced to the header row so it can render the floating
@@ -156,14 +157,18 @@ export class ReorderController<T extends object> implements ReactiveController {
     const targetIdx = visibleColumns.findIndex((c) => c.key === target.column.key);
     if (sourceIdx === -1 || targetIdx === -1) return;
 
+    // `position` is order-based, so it needs no direction awareness. The
+    // midpoint test does: moving toward a *later* column means moving right in
+    // LTR and left under `dir="rtl"`, so the comparison flips.
+    const rtl = isRTL(this.host as unknown as Element);
     let position: 'before' | 'after';
     if (sourceIdx < targetIdx) {
-      // Dragging right — swap when the cursor crosses past the target's centre.
-      if (clientX < midpoint) return;
+      // Toward a later column — swap once the cursor crosses the target's centre.
+      if (rtl ? clientX > midpoint : clientX < midpoint) return;
       position = 'after';
     } else {
-      // Dragging left — swap when the cursor crosses before the target's centre.
-      if (clientX > midpoint) return;
+      // Toward an earlier column — swap once the cursor crosses back over it.
+      if (rtl ? clientX < midpoint : clientX > midpoint) return;
       position = 'before';
     }
 

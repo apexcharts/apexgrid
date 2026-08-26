@@ -3,7 +3,7 @@ import type ApexGridRow from '../components/row.js';
 import { NAVIGATION_STATE, SENTINEL_NODE } from '../internal/constants.js';
 import { GRID_ROW_TAG } from '../internal/tags.js';
 import type { ActiveNode, ColumnConfiguration, GridHost, Keys } from '../internal/types.js';
-import { getDisplayColumns } from '../internal/utils.js';
+import { getDisplayColumns, isRTL } from '../internal/utils.js';
 
 export class NavigationController<T extends object> implements ReactiveController {
   protected handlers = new Map(
@@ -190,14 +190,28 @@ export class NavigationController<T extends object> implements ReactiveControlle
   }
 
   protected arrowLeft() {
-    const next = this.nextNode;
-    this.active = Object.assign(next, { column: this.getPreviousColumn(next.column) });
-    this.scrollToCell(this.active);
+    this.#moveInline('left');
   }
 
   protected arrowRight() {
+    this.#moveInline('right');
+  }
+
+  /**
+   * Moves the active cell one column in a *physical* direction.
+   *
+   * ArrowLeft and ArrowRight name screen directions, not column order, so under
+   * `dir="rtl"` the column to the left is the *next* one and the mapping onto
+   * previous/next inverts. Everything else about navigation is order-based and
+   * needs no direction awareness.
+   */
+  #moveInline(direction: 'left' | 'right') {
+    const towardsEnd = isRTL(this.host as unknown as Element) === (direction === 'left');
     const next = this.nextNode;
-    this.active = Object.assign(next, { column: this.getNextColumn(next.column) });
+    const column = towardsEnd
+      ? this.getNextColumn(next.column)
+      : this.getPreviousColumn(next.column);
+    this.active = Object.assign(next, { column });
     this.scrollToCell(this.active);
   }
 

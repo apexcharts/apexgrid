@@ -1,3 +1,4 @@
+import { isRTL } from 'apex-commons';
 import type { ApexGridChart } from '../chart-panel.js';
 import type { ChartDefinition, ChartModel } from './chart.js';
 import type { RangeBounds } from './range-selection.js';
@@ -139,12 +140,15 @@ export class ChartRangeManager {
         width: `${rect.width}px`,
         height: `${Math.max(0, bottom - top)}px`,
       });
-      // Handle centered on the range's bottom-right corner (only when that corner is in view).
+      // Handle centered on the range's trailing bottom corner (only when that corner
+      // is in view). Under `dir="rtl"` the trailing edge is the physical left one,
+      // matching where the selection's own fill handle sits.
       const cornerVisible = rect.bottom > clip.top && rect.bottom <= clip.bottom + 2;
       link.handle.style.display = cornerVisible ? 'block' : 'none';
       if (cornerVisible) {
+        const rtl = isRTL('auto', this.host.gridElement);
         link.handle.style.top = `${rect.bottom - 6}px`;
-        link.handle.style.left = `${rect.right - 6}px`;
+        link.handle.style.left = `${(rtl ? rect.left : rect.right) - 6}px`;
       }
     }
   };

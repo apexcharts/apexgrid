@@ -8,6 +8,7 @@ import { partNameMap } from '../internal/part-map.js';
 import { registerComponent } from '../internal/register.js';
 import { GRID_HEADER_TAG } from '../internal/tags.js';
 import type { ApexHeaderContext, ColumnConfiguration } from '../internal/types.js';
+import { isRTL } from '../internal/utils.js';
 import { styles } from '../styles/header-cell/header-cell.css.js';
 
 /** Pixels of pointer travel before a hold turns into a drag — avoids
@@ -103,9 +104,16 @@ export default class ApexGridHeader<T extends object> extends LitElement {
   }
 
   #handleResize = ({ clientX }: PointerEvent) => {
-    const { left } = this.getBoundingClientRect();
-    const width = Math.max(clientX - left, MIN_COL_RESIZE_WIDTH);
-    const x = this.offsetLeft + width;
+    const rect = this.getBoundingClientRect();
+    // The inline-start edge stays put and the inline-end edge follows the
+    // pointer. Under `dir="rtl"` inline-end is the *physical left* side, so the
+    // column grows as the pointer moves left and the width is measured from the
+    // fixed right edge instead.
+    const rtl = isRTL(this);
+    const width = Math.max(rtl ? rect.right - clientX : clientX - rect.left, MIN_COL_RESIZE_WIDTH);
+    // The indicator is drawn with `translateX`, which is physical either way, so
+    // it needs the physical x of the edge being dragged.
+    const x = rtl ? this.offsetLeft + this.offsetWidth - width : this.offsetLeft + width;
 
     this.resizeController.resize(this.column, width, x);
   };

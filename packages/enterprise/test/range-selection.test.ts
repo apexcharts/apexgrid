@@ -685,7 +685,9 @@ describe('Range selection', () => {
       const grid = await mount();
       grid.selectRange({ row: 0, column: 'amount' });
       let fired = 0;
-      grid.addEventListener(RANGE_CHANGED_EVENT, () => {
+      // Via EventTarget: the enterprise events are not in the grid's typed
+      // event map, so the plain overload does not accept the name.
+      (grid as EventTarget).addEventListener(RANGE_CHANGED_EVENT, () => {
         fired += 1;
       });
 
