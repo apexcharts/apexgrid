@@ -546,4 +546,176 @@ describe('Range selection', () => {
       interact(grid, 'up', 0, 'amount');
     });
   });
+  describe('keyboard range extension (Shift+Arrows)', () => {
+    /**
+     * Fires a keydown the way the browser would: from a body cell, composed, so
+     * it reaches the controller's capture-phase listener on the host.
+     *
+     * Returns whether the extension handler *claimed* the key. `defaultPrevented`
+     * cannot answer that — the grid's own arrow navigation calls
+     * `preventDefault()` too, so an unclaimed arrow looks identical. Claiming
+     * also stops propagation, so a bubble-phase listener on the host firing is
+     * exactly the signal that nothing claimed the event.
+     */
+    function extend(
+      grid: ApexGridEnterprise<Row>,
+      key: string,
+      opts: { shift?: boolean; accel?: boolean } = { shift: true }
+    ): boolean {
+      const cell = renderedCell(grid, 0, 'amount')!;
+      let reachedHost = false;
+      const spy = () => {
+        reachedHost = true;
+      };
+      grid.addEventListener('keydown', spy);
+      cell.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key,
+          shiftKey: opts.shift ?? true,
+          ctrlKey: Boolean(opts.accel),
+          bubbles: true,
+          composed: true,
+          cancelable: true,
+        })
+      );
+      grid.removeEventListener('keydown', spy);
+      return !reachedHost;
+    }
+
+    it('extends the focus corner one cell per press, anchor staying put', async () => {
+      const grid = await mount();
+      grid.selectRange({ row: 1, column: 'name' });
+
+      extend(grid, 'ArrowDown');
+      expect(grid.getSelectionBounds()).to.eql({ top: 1, bottom: 2, left: 1, right: 1 });
+
+      extend(grid, 'ArrowRight');
+      expect(grid.getSelectionBounds()).to.eql({ top: 1, bottom: 2, left: 1, right: 2 });
+
+      extend(grid, 'ArrowDown');
+      expect(grid.getSelectionBounds()).to.eql({ top: 1, bottom: 3, left: 1, right: 2 });
+    });
+
+    it('shrinks again when the focus corner comes back', async () => {
+      const grid = await mount();
+      grid.selectRange({ row: 0, column: 'name' }, { row: 2, column: 'score' });
+
+      extend(grid, 'ArrowUp');
+      expect(grid.getSelectionBounds()).to.eql({ top: 0, bottom: 1, left: 1, right: 3 });
+
+      extend(grid, 'ArrowLeft');
+      expect(grid.getSelectionBounds()).to.eql({ top: 0, bottom: 1, left: 1, right: 2 });
+    });
+
+    it('clamps at the grid edges and still claims the key', async () => {
+      const grid = await mount();
+      grid.selectRange({ row: 0, column: 'id' });
+
+      // Already at the top-left corner: nothing to extend into, but the grid's
+      // own navigation must not get the key either.
+      expect(extend(grid, 'ArrowUp'), 'claimed at the top edge').to.be.true;
+      expect(extend(grid, 'ArrowLeft'), 'claimed at the left edge').to.be.true;
+      expect(grid.getSelectionBounds()).to.eql({ top: 0, bottom: 0, left: 0, right: 0 });
+    });
+
+    it('seeds a range from the active cell when nothing is selected', async () => {
+      const grid = await mount();
+      expect(grid.getSelectionBounds()).to.be.null;
+      (grid as unknown as { stateController: { active: unknown } }).stateController.active = {
+        column: 'amount',
+        row: 1,
+      };
+
+      extend(grid, 'ArrowDown');
+      expect(grid.getSelectionBounds()).to.eql({ top: 1, bottom: 2, left: 2, right: 2 });
+    });
+
+    it('Shift+Home / Shift+End reach the row edges', async () => {
+      const grid = await mount();
+      grid.selectRange({ row: 1, column: 'amount' });
+
+      extend(grid, 'End');
+      expect(grid.getSelectionBounds()).to.eql({ top: 1, bottom: 1, left: 2, right: 3 });
+
+      extend(grid, 'Home');
+      expect(grid.getSelectionBounds()).to.eql({ top: 1, bottom: 1, left: 0, right: 2 });
+    });
+
+    it('Ctrl+Shift+Home / End reach the grid corners', async () => {
+      const grid = await mount();
+      grid.selectRange({ row: 1, column: 'amount' });
+
+      extend(grid, 'End', { shift: true, accel: true });
+      expect(grid.getSelectionBounds()).to.eql({
+        top: 1,
+        bottom: grid.pageItems.length - 1,
+        left: 2,
+        right: 3,
+      });
+
+      extend(grid, 'Home', { shift: true, accel: true });
+      expect(grid.getSelectionBounds()).to.eql({ top: 0, bottom: 1, left: 0, right: 2 });
+    });
+
+    it('ignores arrows without Shift, so plain navigation still works', async () => {
+      const grid = await mount();
+      grid.selectRange({ row: 1, column: 'name' });
+
+      expect(extend(grid, 'ArrowDown', { shift: false }), 'not claimed').to.be.false;
+      expect(grid.getSelectionBounds(), 'range untouched').to.eql({
+        top: 1,
+        bottom: 1,
+        left: 1,
+        right: 1,
+      });
+    });
+
+    it('is inert when range selection is disabled', async () => {
+      const grid = await mount();
+      grid.selectRange({ row: 1, column: 'name' });
+      grid.rangeSelection = false;
+      await grid.updateComplete;
+
+      expect(extend(grid, 'ArrowDown'), 'not claimed').to.be.false;
+      // Disabling clears the selection outright, so there is nothing to extend.
+      expect(grid.getSelectionBounds()).to.be.null;
+    });
+
+    it('fires apex-range-changed as the range grows', async () => {
+      const grid = await mount();
+      grid.selectRange({ row: 0, column: 'amount' });
+      let fired = 0;
+      grid.addEventListener(RANGE_CHANGED_EVENT, () => {
+        fired += 1;
+      });
+
+      extend(grid, 'ArrowDown');
+      expect(fired).to.equal(1);
+    });
+    it('marks range cells aria-selected for assistive tech', async () => {
+      const grid = await mount();
+      grid.selectRange({ row: 0, column: 'amount' }, { row: 1, column: 'score' });
+      await grid.updateComplete;
+      await nextFrame();
+
+      expect(renderedCell(grid, 0, 'amount')?.getAttribute('aria-selected')).to.equal('true');
+      expect(renderedCell(grid, 1, 'score')?.getAttribute('aria-selected')).to.equal('true');
+      // Outside the range the attribute is absent, not "false".
+      expect(renderedCell(grid, 0, 'name')?.hasAttribute('aria-selected')).to.be.false;
+      expect(renderedCell(grid, 2, 'amount')?.hasAttribute('aria-selected')).to.be.false;
+    });
+
+    it('drops aria-selected when the selection clears', async () => {
+      const grid = await mount();
+      grid.selectRange({ row: 0, column: 'amount' });
+      await grid.updateComplete;
+      await nextFrame();
+      expect(renderedCell(grid, 0, 'amount')?.hasAttribute('aria-selected')).to.be.true;
+
+      grid.clearRangeSelection();
+      await grid.updateComplete;
+      await nextFrame();
+      expect(renderedCell(grid, 0, 'amount')?.hasAttribute('aria-selected')).to.be.false;
+    });
+  });
 });

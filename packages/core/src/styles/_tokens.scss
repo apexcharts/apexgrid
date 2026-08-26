@@ -193,3 +193,22 @@
     --ag-row-hover: color-mix(in srgb, var(--ag-brand) 12%, var(--ag-surface));
     --ag-text-muted: color-mix(in srgb, var(--ag-brand) 28%, #94a3b8);
 }
+
+// ─────────────────────────────────────────────────────────────────────────
+// Reduced motion. Every transition in the grid is declared with one of the
+// three `--ag-dur-*` tokens (nothing hardcodes a duration, and there are no
+// keyframe animations), so zeroing them here is the whole opt-out: hover
+// washes, focus rings, chevron rotation and bar fills all become instant while
+// the end states stay identical. `prefers-reduced-motion` is a user request,
+// not a preference we can override, hence no `--ag-*` escape hatch.
+// A consumer that adds its own transitions inside the grid should either use
+// these tokens or guard them the same way. Row reorder / expansion animations
+// live in JS and already bail out (`internal/flip.ts`).
+// ─────────────────────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+    :host {
+        --ag-dur-fast: 0ms;
+        --ag-dur-med: 0ms;
+        --ag-dur-slow: 0ms;
+    }
+}

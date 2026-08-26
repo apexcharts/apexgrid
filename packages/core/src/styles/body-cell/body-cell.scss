@@ -518,3 +518,38 @@ $invalid-color: var(--ag-risk, #ef4444);
 :host([data-formula-pointer-edge~='right'])::before {
     border-inline-end-width: var(--apex-formula-pointer-width, 1.5px);
 }
+
+// ─────────────────────────────────────────────────────────────────────────
+// Forced colors (Windows High Contrast and friends).
+// The system replaces every author colour, and — critically — paints no
+// `box-shadow` at all. Three indicators in this file are box-shadow rings, so
+// without this block the active cell, the invalid cell and the editor surface
+// are all completely unmarked: a keyboard user would have no idea where they
+// are. `outline` is painted, so each ring is restated as one, and the widths
+// match the shadows they replace so nothing shifts.
+// The active ring uses `Highlight` (the system's selection colour) and the
+// invalid ring `dashed` — in forced colors there is no error hue to borrow, so
+// the shape has to carry the distinction. `outline-offset` pulls both inside
+// the cell box, matching the `inset` shadows.
+// ─────────────────────────────────────────────────────────────────────────
+@media (forced-colors: active) {
+    // 2px rather than the 1px the shadow uses: an outline is not part of the
+    // layout, so widening the keyboard indicator here costs nothing and a 1px
+    // system-coloured hairline is genuinely hard to find (WCAG 2.4.11).
+    :host([active]) {
+        outline: #{rem(2px)} solid Highlight;
+        outline-offset: #{rem(-2px)};
+    }
+
+    :host([data-invalid]),
+    :host([data-invalid][editing]) {
+        outline: #{rem(2px)} dashed CanvasText;
+        outline-offset: #{rem(-2px)};
+    }
+
+    // The editing surface reads as an ordinary field rather than a wash.
+    :host([editing]) {
+        background: Field;
+        color: FieldText;
+    }
+}

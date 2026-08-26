@@ -275,3 +275,30 @@ $accent: var(--cell-active-border-color, var(--ag-brand));
         box-shadow: inset 0 0 0 rem(2px) var(--ag-brand);
     }
 }
+
+// ─────────────────────────────────────────────────────────────────────────
+// Forced colors: every focus ring in this file is a `box-shadow` glow paired
+// with a `border-color` shift, and several explicitly set `outline: 0` to make
+// room for it. Forced colors paints no box-shadow and flattens all borders to
+// one system colour, so the toolbar had no visible keyboard focus at all —
+// the worst place for it, since the toolbar is reached by Tab.
+// Restating each ring as an `outline` fixes it: outlines are painted, are
+// recoloured rather than dropped, and sit outside the layout so nothing moves.
+// `Highlight` is the system's focus/selection colour.
+// ─────────────────────────────────────────────────────────────────────────
+@media (forced-colors: active) {
+    [part='search-field']:focus-within,
+    [part='toolbar-action']:focus-visible,
+    [part='toolbar-action'][data-action-id='ask-ai']:focus-visible,
+    [part='export-trigger']:focus-visible,
+    [part='export-menu-item']:focus-visible {
+        outline: #{rem(2px)} solid Highlight;
+        outline-offset: #{rem(1px)};
+    }
+
+    // The menu item sits flush inside the popover, so its ring goes inward to
+    // avoid being clipped by the menu's own edge.
+    [part='export-menu-item']:focus-visible {
+        outline-offset: #{rem(-2px)};
+    }
+}

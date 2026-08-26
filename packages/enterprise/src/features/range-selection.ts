@@ -154,6 +154,12 @@ export class RangeSelectionController<T extends object>
   public hostConnected(): void {
     const el = this.host as unknown as HTMLElement;
     el.addEventListener('keydown', this.#onKeydown);
+    // Range extension listens in the *capture* phase, unlike everything else
+    // here. The grid's own navigation is bound on `<apex-virtualizer>` inside
+    // the shadow root, so a bubbling listener would only see Shift+Arrow after
+    // the active cell had already moved; capturing on the host runs first,
+    // which is what lets an extension key be claimed outright.
+    el.addEventListener('keydown', this.#onExtendKeydown, true);
     // Catch pointer release outside the grid body so a drag always ends.
     globalThis.addEventListener?.('pointerup', this.#onWindowPointerUp);
   }
@@ -161,6 +167,7 @@ export class RangeSelectionController<T extends object>
   public hostDisconnected(): void {
     const el = this.host as unknown as HTMLElement;
     el.removeEventListener('keydown', this.#onKeydown);
+    el.removeEventListener('keydown', this.#onExtendKeydown, true);
     globalThis.removeEventListener?.('pointerup', this.#onWindowPointerUp);
     this.#endDrag();
   }
@@ -170,6 +177,102 @@ export class RangeSelectionController<T extends object>
     this.#mode = 'idle';
     this.#endDrag();
   };
+
+  /**
+   * Keyboard range extension: Shift+Arrows grow or shrink the selection one
+   * cell at a time, Shift+Home/End reach the row's edges, and adding
+   * Ctrl/Cmd reaches the grid's corners — the spreadsheet key model, and what
+   * the ARIA grid pattern reserves Shift+Arrow for.
+   *
+   * The anchor stays put and only the focus corner moves, so the grid's active
+   * cell deliberately does not follow (matching the Shift-click path). With no
+   * selection yet, the active cell seeds one, so Shift+Arrow from a freshly
+   * focused cell starts a range rather than doing nothing.
+   *
+   * Runs in the capture phase and claims the event, otherwise the grid's own
+   * arrow navigation would move the active cell out from under the range.
+   */
+  #onExtendKeydown = (event: KeyboardEvent): void => {
+    if (!this.enabled || event.altKey) return;
+    if (!event.shiftKey) return;
+
+    const columns = this.#visibleColumns();
+    const lastRow = (this.host.pageItems as unknown[]).length - 1;
+    const lastCol = columns.length - 1;
+    if (lastRow < 0 || lastCol < 0) return;
+
+    // Only keys pressed on the body itself (the scroll container or a
+    // non-editing cell) extend; anything from inside an editor or an embedded
+    // control keeps its own meaning.
+    const origin = event.composedPath()[0] as HTMLElement | undefined;
+    if (!this.#isBodyOrigin(origin)) return;
+
+    const accel = event.ctrlKey || event.metaKey;
+    const from = this.#focus ?? this.#seedFromActive(columns);
+    if (!from) return;
+
+    let next: CellRef | null = null;
+    switch (event.key) {
+      case 'ArrowUp':
+        next = { row: Math.max(0, from.row - 1), col: from.col };
+        break;
+      case 'ArrowDown':
+        next = { row: Math.min(lastRow, from.row + 1), col: from.col };
+        break;
+      case 'ArrowLeft':
+        next = { row: from.row, col: Math.max(0, from.col - 1) };
+        break;
+      case 'ArrowRight':
+        next = { row: from.row, col: Math.min(lastCol, from.col + 1) };
+        break;
+      case 'Home':
+        next = accel ? { row: 0, col: 0 } : { row: from.row, col: 0 };
+        break;
+      case 'End':
+        next = accel ? { row: lastRow, col: lastCol } : { row: from.row, col: lastCol };
+        break;
+      default:
+        return;
+    }
+
+    // Claim the key even when the focus corner is already against the edge, so
+    // holding Shift+ArrowUp at row 0 doesn't start scrolling the active cell.
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!this.#anchor) this.#anchor = from;
+    if (this.#focus && this.#focus.row === next.row && this.#focus.col === next.col) return;
+    this.#focus = next;
+    this.#mode = 'idle';
+    this.#commit();
+  };
+
+  /** Whether a keydown came from the grid body rather than an editor or control. */
+  #isBodyOrigin(origin: HTMLElement | undefined): boolean {
+    if (!origin) return false;
+    const tag = origin.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'BUTTON') return false;
+    if (origin.isContentEditable) return false;
+    // A cell mid-edit hosts the editor; its keys belong to the editor.
+    return !origin.hasAttribute?.('editing');
+  }
+
+  /**
+   * Seeds anchor and focus at the grid's active cell so a first Shift+Arrow
+   * starts a range. Returns `null` when nothing is focused or the active
+   * column is not currently visible.
+   */
+  #seedFromActive(columns: ColumnConfiguration<T>[]): CellRef | null {
+    const active = this.state.active;
+    if (!active) return null;
+    const col = columns.findIndex((column) => String(column.key) === String(active.column));
+    if (col < 0) return null;
+    const ref: CellRef = { row: active.row, col };
+    this.#additional = [];
+    this.#anchor = ref;
+    this.#focus = ref;
+    return ref;
+  }
 
   #onKeydown = (event: KeyboardEvent): void => {
     if (!this.enabled || !this.hasSelection()) return;
@@ -292,6 +395,13 @@ export class RangeSelectionController<T extends object>
         'data-range': isFocus ? 'selected active' : 'selected',
         'data-range-edge': edges.length ? edges.join(' ') : null,
         'data-range-handle': isHandle ? '' : null,
+        // The one non-`data-*` attribute this decorator sets, deliberately: the
+        // range was visible only as styling, so assistive tech had no way to
+        // know a cell was in it. `gridcell` supports `aria-selected` and the
+        // cell reflects no attribute by that name, so there is no collision.
+        // Absent means "not selected" for a gridcell, so unselected cells stay
+        // clean rather than carrying `aria-selected="false"` on every cell.
+        'aria-selected': 'true',
       },
     };
   }

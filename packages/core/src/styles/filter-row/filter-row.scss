@@ -277,7 +277,9 @@ svg {
     min-inline-size: rem(24px);
     min-block-size: rem(24px);
     opacity: 0.55;
-    transition: opacity 0.15s ease, background-color 0.15s ease;
+    transition:
+        opacity var(--ag-dur-fast) var(--ag-ease),
+        background-color var(--ag-dur-fast) var(--ag-ease);
 
     &:hover {
         opacity: 1;
@@ -334,5 +336,18 @@ svg {
     &:focus-visible {
         outline: rem(2px) solid $accent;
         outline-offset: rem(1px);
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Forced colors: the filter input's focus state is a `box-shadow` glow plus a
+// `border-color` shift. Forced colors paints no box-shadow and forces every
+// border to the same system colour, so focus was invisible. An outline is
+// painted and recoloured, so restate it as one.
+// ─────────────────────────────────────────────────────────────────────────
+@media (forced-colors: active) {
+    [part='filter-input']:focus {
+        outline: #{rem(2px)} solid Highlight;
+        outline-offset: #{rem(-2px)};
     }
 }

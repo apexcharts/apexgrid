@@ -233,3 +233,20 @@ $accent: var(--cell-active-border-color, var(--ag-brand));
     box-sizing: border-box;
     overflow: hidden;
 }
+
+// ─────────────────────────────────────────────────────────────────────────
+// Forced colors: the selected row's brand wash is overridden by the system and
+// its 2px leading accent bar is a `box-shadow`, which forced colors never
+// paints — so a selected row would be indistinguishable from an unselected one.
+// Selection is exactly what the system `Highlight` / `HighlightText` pair is
+// for, so use it and opt this rule out of the automatic override, which is the
+// one place `forced-color-adjust: none` is warranted.
+// ─────────────────────────────────────────────────────────────────────────
+@media (forced-colors: active) {
+    :host([selected]),
+    :host([selected]:hover) {
+        forced-color-adjust: none;
+        background: Highlight;
+        color: HighlightText;
+    }
+}
