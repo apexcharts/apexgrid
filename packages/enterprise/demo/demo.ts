@@ -1,6 +1,5 @@
 // Single-page demo for <apex-grid-enterprise>. Shows the licensing watermark
 // toggle and the aggregation feature on top of the full community grid.
-import { configureTheme } from 'igniteui-webcomponents';
 import type { ColumnConfiguration } from 'apex-grid';
 import {
   ApexGridEnterprise,
@@ -23,14 +22,6 @@ const DEPARTMENTS = ['Engineering', 'Sales', 'Marketing', 'Support'];
 ApexGridEnterprise.register();
 ApexGridToolPanel.register();
 ApexGridStatusBar.register();
-
-async function loadTheme(theme = 'bootstrap', variant = 'light'): Promise<void> {
-  await import(
-    /* @vite-ignore */
-    `/node_modules/igniteui-webcomponents/themes/${variant}/${theme}.css?${Date.now()}`
-  );
-  configureTheme(theme as never);
-}
 
 function generateUsers(length: number): User[] {
   return Array.from({ length }, (_, id) => ({
@@ -207,6 +198,5 @@ document.getElementById('clear-range')?.addEventListener('click', () => {
   grid.clearRangeSelection();
 });
 
-await loadTheme();
 refresh();
 await redrawChart();

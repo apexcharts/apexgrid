@@ -30,7 +30,7 @@ export async function compileSass(src, compiler) {
     charset: false,
     style: 'compressed',
     // node_modules is resolved both locally and at the workspace root, since npm
-    // hoists shared deps (e.g. igniteui-theming) to the monorepo root.
+    // hoists shared deps to the monorepo root.
     loadPaths: ['node_modules', '../../node_modules', 'src'],
   });
 

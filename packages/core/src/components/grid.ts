@@ -768,8 +768,8 @@ const SET_STATE_SLICES = [
  *
  * The grid is styled out of the box through `--ag-*` CSS custom properties —
  * there is no theme to import and no `configureTheme()` call. Override `--ag-*`
- * tokens on the host (or any ancestor) to rebrand; when `igniteui-webcomponents`
- * is present, the brand tokens auto-tint from its palette. For dark mode, set
+ * tokens on the host (or any ancestor) to rebrand; where an Ignite UI palette is
+ * present, the brand tokens auto-tint from it. For dark mode, set
  * the `theme="dark"` attribute on the host for the built-in slate dark palette
  * (further `--ag-*` overrides still compose on top). Add `tinted` (e.g.
  * `theme="tinted"` or `theme="dark tinted"`) to mix the brand into the chrome
@@ -805,7 +805,7 @@ const SET_STATE_SLICES = [
  *
  * @csspart live-region - Visually-hidden ARIA live region used for screen-reader announcements.
  *
- * @cssprop [--ag-brand] - Brand color for selection, focus rings, and accents. Auto-tints from `--ig-primary-500` when igniteui is present.
+ * @cssprop [--ag-brand] - Brand color for selection, focus rings, and accents. Auto-tints from `--ig-primary-500` where an Ignite UI palette is present.
  * @cssprop [--ag-brand-strong] - Brand color for hover / pressed states.
  * @cssprop [--ag-grid-shadow] - Grid edge/shadow override. Default is a flat 1px hairline edge; set to `var(--ag-shadow-card)` for the elevated card look, or `none` to remove it.
  * @cssprop [--ag-grid-bg] - Host card background. Defaults to a subtle light gradient; override with a flat color (or use `theme="dark"`) for dark themes.

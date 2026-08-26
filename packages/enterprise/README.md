@@ -30,11 +30,11 @@ configuration API, theming, and events are identical, plus the additions below.
 ## Install
 
 ```bash
-npm install apex-grid-enterprise apex-grid lit igniteui-webcomponents
+npm install apex-grid-enterprise apex-grid lit
 ```
 
-`apex-grid`, `lit`, and `igniteui-webcomponents` are peer dependencies shared
-with the community package: install a single copy of each.
+`apex-grid` and `lit` are peer dependencies shared with the community package:
+install a single copy of each.
 
 [`apexcharts`](https://www.npmjs.com/package/apexcharts) is an **optional** peer
 dependency, used only by the integrated charts (`renderChart()`). It is loaded

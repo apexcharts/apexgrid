@@ -25,18 +25,9 @@
       }
       .subtitle { font-size: 13px; color: #888; margin-bottom: 16px; }
       code { background: #f1f1f1; padding: 0 0.25rem; border-radius: 3px; }
-      apex-grid-enterprise { height: 300px; --ig-size: 2; }
+      apex-grid-enterprise { height: 300px; }
       #chart { display: block; margin-top: 12px; }
     </style>
-    <script type="module">
-      try {
-        const resp = await fetch('https://cdn.jsdelivr.net/npm/igniteui-webcomponents@5/themes/light/bootstrap.css');
-        const css = await resp.text();
-        const style = document.createElement('style');
-        style.textContent = css.replaceAll(':root', 'apex-grid-enterprise');
-        document.head.appendChild(style);
-      } catch (e) { /* theme is cosmetic */ }
-    </script>
   </head>
   <body>
     <h2>Chart Calculated Fields <span class="badge">Enterprise</span></h2>

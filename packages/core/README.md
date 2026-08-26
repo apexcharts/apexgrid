@@ -29,7 +29,7 @@ A Lit-based, framework-agnostic web component data grid. Ships as a single custo
 - **CSV export**: programmatic method plus an optional toolbar dropdown. (Excel/XLSX export is in `apex-grid-enterprise`.)
 - **Toolbar**: opt-in `<apex-grid-toolbar>` with debounced quick filter and export menu.
 - **Templating**: slot-based templates for cells, headers, editors, and detail panels.
-- **Theming**: styled out-of-the-box; fully customizable through `--ag-*` CSS custom properties (no theme import or build step). Auto-matches an `igniteui-webcomponents` host app when one is present.
+- **Theming**: styled out-of-the-box; fully customizable through `--ag-*` CSS custom properties (no theme import or build step). Auto-tints to an Ignite UI host app's palette when one is present, with no dependency on it.
 - **Accessibility**: WCAG 2.2 AA semantics (`role="grid"` / `role="treegrid"`, `aria-rowcount`, `aria-colcount`, focus + keyboard navigation).
 - **Provenance-signed npm releases** with OIDC trusted publishing.
 
@@ -94,8 +94,6 @@ If you'd rather not use `setup()`, this is what it does under the hood. Skipping
 npm install apex-grid lit
 ```
 
-`igniteui-webcomponents` ships as a transitive dependency; no separate install.
-
 ### 2. Register the custom element
 
 ```ts
@@ -133,7 +131,7 @@ apex-grid { --ag-grid-shadow: var(--ag-shadow-card); } /* elevated floating-card
 apex-grid { --ag-grid-shadow: none; }                  /* remove the edge entirely */
 ```
 
-If you embed the grid alongside `igniteui-webcomponents`, the brand tokens automatically re-tint from the igniteui palette (`--ig-primary-500`); no configuration needed.
+If you embed the grid in an Ignite UI app, the brand tokens automatically re-tint from its palette: they read `--ig-primary-500` with the grid's own default as the fallback. That is a plain CSS variable lookup, so the grid neither depends on nor bundles Ignite UI.
 
 ### 4. Size the host
 
@@ -497,7 +495,7 @@ Search input has a `debounce` attribute (default `200`ms).
 
 ### Theming
 
-The grid styles itself through `--ag-*` CSS custom properties; override them on `apex-grid` (or any ancestor) to rebrand; see [`src/styles/_tokens.scss`](src/styles/_tokens.scss) for the full list. When `igniteui-webcomponents` is present, the brand tokens auto-tint from its palette.
+The grid styles itself through `--ag-*` CSS custom properties; override them on `apex-grid` (or any ancestor) to rebrand; see [`src/styles/_tokens.scss`](src/styles/_tokens.scss) for the full list. Where an Ignite UI palette is present, the brand tokens auto-tint from `--ig-primary-500`.
 
 Style with CSS parts on the grid, paginator, and toolbar:
 

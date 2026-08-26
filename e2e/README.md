@@ -66,8 +66,9 @@ depends on a flaky CDN:
   vendored bundle ([`vendor-lit-entry.js`](vendor-lit-entry.js), built by
   `e2e:vendor`) — a CDN hiccup can't break the demos that build templates.
 - **Remote avatar images** are replaced with a fixed stub SVG.
-- **Optional theme stylesheets** (igniteui via jsdelivr) are aborted; the demos
-  fall back to the default `--ag-*` look, which is what we want to pin.
+- **Other CDN requests** are aborted. The demos no longer fetch an optional
+  theme stylesheet, so the default `--ag-*` look renders, which is what we
+  want to pin.
 
 Animations/carets are disabled, the viewport/DPR/locale/timezone are fixed, and
 `maxDiffPixelRatio` absorbs sub-pixel noise while a tightened per-pixel

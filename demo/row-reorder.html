@@ -62,18 +62,8 @@
       }
       apex-grid {
         min-height: 420px;
-        --ig-size: 2;
       }
     </style>
-    <script type="module">
-      try {
-        const resp = await fetch('https://cdn.jsdelivr.net/npm/igniteui-webcomponents@5/themes/light/bootstrap.css');
-        const css = await resp.text();
-        const style = document.createElement('style');
-        style.textContent = css.replaceAll(':root', 'apex-grid');
-        document.head.appendChild(style);
-      } catch (e) { /* theme is cosmetic */ }
-    </script>
   </head>
   <body>
     <h2>Row Drag-Reorder</h2>

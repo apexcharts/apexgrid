@@ -26,9 +26,9 @@ const STUB_AVATAR =
  *  - lit `html` module imports (jsdelivr / esm.sh) -> the vendored local bundle,
  *    so a CDN hiccup can't break the demos that build templates with it;
  *  - remote avatar images -> a fixed stub SVG;
- *  - every other CDN (jsdelivr igniteui themes) -> aborted. The demos tolerate a
- *    missing optional theme stylesheet, falling back to the default `--ag-*`
- *    look, which is exactly what we want to pin.
+ *  - every other CDN -> aborted. The demos load no optional stylesheets any more
+ *    (they used to fetch an Ignite UI theme), so the default `--ag-*` look is
+ *    what renders, which is exactly what we want to pin.
  */
 async function routeDeterministically(route: Route): Promise<void> {
   const url = route.request().url();

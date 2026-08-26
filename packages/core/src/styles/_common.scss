@@ -1,11 +1,37 @@
-@use "igniteui-theming" as *;
-@forward "igniteui-theming";
+// ─────────────────────────────────────────────────────────────────────────
+// Shared SCSS helpers, `@use`d as `*` by every component stylesheet.
+// This used to forward `igniteui-theming` for one function: `rem()`. The grid
+// styles itself entirely through `--ag-*` custom properties and registers no
+// igniteui element, so carrying a whole theming library (and shipping it as a
+// runtime dependency of every consumer) bought a three-line px-to-rem helper.
+// It also emitted 55 Sass deprecation warnings per build from its own
+// `if()` usage. Both are gone; `rem()` below is the same conversion.
+// The `--ig-*` / `--igx-*` custom-property fallbacks elsewhere in these styles
+// are unaffected: they are plain CSS variable names with defaults, cost nothing
+// when absent, and are how the grid auto-tints inside an Ignite UI host app.
+// ─────────────────────────────────────────────────────────────────────────
 
-$ig-cells-padding: sizable(rem(8px), rem(16px), rem(24px));
-$ig-cells-min-height: sizable(rem(24px), rem(34px), rem(50px));
+@use 'sass:math';
 
-:host {
-  @include sizable();
+/// The root font size `rem()` converts against.
+$base-font-size: 16px !default;
 
-  --component-size: 3;
+/// Converts a pixel value to root-relative `rem`. Unitless input is read as px.
+///
+/// @param {number} $pixels - The pixel value to convert.
+/// @param {number} $context [$base-font-size] - The base to convert against.
+/// @return {number} The value in `rem`.
+///
+/// @example
+///   padding: rem(8px);  // => 0.5rem
+@function rem($pixels, $context: $base-font-size) {
+  @if math.is-unitless($pixels) {
+    $pixels: $pixels * 1px;
+  }
+
+  @if math.is-unitless($context) {
+    $context: $context * 1px;
+  }
+
+  @return math.div($pixels, $context) * 1rem;
 }

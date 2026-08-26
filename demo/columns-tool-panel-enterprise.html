@@ -52,22 +52,12 @@
         flex: 1;
         min-width: 0;
         min-height: 460px;
-        --ig-size: 2;
       }
       apex-grid-tool-panel {
         flex: 0 0 auto;
         max-height: 460px;
       }
     </style>
-    <script type="module">
-      try {
-        const resp = await fetch('https://cdn.jsdelivr.net/npm/igniteui-webcomponents@5/themes/light/bootstrap.css');
-        const css = await resp.text();
-        const style = document.createElement('style');
-        style.textContent = css.replaceAll(':root', 'apex-grid-enterprise');
-        document.head.appendChild(style);
-      } catch (e) { /* theme is cosmetic */ }
-    </script>
   </head>
   <body>
     <h2>Columns Tool Panel <span class="badge">Enterprise</span></h2>

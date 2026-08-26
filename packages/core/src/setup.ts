@@ -1,20 +1,21 @@
-import { configureTheme } from 'igniteui-webcomponents';
 import { ApexGrid } from './components/grid.js';
 
 type ApexGridTheme = 'bootstrap' | 'material' | 'fluent' | 'indigo';
 
 export interface ApexGridSetupOptions {
   /**
-   * @deprecated The grid no longer ships per-framework themes — it styles
-   * itself entirely through `--ag-*` CSS custom properties (see the README's
-   * theming section). This option does **not** affect the grid's appearance;
-   * it only forwards to igniteui-webcomponents' `configureTheme()` for apps
-   * that embed the grid alongside igniteui components. When set, the grid
-   * still auto-tints from the igniteui palette via its `--ig-*` fallbacks.
-   * Omit it and customize via CSS variables instead. Will be removed in a
-   * future major version.
+   * @deprecated Inert, and accepted only so existing calls keep compiling.
    *
-   * @defaultValue 'bootstrap'
+   * The grid never shipped its own per-framework themes — it styles itself
+   * entirely through `--ag-*` CSS custom properties (see the README's theming
+   * section), so this option never affected its appearance. It used to forward
+   * to `configureTheme()` from `igniteui-webcomponents`, which made a whole
+   * component library a runtime dependency of every consumer for one
+   * pass-through call. The dependency is gone and so is the forwarding.
+   *
+   * If you were relying on that side effect to theme your own Ignite UI
+   * components, call `configureTheme()` yourself. Passing this option now warns
+   * once and does nothing else; it will be removed in the next major version.
    */
   theme?: ApexGridTheme;
 
@@ -48,6 +49,20 @@ function adoptHostStyles(): void {
   hostStylesInjected = true;
 }
 
+let themeWarned = false;
+
+function warnThemeIsInert(): void {
+  if (themeWarned) return;
+  themeWarned = true;
+  // biome-ignore lint/suspicious/noConsole: intentional one-shot deprecation diagnostic
+  console.warn(
+    '[apex-grid] `setup({ theme })` is inert and will be removed. The grid styles ' +
+      'itself through `--ag-*` CSS custom properties; this option only ever forwarded ' +
+      "to igniteui-webcomponents' `configureTheme()`, which is no longer a dependency. " +
+      'Call `configureTheme()` directly if you need it, and drop the option.'
+  );
+}
+
 /**
  * One-call convenience: registers `<apex-grid>` and adopts a default host
  * stylesheet so the virtualizer has a bounded height. The grid is styled
@@ -59,8 +74,7 @@ function adoptHostStyles(): void {
  * than once; host styles are adopted only on the first call.
  *
  * Customize the look by overriding `--ag-*` CSS variables (see the README).
- * The deprecated {@link ApexGridSetupOptions.theme} option only forwards to
- * igniteui-webcomponents and does not change the grid's appearance.
+ * The deprecated {@link ApexGridSetupOptions.theme} option is inert.
  *
  * @example
  * ```ts
@@ -78,11 +92,7 @@ export function setup(options: ApexGridSetupOptions = {}): void {
 
   ApexGrid.register();
 
-  // Deprecated: only forwards to igniteui when a consumer explicitly opts in.
-  // The grid styles itself via `--ag-*` variables regardless.
-  if (theme !== undefined) {
-    configureTheme(theme);
-  }
+  if (theme !== undefined) warnThemeIsInert();
 
   if (hostStyles) {
     adoptHostStyles();
