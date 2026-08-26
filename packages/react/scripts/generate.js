@@ -16,7 +16,8 @@
  *   src/generated/index.ts             // re-exports
  *
  * Determinism: event keys are sorted and the banner carries the source manifest's
- * content hash (not a timestamp), so identical input yields byte-identical output.
+ * content hash (not a timestamp), canonicalized so the analyzer's module ordering
+ * cannot move it, so identical input yields byte-identical output.
  */
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -80,11 +81,42 @@ function banner(hash) {
   return `// GENERATED FROM custom-elements.json - do not edit by hand.\n// Manifest hash: ${hash}\n// Regenerate with \`npm run generate\`.\n`;
 }
 
+/**
+ * Content hash of the manifest, immune to the order the analyzer emits modules in.
+ *
+ * Hashing the raw file looked reproducible and was not: the analyzer walks the
+ * source glob in filesystem order, so the same sources yield the same 64 modules
+ * in a different sequence from run to run, and the drift check then failed on a
+ * banner hash that had changed while every wrapper body stayed identical. Sorting
+ * the modules by path and stringifying with sorted keys hashes what the manifest
+ * *says* rather than the order it happened to say it in.
+ */
+function manifestHashOf(manifest) {
+  const modules = [...(manifest.modules ?? [])].sort((a, b) =>
+    String(a.path).localeCompare(String(b.path))
+  );
+  const canonical = stableStringify({ ...manifest, modules });
+  return createHash('sha256').update(canonical).digest('hex').slice(0, 12);
+}
+
+/** JSON.stringify with object keys sorted at every depth. */
+function stableStringify(value) {
+  if (Array.isArray(value)) return `[${value.map(stableStringify).join(',')}]`;
+  if (value && typeof value === 'object') {
+    const body = Object.keys(value)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`)
+      .join(',');
+    return `{${body}}`;
+  }
+  return JSON.stringify(value) ?? 'null';
+}
+
 // --- Read + index the manifest ----------------------------------------------
 const manifestPath = findManifest();
 const raw = readFileSync(manifestPath, 'utf-8');
-const hash = createHash('sha256').update(raw).digest('hex').slice(0, 12);
 const manifest = JSON.parse(raw);
+const hash = manifestHashOf(manifest);
 
 const byTag = new Map();
 for (const mod of manifest.modules ?? []) {
