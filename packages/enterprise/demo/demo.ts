@@ -120,13 +120,44 @@ document.getElementById('clear')?.addEventListener('click', () => {
   refresh();
 });
 
+/**
+ * Mint a signed key for the demo's "Generate trial key" button.
+ *
+ * apex-commons 0.4.0 made licence keys ECDSA-signed and removed the old
+ * `generateLicenseKey` helper: nothing outside the licence generator can mint a
+ * key the shipped build accepts, which is the entire point of signing. So this
+ * dev-only harness signs with a throwaway keypair and installs its public half
+ * as the accepted key, exactly as the licensing tests do. It exercises the
+ * licensed render path locally and produces a key no real build will honour.
+ */
+async function generateDemoTrialKey(): Promise<string> {
+  const pair = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, [
+    'sign',
+    'verify',
+  ]);
+  const toBase64 = (bytes: ArrayBuffer) =>
+    btoa(String.fromCharCode(...new Uint8Array(bytes)));
+  const spki = await crypto.subtle.exportKey('spki', pair.publicKey);
+  (LicenseManager as unknown as { publicKeysSpki: string[] }).publicKeysSpki = [toBase64(spki)];
+
+  const issueDate = new Date().toISOString().slice(0, 10);
+  const expiryDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const plan = 'enterprise';
+  // Must match the library's `canonicalPayload` byte for byte.
+  const signature = await crypto.subtle.sign(
+    { hash: 'SHA-256', name: 'ECDSA' },
+    pair.privateKey,
+    new TextEncoder().encode(`v1|${issueDate}|${expiryDate}|${plan}|`)
+  );
+  return `APEX-${btoa(JSON.stringify({ expiryDate, issueDate, plan, sig: toBase64(signature) }))}`;
+}
+
 document.getElementById('trial')?.addEventListener('click', () => {
-  const today = new Date().toISOString().slice(0, 10);
-  const nextYear = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const key = LicenseManager.generateLicenseKey(today, nextYear, 'enterprise');
-  keyInput.value = key;
-  ApexGridEnterprise.setLicense(key);
-  refresh();
+  void generateDemoTrialKey().then((key) => {
+    keyInput.value = key;
+    ApexGridEnterprise.setLicense(key);
+    refresh();
+  });
 });
 
 document.getElementById('group-dept')?.addEventListener('click', () => {
