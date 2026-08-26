@@ -1,4 +1,4 @@
-import { expect, fixture, fixtureCleanup, html, nextFrame } from '@open-wc/testing';
+import { expect, fixture, fixtureCleanup, html, nextFrame, waitUntil } from '@open-wc/testing';
 import type { ColumnConfiguration } from 'apex-grid';
 import {
   ApexGridChart,
@@ -141,7 +141,14 @@ describe('ApexGridChart panel', () => {
       return EMPTY;
     };
     grid.dispatchEvent(new CustomEvent('apex-range-changed', { bubbles: true, composed: true }));
-    await nextFrame();
+    // The panel debounces through rAF and its refresh is fire-and-forget, and a
+    // refresh arriving while one is still in flight is queued rather than run.
+    // The mount's own refresh lazy-imports ApexCharts, so it can still be in
+    // flight here — for several frames when the whole suite runs in parallel.
+    // Wait for the call itself rather than a fixed frame count, or the assertion
+    // races that import. `waitUntil` throws on timeout, so a refresh that never
+    // arrives still fails the test.
+    await waitUntil(() => refreshed > 0);
     await panel.updateComplete;
     expect(refreshed).to.be.greaterThan(0);
   });
