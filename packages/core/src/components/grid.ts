@@ -2309,6 +2309,72 @@ export class ApexGrid<T extends object> extends EventEmitterBase<ApexGridEventMa
   }
 
   /**
+   * Applies many cell edits as a **single** operation.
+   *
+   * Every write goes through the same choke point interactive editing uses, so
+   * each one emits the cancellable `cellValueChanging` and then
+   * `cellValueChanged`, and runs the column's validators. What differs from
+   * calling {@link editCell} + {@link commitEdit} in a loop is that the whole
+   * set lands as one undo step and triggers one pipeline run, which is the
+   * point: a thousand `editCell` round-trips would be a thousand entries in the
+   * undo stack and a thousand re-renders.
+   *
+   * `rowIndex` is view-relative and matches {@link ApexGrid.pageItems}, the same
+   * as {@link editCell}. Edits naming an unknown column, a row index out of
+   * range, or a column the user could not edit either (editing off, not
+   * `editable`, or hidden — the same gate interactive editing uses) are skipped
+   * rather than throwing, so a partially-stale batch still applies what it can.
+   *
+   * @param edits Cells to write. Order is preserved, so later edits to the same
+   * cell win.
+   * @returns A per-outcome tally. `applied` counts cells whose value actually
+   * changed; `unchanged`, `invalid` and `cancelled` explain the rest, so a caller
+   * can tell a rejected batch from a no-op one.
+   *
+   * @example Bulk-clear a column for the rows the user selected
+   * ```ts
+   * grid.applyEdits(
+   *   grid.selectedRows.map((row) => ({
+   *     rowIndex: grid.pageItems.indexOf(row),
+   *     column: 'discount',
+   *     value: 0,
+   *   }))
+   * );
+   * ```
+   */
+  public applyEdits(edits: ReadonlyArray<{ rowIndex: number; column: Keys<T>; value: unknown }>): {
+    applied: number;
+    unchanged: number;
+    invalid: number;
+    cancelled: number;
+    skipped: number;
+  } {
+    const tally = { applied: 0, unchanged: 0, invalid: 0, cancelled: 0, skipped: 0 };
+    if (!edits.length) return tally;
+
+    const editing = this.stateController.editing;
+    const items = this.pageItems;
+    // One history entry for the batch, so undo reverses the whole thing.
+    this.stateController.history.beginBatch();
+    try {
+      for (const { rowIndex, column, value } of edits) {
+        const record = items.at(rowIndex);
+        const config = this.getColumn(column);
+        if (!record || rowIndex < 0 || !config || !editing.isEditable(config)) {
+          tally.skipped += 1;
+          continue;
+        }
+        tally[editing.applyCellEdit(rowIndex, column, record as T, value)] += 1;
+      }
+    } finally {
+      this.stateController.history.endBatch();
+    }
+
+    if (tally.applied > 0) this.requestUpdate(PIPELINE);
+    return tally;
+  }
+
+  /**
    * Discards the current edit without writing back to {@link ApexGrid.data}.
    */
   public cancelEdit(): void {

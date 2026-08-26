@@ -315,6 +315,25 @@ grid.cancelEdit();
 
 `mode: 'row'` puts all editable cells in the row into edit together. Properties: `editingCell`, `editingRow`. Events: `cellValueChanging` (cancellable), `cellValueChanged`, plus `rowEditStarted` / `rowEditEnded` in row mode.
 
+For programmatic writes, `applyEdits()` takes many cells at once:
+
+```ts
+const { applied, invalid, skipped } = grid.applyEdits([
+  { rowIndex: 0, column: 'name', value: 'Ada' },
+  { rowIndex: 1, column: 'age', value: 36 },
+]);
+```
+
+Each write goes through the same choke point interactive editing uses, so it
+emits `cellValueChanging` / `cellValueChanged` and runs the column's validators.
+What differs from looping over `editCell` + `commitEdit` is that the whole batch
+lands as **one** undo step and triggers **one** pipeline run — a thousand
+round-trips would otherwise mean a thousand undo entries and a thousand
+re-renders. The returned tally splits `applied` from `unchanged`, `invalid`,
+`cancelled`, and `skipped`, so a rejected batch is distinguishable from a no-op
+one. Edits naming a row out of range or a column the user could not edit either
+are skipped rather than throwing.
+
 ### Keyboard navigation and accessibility
 
 The grid body is a single tab stop: Tab enters the grid, and the active cell

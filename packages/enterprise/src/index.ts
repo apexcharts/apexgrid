@@ -110,6 +110,13 @@ export {
   SSRM_GROUP_KEY,
   serverSideRowModelModule,
 } from './features/server-side-row-model.js';
+export {
+  isTotalRow,
+  TOTAL_ROW_MODULE_ID,
+  type TotalRowConfig,
+  TotalRowController,
+  totalRowModule,
+} from './features/total-row.js';
 export type { XLSXExportOptions } from './features/xlsx.js';
 export { ApexGridFilterBuilder, FILTER_BUILDER_TAG } from './filter-builder.js';
 export { ApexGridEnterprise, ENTERPRISE_TAG, VIEW_CHANGED_EVENT } from './grid-enterprise.js';

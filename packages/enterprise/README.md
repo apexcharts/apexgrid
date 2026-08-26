@@ -99,6 +99,27 @@ const totals = grid.getAggregations();
 same engine powers group subtotals and pivot cells, so numbers are computed
 consistently everywhere.
 
+### Grand-total row
+
+`totalRow` adds one synthesized row showing aggregations across the whole view:
+
+```ts
+grid.totalRow = { aggregations: { price: ['sum'], sold: ['sum'] } };
+grid.getTotals(); // → { price: { sum: 657.92 }, sold: { sum: 347 } }
+```
+
+This is not the same thing as the per-group aggregates `groupBy` renders, which
+total a group's own leaves. The total row totals the *view*, so it answers "what
+is the sum of this column" without grouping anything, and it follows filtering —
+a filtered grid totals what it shows. In a grouped view the group-header rows are
+excluded, so their aggregates are not counted twice.
+
+`position: 'top'` moves it above the rows, `label` overrides the leading text
+(default: the localized "Grand Total"), and `null` removes it. Style it through
+the `total-row`, `total-row-content`, `total-row-label`, `total-row-values`, and
+`total-row-value` parts. Pivot brings its own grand total, so this covers the
+flat and grouped views.
+
 ## Row grouping
 
 Group rows by one or more columns. Group headers render full-width with a chevron

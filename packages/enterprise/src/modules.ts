@@ -6,6 +6,7 @@ import { groupingModule } from './features/grouping.js';
 import { pivotModule } from './features/pivot.js';
 import { rangeSelectionModule } from './features/range-selection.js';
 import { serverSideRowModelModule } from './features/server-side-row-model.js';
+import { totalRowModule } from './features/total-row.js';
 
 /**
  * Every built-in enterprise feature module, for the batteries-included path.
@@ -22,4 +23,5 @@ export const enterpriseModules: ReadonlyArray<GridFeatureModule> = [
   contextMenuModule,
   formulaModule,
   serverSideRowModelModule,
+  totalRowModule,
 ];

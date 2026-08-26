@@ -104,6 +104,11 @@ import {
   type ServerSideRowModelConfig,
   ServerSideRowModelManager,
 } from './features/server-side-row-model.js';
+import {
+  TOTAL_ROW_MODULE_ID,
+  type TotalRowConfig,
+  type TotalRowController,
+} from './features/total-row.js';
 import { buildXLSX, type XLSXExportOptions } from './features/xlsx.js';
 
 const XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
@@ -428,6 +433,26 @@ export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
    */
   @property({ attribute: false })
   public aggregations: AggregationConfig = {};
+
+  /**
+   * A **grand-total row** over the whole view: one synthesized row showing the
+   * configured aggregations across every data row currently displayed.
+   *
+   * Distinct from the per-group aggregates {@link groupBy} renders, which total a
+   * group's own leaves. This totals the view, so it answers "what is the sum of
+   * this column" without grouping anything, and it follows filtering — a filtered
+   * grid totals what it shows. Group-header rows are excluded so their aggregates
+   * are not counted twice. `null` (the default) renders nothing.
+   *
+   * Pivot supplies its own grand total, so this covers the flat and grouped views.
+   *
+   * @example
+   * ```ts
+   * grid.totalRow = { aggregations: { salary: ['sum', 'avg'] } };
+   * ```
+   */
+  @property({ attribute: false })
+  public totalRow: TotalRowConfig | null = null;
 
   /**
    * Ordered column keys to group rows by (derived row grouping, distinct from
@@ -938,6 +963,7 @@ export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
     // first paint. Pivot runs first since it disables grouping when active.
     this.#syncPivot(changed);
     this.#syncGrouping(changed);
+    this.#syncTotalRow(changed);
     this.#syncRange(changed);
     this.#syncContextMenu(changed);
     this.#syncMasterDetail(changed);
@@ -1358,6 +1384,26 @@ export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
    */
   public registerFormulaFunction(name: string, fn: FormulaFn): void {
     this.#formulaController()?.registerFormulaFunction(name, fn);
+  }
+
+  #syncTotalRow(changed: PropertyValues): void {
+    if (!changed.has('totalRow')) return;
+    const controller = this.#totalRowController();
+    if (!controller) return;
+    controller.config = this.totalRow;
+    this.requestUpdate(PIPELINE);
+  }
+
+  #totalRowController(): TotalRowController<T> | undefined {
+    return this.stateController.module<TotalRowController<T>>(TOTAL_ROW_MODULE_ID);
+  }
+
+  /**
+   * The grand-total row's computed values from the latest pipeline run, keyed by
+   * column then aggregation function. Empty when {@link totalRow} is unset.
+   */
+  public getTotals() {
+    return this.#totalRowController()?.totals ?? {};
   }
 
   #groupingController(): GroupingController<T> | undefined {
