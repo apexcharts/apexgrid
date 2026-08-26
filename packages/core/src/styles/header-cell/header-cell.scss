@@ -173,16 +173,19 @@ $header-separator-color: var(--header-separator-color, var(--ag-header-separator
     position: relative;
     isolation: isolate;
 
-    // Pointer target + hover/focus highlight surface: a ~22px rounded chip that
-    // expands ~3px past the 16px box without affecting layout, painted behind
-    // the icon (z-index: -1 within the button's own stacking context). Adjacent
-    // buttons' chips can overlap ~2px across the 4px actions gap, which is
+    // Pointer target + hover/focus highlight surface: a 24px rounded chip that
+    // expands 4px past the 16px box without affecting layout, painted behind
+    // the icon (z-index: -1 within the button's own stacking context). 24px is
+    // the WCAG 2.2 AA minimum (2.5.8) and the reason the inset is 4px and not
+    // the 3px it used to be: the visible box stays 16px so the header actions
+    // remain tightly packed, while the thing a pointer has to hit is compliant.
+    // Adjacent buttons' chips overlap ~4px across the 4px actions gap, which is
     // harmless: the fill only appears on hover / focus, and only one button is
     // ever hovered at a time.
     &::before {
         content: '';
         position: absolute;
-        inset: rem(-3px);
+        inset: rem(-4px);
         z-index: -1;
         border-radius: var(--ag-radius-xs);
         background: transparent;

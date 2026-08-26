@@ -91,9 +91,13 @@ $header-border-color: var(--header-border-color, var(--ag-hairline));
     border: 0;
     padding: rem(2px);
     margin: 0;
-    width: rem(22px);
-    height: rem(22px);
-    min-width: rem(22px);
+
+    // 24px is the WCAG 2.2 AA minimum target size (2.5.8). Unlike the header
+    // actions, these buttons are a real layout box rather than an invisible
+    // chip, so growing them widens the paginator bar by 2px per button.
+    width: rem(24px);
+    height: rem(24px);
+    min-width: rem(24px);
     display: inline-flex;
     align-items: center;
     justify-content: center;

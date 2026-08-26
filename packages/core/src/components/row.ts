@@ -403,11 +403,24 @@ export default class ApexGridRow<T extends object> extends LitElement {
       // Plain click: let the default checkbox toggle proceed; `change` will
       // commit the new state via `toggleRow`.
     };
+    // The checkbox itself is 14x14, well under the 24x24 WCAG 2.2 AA minimum
+    // (2.5.8), and growing it would make a chunky box out of a deliberately
+    // small mark. Instead the whole cell is the target: a click anywhere in it
+    // forwards to the checkbox, which is both compliant and what people expect
+    // of a selection column. Clicks that land on the checkbox are left alone,
+    // or the forward would toggle twice and cancel out.
+    const forwardToCheckbox = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (target instanceof HTMLInputElement) return;
+      event.currentTarget instanceof HTMLElement &&
+        event.currentTarget.querySelector<HTMLInputElement>('input[type="checkbox"]')?.click();
+    };
     return html`<div
       part="selection-cell"
       role="gridcell"
       aria-colindex=${colindex}
       data-pinned="start"
+      @click=${forwardToCheckbox}
     >
       <input
         type="checkbox"

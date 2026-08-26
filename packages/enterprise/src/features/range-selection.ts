@@ -19,7 +19,17 @@ export const RANGE_SELECTION_MODULE_ID = 'range-selection';
 /** Custom event fired on the grid host whenever the selected range changes. */
 export const RANGE_CHANGED_EVENT = 'apex-range-changed';
 
-/** How close (px) to a cell's bottom-right corner counts as grabbing the fill handle. */
+/**
+ * How close (px) to a cell's bottom-right corner counts as grabbing the fill
+ * handle. Larger than the 7px dot it draws, so the grab is forgiving.
+ *
+ * Deliberately below the 24x24 WCAG 2.2 AA target size (2.5.8), which it cannot
+ * meet: a 24px corner band would swallow a quarter of every cell's click area
+ * and make ordinary cell selection unpredictable. The criterion's exceptions
+ * cover this — fill is reachable through controls that do meet 24x24 (copy and
+ * paste, and Shift+Arrow range extension plus paste), and the handle's position
+ * at the range's corner is essential to what it means.
+ */
 const FILL_HANDLE_HIT = 10;
 
 /** A cell coordinate within the current page/view (visible-column index). */

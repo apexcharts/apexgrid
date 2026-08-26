@@ -169,11 +169,22 @@ export default class ApexGridHeaderRow<T extends object> extends LitElement {
         void selection.clear();
       }
     };
+    // As in the body's selection cell: the 14x14 checkbox is under the 24x24
+    // WCAG 2.2 AA minimum (2.5.8), so the header cell forwards clicks to it
+    // rather than the mark growing. Clicks on the checkbox pass through
+    // untouched, or the forward would toggle twice.
+    const forwardToCheckbox = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (target instanceof HTMLInputElement) return;
+      event.currentTarget instanceof HTMLElement &&
+        event.currentTarget.querySelector<HTMLInputElement>('input[type="checkbox"]')?.click();
+    };
     return html`<div
       part="selection-header"
       role="columnheader"
       aria-colindex="1"
       data-pinned="start"
+      @click=${forwardToCheckbox}
     >
       <input
         type="checkbox"
