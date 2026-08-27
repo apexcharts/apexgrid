@@ -1,4 +1,4 @@
-import { LicenseManager } from 'apex-commons';
+import { LicenseManager, Watermark } from 'apex-commons';
 import type {
   ApexCellContext,
   ColumnConfiguration,
@@ -34,7 +34,7 @@ import {
   serializeRowRefs,
   type ToolbarAction,
 } from 'apex-grid/internal';
-import { html, nothing, type PropertyValues } from 'lit';
+import { html, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 import type { ApexGridAI } from './ai-panel.js';
 import type { ApexGridChart, ChartSource } from './chart-panel.js';
@@ -315,25 +315,6 @@ export const ENTERPRISE_TAG = 'apex-grid-enterprise';
  */
 export const VIEW_CHANGED_EVENT = 'apex-view-changed';
 
-// Repeating diagonal watermark shown when no valid license is set. Rendered in
-// the grid's shadow DOM as a non-interactive overlay (absolute + inset:0 covers
-// the full scroll area without disturbing the grid layout).
-const WATERMARK_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200">' +
-  '<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" ' +
-  'font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif" ' +
-  'font-size="16" font-weight="600" fill="rgba(134,134,134,0.16)" ' +
-  'transform="rotate(-35,160,100)">apex-grid-enterprise</text></svg>';
-const WATERMARK_STYLE = [
-  'position:absolute',
-  'inset:0',
-  'pointer-events:none',
-  'user-select:none',
-  'z-index:10000',
-  `background-image:url("data:image/svg+xml,${encodeURIComponent(WATERMARK_SVG)}")`,
-  'background-repeat:repeat',
-].join(';');
-
 /** Tags a `cellTemplate` injected by `showFormulas`, so the toggle can revert it. */
 const FORMULA_DISPLAY = Symbol('apex-formula-display');
 
@@ -387,7 +368,7 @@ export interface FormulaExportOptions {
  * column aggregations, row grouping, pivoting, integrated charts, cell range
  * selection, XLSX export, and licensing on top.
  *
- * @csspart license-watermark - Non-interactive diagonal watermark overlay shown when no valid license is set.
+ * @csspart license-watermark - Non-interactive diagonal watermark overlay shown when no valid license is set. Painted by `apex-commons`' shared `Watermark`, so it matches the other Apex products; this part stays on the node for styling.
  */
 export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
   /** Live instances, so {@link setLicense} can refresh watermarks on the fly. */
@@ -668,6 +649,7 @@ export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
     window.addEventListener('resize', this.#onChartViewportChange);
     // A charted range's outline tracks the rows under it as the view changes.
     (this as EventTarget).addEventListener(VIEW_CHANGED_EVENT, this.#repositionChartRanges);
+    this.#watchLicense();
   }
 
   /** Keep both the selection affordance and any charted-range overlays anchored on scroll/resize. */
@@ -695,6 +677,10 @@ export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
     window.removeEventListener('scroll', this.#onChartViewportChange, true);
     window.removeEventListener('resize', this.#onChartViewportChange);
     (this as EventTarget).removeEventListener(VIEW_CHANGED_EVENT, this.#repositionChartRanges);
+    this.#licenseUnsubscribe?.();
+    this.#licenseUnsubscribe = null;
+    this.#watermarkLayer?.remove();
+    this.#watermarkLayer = null;
     this.#chartAffordance?.remove();
     this.#chartAffordance = null;
     // Floating chart dialogs + charted-range overlays live on document.body, not under the grid.
@@ -1137,6 +1123,7 @@ export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
 
   protected override updated(): void {
     super.updated();
+    this.#syncWatermark();
     if (this.#infiniteManager && this.#infiniteNeedsStart) {
       this.#infiniteNeedsStart = false;
       this.#infiniteManager.start();
@@ -1970,14 +1957,76 @@ export class ApexGridEnterprise<T extends object> extends ApexGrid<T> {
     return new StateController<T>(this, modules);
   }
 
-  protected override render() {
-    return html`${super.render()}${this.#renderWatermark()}`;
+  // --- license watermark ---------------------------------------------------
+
+  /**
+   * Out-of-flow layer the shared watermark paints into.
+   *
+   * `Watermark` is an imperative DOM API: it appends a node to a container and
+   * needs a real element, which rules out both the light DOM (the grid renders
+   * no `<slot>`, so light children are never shown) and the shadow root itself
+   * (`getComputedStyle` throws on a `ShadowRoot`). It also has to be
+   * `position: absolute`, or the host's `display: grid` would lay it out as an
+   * extra grid row and push the real content down.
+   *
+   * Created once and appended outside Lit's rendered range, so re-renders leave
+   * both it and the node inside it alone.
+   */
+  #watermarkLayer: HTMLElement | null = null;
+
+  /** Unsubscribes the licence listener on disconnect. */
+  #licenseUnsubscribe: (() => void) | null = null;
+
+  #watermarkContainer(): HTMLElement | null {
+    if (typeof document === 'undefined') return null;
+    if (!this.#watermarkLayer?.isConnected) {
+      const layer = document.createElement('div');
+      layer.style.position = 'absolute';
+      layer.style.inset = '0';
+      layer.style.pointerEvents = 'none';
+      this.renderRoot.appendChild(layer);
+      this.#watermarkLayer = layer;
+    }
+    return this.#watermarkLayer;
   }
 
-  #renderWatermark() {
+  /**
+   * Reconcile the watermark with the licence.
+   *
+   * The pattern, the overlay styles and the tamper-resistant bits all live in
+   * `Watermark`, shared with the other Apex products — this used to be a private
+   * copy of them. What stays here is the decision and the `license-watermark`
+   * part, which is documented API this package has to keep on the node.
+   *
+   * Driven with `manage: false` rather than letting `Watermark` reconcile
+   * internally: its own reconcile paints a *fresh* node, which would arrive
+   * without that part and outside any render this component knows about. Doing
+   * it here means one decision point, and the part is stamped every time.
+   */
+  #syncWatermark(): void {
+    // A disconnected grid must not paint: `disconnectedCallback` drops the layer,
+    // and a licence change arriving afterwards would otherwise rebuild it and
+    // re-append to a detached shadow root.
+    if (!this.isConnected) return;
+    const container = this.#watermarkContainer();
+    if (!container) return;
     if (LicenseManager.isLicenseValid()) {
-      return nothing;
+      Watermark.remove(container, { manage: false });
+      return;
     }
-    return html`<div part="license-watermark" aria-hidden="true" style=${WATERMARK_STYLE}></div>`;
+    const node = Watermark.add(container, { manage: false });
+    node?.setAttribute('part', 'license-watermark');
+    node?.setAttribute('aria-hidden', 'true');
+  }
+
+  /**
+   * Signature verification settles a microtask after `setLicense`, and
+   * {@link LicenseManager.isLicenseValid} answers synchronously from the
+   * structural check until it does. Without this, a forged-but-well-formed key
+   * would paint unwatermarked and never be corrected, since nothing would ask
+   * again after the verdict flipped.
+   */
+  #watchLicense(): void {
+    this.#licenseUnsubscribe ??= LicenseManager.onChange(() => this.#syncWatermark());
   }
 }

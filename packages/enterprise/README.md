@@ -936,6 +936,13 @@ ApexGridEnterprise.setLicense('APEX-…'); // removes the watermark on all insta
 `LicenseManager` (re-exported from `apex-commons`) is also available for advanced
 use, but `setLicense` is the supported entry point.
 
+Keys are ECDSA-signed. Verification is asynchronous (WebCrypto has no synchronous
+API) while the watermark decision is synchronous, so a structurally valid key is
+accepted provisionally and the grid re-checks when the signature verdict settles:
+a tampered key lifts the watermark for a microtask and then gets it back. The
+overlay itself is `apex-commons`' shared `Watermark`, the same one the other Apex
+products paint, and it keeps the `license-watermark` part for styling.
+
 ## See also
 
 - [`apex-grid`](https://www.npmjs.com/package/apex-grid): the community grid with
