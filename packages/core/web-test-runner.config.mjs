@@ -26,6 +26,7 @@ export default /** @type {import("@web/test-runner").TestRunnerConfig} */ ({
             }
           });
         </script>
+        <script type="module" src="./test/setup.js"></script>
         <script type="module" src="${testFramework}"></script>
       </body>
     </html>

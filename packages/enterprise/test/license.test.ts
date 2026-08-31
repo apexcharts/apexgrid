@@ -11,14 +11,7 @@ const data: Row[] = [
 
 const WATERMARK = '[part~="license-watermark"]';
 
-/**
- * Whether the watermark overlay is present.
- *
- * Deliberately a boolean rather than `expect(node).to.exist`: a failing
- * element assertion makes chai inspect the node, and the runner then hangs to
- * its 120s timeout instead of printing anything, so a real regression here
- * would read as CI being stuck.
- */
+/** Whether the watermark overlay is present. */
 function watermarked(grid: ApexGridEnterprise<Row>): boolean {
   return grid.renderRoot.querySelector(WATERMARK) !== null;
 }

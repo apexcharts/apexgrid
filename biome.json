@@ -9,7 +9,9 @@
     "includes": [
       "packages/*/src/**/*.ts",
       "packages/*/test/**/*.ts",
+      "packages/*/test/**/*.js",
       "packages/*/scripts/**/*.js",
+      "test-setup/**/*.js",
       "!packages/react/src/generated/**",
       "!packages/react/src/events.ts"
     ],
